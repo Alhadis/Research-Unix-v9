@@ -1,0 +1,33 @@
+.TH SYSMON 1
+.CT 1 sa_mortals comm_users
+.SH NAME
+sysmon
+.SH SYNOPSIS
+.B sysmon
+[
+.BI - n
+]
+.SH DESCRIPTION
+.I Sysmon
+monitors use of a Unix
+.I system.
+It displays time of day and CPU usage statistics.
+.PP
+CPU usage is reported as a numerical load average (average number
+of runnable processes) and its change in the last
+minute, and a bar graph showing, left-to-right, the
+proportion of CPU time spent in: default-priority user processes,
+low priority (nice) processes, system kernel, stream I/O (on 9th
+Edition systems), and idle time.
+.PP
+.PP
+The options are:
+.TP
+.BI - n
+Update the bar graph every
+.I n
+seconds.
+.RI ( n =5
+by default.)
+.SH BUGS
+There's more to system performance than meets the eye.

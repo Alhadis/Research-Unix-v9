@@ -1,0 +1,5 @@
+CFLAGS	= -I../sunlib -g -DBSD -DSUNTOOLS
+LIBS	= ../sunlib/libsj.a -lsuntool -lsunwindow -lpixrect
+OFILES	= jek.o noflash.o x11.o
+tek: $(OFILES)
+	cc -o tek $(OFILES) $(LIBS)

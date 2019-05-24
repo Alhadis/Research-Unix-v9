@@ -1,0 +1,237 @@
+#include "om.h"
+/*
+ * various metheus models on dr11-w, hacked from rob's raster tech driver
+ * td 86.09.13
+ * Bugs:
+ *	should support the cursor
+ */
+#include "../h/param.h"
+#include "../h/dir.h"
+#include "../h/user.h"
+#include "../h/buf.h"
+#include "../h/systm.h"
+#include "../h/pte.h"
+#include "../h/map.h"
+#include "../h/ubareg.h"
+#include "../h/ubavar.h"
+struct omregs{
+	short	wcr;		/* Unibus word count reg */
+	u_short	bar;		/* Unibus address register */
+	u_short	csr;		/* Unibus status/command reg */
+	u_short	dr;		/* Data Register */
+};
+#define	eir	csr		/* Error and Information Register */
+/*
+ * Unibus status/command register bits
+ */
+#define GO		0000001
+#define	FUNC1		0000002	/* if set, a dma reads rather than writes */
+#define	FUNC2		0000004
+#define	FUNC3		0000010
+#define IENABLE		0000100
+#define READY		0000200
+#define	MAINT		0010000
+#define	ATTN		0020000
+#define	ERROR		0100000
+/*
+ * setting FUNC1 causes metheus to assert attention,
+ * abort any dma in progress, cause an error and
+ * interrupt (if enabled)
+ */
+#define	ABORT	FUNC3
+
+#define DMAPRI (PZERO-1)
+#define WAITPRI (PZERO+1)
+
+int	omprobe(), omattach(), omintr();
+struct	uba_device *omdinfo[NOM];
+u_short	omstd[] = { 0772410, 0772430, 0, 0 };
+struct	uba_driver omdriver = {
+	omprobe, 0, omattach, 0, omstd, "om", omdinfo, 0, 0
+};
+
+struct omsoftc {
+	char	open;		/* flag for device open */
+	char	busy;		/* flag for io in progress */
+	int	ubinfo;		/* ubasetup/ubarelse datum */
+	int	count;		/* io byte count */
+	struct	buf *bp;	/* io buffer header */
+	int	bufp;		/* io memory address, in UNIBUS coordinates */
+	int	icnt;		/* interrupt count */
+} omsoftc[NOM];
+int	omstrategy();
+u_int	omminphys();
+struct	buf rombuf[NOM];
+#define UNIT(dev) (minor(dev))
+omprobe(reg)
+	caddr_t reg;
+{
+	register int br, cvec;		/* value-result */
+	register struct omregs *omaddr = (struct omregs *)reg;
+
+#ifdef lint
+	br = 0; cvec = br; br = cvec;
+#endif
+	omaddr->csr=ATTN|ABORT|IENABLE;
+	DELAY(10000);
+	omaddr->csr=IENABLE;
+	/* grumble */
+	br = 0x15;
+	switch ((int)omaddr&077){
+	case 010: cvec=0124; break;
+	case 030: cvec=0134; break;
+	}
+	return sizeof(struct omregs);
+}
+/*ARGSUSED*/
+omattach(ui)
+struct uba_device *ui;
+{
+}
+omopen(dev)
+dev_t dev;
+{
+	register struct omsoftc *omp;
+	register struct uba_device *ui;
+	if(UNIT(dev)>=NOM
+	|| (omp=&omsoftc[minor(dev)])->open
+	|| (ui=omdinfo[UNIT(dev)])==0
+	|| ui->ui_alive==0)
+		u.u_error=EBUSY;
+	else{
+		omp->open=1;
+		omp->icnt=0;
+		omp->busy=0;
+	}
+}
+omclose(dev)
+dev_t dev;
+{
+	omsoftc[minor(dev)].open=0;
+	omsoftc[minor(dev)].busy=0;
+}
+omread(dev)
+dev_t dev;
+{
+	return omrdwr(dev, B_READ);
+}
+omwrite(dev)
+dev_t dev;
+{
+	return omrdwr(dev, B_WRITE);
+}
+omrdwr(dev, flag)
+dev_t dev;
+{
+	register int unit=UNIT(dev);
+	if (unit>=NOM)
+		return ENXIO;
+	return physio(omstrategy, &rombuf[unit], dev, flag, omminphys);
+}
+u_int omminphys(bp)
+register struct buf *bp;
+{
+	if(bp->b_bcount>32768)	/* what's the actual upper bound? */
+		bp->b_bcount=32768;
+}
+omstrategy(bp)
+register struct buf *bp;
+{
+	register struct omsoftc *omp = &omsoftc[UNIT(bp->b_dev)];
+	register struct uba_device *ui;
+	if(UNIT(bp->b_dev)>=NOM
+	|| (ui=omdinfo[UNIT(bp->b_dev)])==0
+	|| ui->ui_alive==0)
+		goto Bad;
+	spl5();
+	while(omp->busy)
+		sleep((caddr_t)omp, DMAPRI+1);
+	omp->busy++;
+	omp->bp=bp;
+	if(bp->b_bcount<=0
+	|| bp->b_bcount&1
+	|| (int)bp->b_un.b_addr&1){
+		u.u_error=EINVAL;
+		goto Bad;
+	}
+	omp->ubinfo=ubasetup(ui->ui_ubanum, bp, UBA_NEEDBDP);
+	omp->bufp=omp->ubinfo&0x3ffff;
+	omp->count=-(bp->b_bcount>>1);	/* it's a word count */
+	omstart(ui);
+	if(tsleep((caddr_t)omp, DMAPRI+1, 15)!=TS_OK){
+		register struct omregs *omaddr=(struct omregs *)ui->ui_addr;
+		bp->b_flags|=B_ERROR;
+		/* stop the dma */
+		omabort(omaddr);
+#ifdef deleted
+		omaddr->wcr=0xFFFF;	/* gently; -1 first... */
+		omaddr->wcr=0x0000;	/* then zero */
+		/* reset device */
+		omabort(omaddr);
+#endif
+		/* fake an interrupt to clear software status */
+		omintr(UNIT(bp->b_dev));
+	}
+	omp->count=0;
+	omp->bufp=0;
+	(void) spl0();
+	ubarelse(ui->ui_ubanum, &omp->ubinfo);
+	omp->bp=0;
+	iodone(bp);
+	wakeup((caddr_t)omp);
+	return;
+Bad:
+	omp->busy=0;
+	bp->b_flags|=B_ERROR;
+	iodone(bp);
+}
+omabort(omaddr)
+register struct omregs *omaddr;
+{
+	omaddr->csr=ATTN|ABORT|IENABLE;
+	DELAY(100);
+	omaddr->csr=IENABLE;
+	DELAY(100);
+}
+omstart(ui)
+register struct uba_device *ui;
+{
+	register int csr;
+	register struct omregs *omaddr = (struct omregs *) ui->ui_addr;
+	register struct omsoftc *omp = &omsoftc[UNIT(ui->ui_unit)];
+	csr=IENABLE|((omp->bufp>>12)&060);
+	if(omp->bp->b_flags&B_WRITE)
+		csr|=FUNC1;
+	omaddr->wcr=omp->count;
+	omaddr->bar=omp->bufp;
+	omaddr->csr=csr;	/* No GO bit; let function codes settle */
+	omaddr->csr=csr|GO;
+}
+/*ARGSUSED*/
+omioctl(dev, cmd, data)
+dev_t dev;
+int cmd;
+register caddr_t data;
+{
+	return ENOTTY;
+}
+/*ARGSUSED*/
+omintr(dev)
+dev_t dev;
+{
+	register struct omregs *omaddr=
+			(struct omregs *)omdinfo[UNIT(dev)]->ui_addr;
+	register struct omsoftc *omp=&omsoftc[UNIT(dev)];
+	register csr;
+	omp->icnt++;
+	if(omp->busy){
+		csr=omaddr->csr;
+		if(csr&ERROR){
+			omaddr->eir|=ERROR;
+			printf("om: csr %x eir %x\n", csr, omaddr->eir);
+		}
+		omaddr->csr=csr&~(FUNC1|FUNC2|FUNC3);
+		omp->busy=0;
+		wakeup((caddr_t)omp);
+	}
+}

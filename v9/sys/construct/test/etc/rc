@@ -1,0 +1,51 @@
+HOME=/; export HOME
+exec >/dev/console 2>&1
+date
+case ${1-xx} in
+autoboot)
+	echo Autoboot:
+	/etc/fsck -p
+	case $? in
+	0)
+		;;
+	4)
+		/etc/reboot -n
+		;;
+	8)
+		echo "Automatic reboot failed... help!"
+		exit 1
+		;;
+	12)
+		echo "Reboot interrupted"
+		exit 1
+		;;
+	*)
+		echo "Unknown error in reboot"
+		exit 1
+		;;
+	esac
+esac
+>/etc/mtab
+#/etc/swapon -a
+/etc/mount -a
+trap "" 1 2 3
+/etc/update
+/etc/cron &
+cd /tmp
+#/usr/lib/ex3.6preserve -a
+/bin/rm -f *
+cd /usr/tmp
+/bin/rm -f *
+date >> /usr/adm/lastboot
+#/etc/dkhup
+/usr/ipc/mgrs/ipconfig /dev/le00 `cat /etc/whoami` mh-capek-net /dev/le01 &
+/usr/ipc/mgrs/tcpmgr
+/usr/ipc/mgrs/svcmgr
+#/usr/net/share.go; /usr/net/setup.go
+/usr/ipc/mgrs/udpconfig /dev/ipudp &
+/usr/ipc/bin/route add \* cgate
+#/usr/net/face.go
+#/usr/bin/wwv -s
+/etc/procmount
+rm -f /etc/nologin
+exit 0

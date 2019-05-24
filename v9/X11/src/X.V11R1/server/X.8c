@@ -1,0 +1,165 @@
+.TH X 8C "10 September 1987"  "X Version 11"
+.SH NAME
+X - X window system server
+.SH SYNOPSIS
+.B X
+<display> [ option ... ] <tty>
+.SH DESCRIPTION
+.I X
+is the window system server.
+It is normally run automatically by \fIinit(8)\fP,
+which provides the tty argument.
+The display argument is the number of the bitmap display to service.
+The number is typically in the range 0-6, and defines the ports the
+server will accept connections on and the filename of the device.
+.PP
+The program \fIxinit(8)\fP is  usually used to start
+X interactively.
+.PP
+The X that gets invoked in either of these ways is actually one
+of a range of servers configured for the hardware you are running
+on.  Their individual peculiarites are documented in separate
+manual pages in this section.
+.PP
+Connections through the Unix domain, through TCP, and through DECnet are
+currently possible.  The connections actually accepted by a server depend
+on how it was compiled.  Unix domain connections are through \fI/dev/X*\fP,
+where * is the display number.
+TCP connections are through ports 6000+N (VAX byte order),
+where N is the display number.  DECnet
+connections are through object name ``X*'', where * is the display number.
+.SH OPTIONS
+The following options can be given on the command line to any X server, usually
+when it is
+started by \fIinit(1)\fP using information stored in the file \fI/etc/ttys\fP.
+(see \fIttys(5)\fP for details):
+.TP
+\fB-a\fP #
+sets mouse acceleration (pixels)
+.TP
+\fB-c\fP
+turns off key-click
+.TP
+\fBc\fP #
+sets key-click volume (0-8)
+.TP
+\fB-f\fP #
+sets feep(bell) volume (0-7)
+.TP
+\fB-p\fP #
+sets screen-saver pattern cycle time (minutes)
+.TP
+\fB-r\fP
+turns off auto-repeat
+.TP
+\fBr\fP	
+turns on auto-repeat
+.TP
+\fB-s\fP #
+sets screen-saver timeout (minutes)
+.TP
+\fB-t\fP #
+sets mouse threshold (pixels)
+.TP
+\fB-to\fP \fItimeout\fP
+sets default screensaver timeout
+.TP
+\fBv\fP
+sets video-on screen-saver preference
+.TP
+\fB-v\fP
+sets video-off screen-saver preference
+.TP
+\fB-co\fP \fIrgbdb\fP
+sets RGB database file
+.TP
+\fB-help\fP
+prints a usage message
+.TP
+\fB-fp\fP \fIfontPath\fP
+sets the search path for fonts
+.TP
+\fB-fc\fP \fIcursorFont\fP
+sets default cursor font
+.TP
+\fB-fn\fP \fIfont\fP
+sets the default font
+.PP
+Specific implementations may have other command-line options.
+.SH
+INITIALIZATION
+.PP
+\fIX(1)\fP and your first \fIxterm(1)\fP are normally started by the 
+\fIinit(8)\fP program.
+.sp
+A typical line in \fI/etc/ttys\fP might be:
+.sp
+.nf
+	ttyv0 "/etc/xterm -L =-1+1 :0" xterm on secure window="/etc/Xvs100 0 -c -l"
+.fi
+.sp
+However, if you want the xterm to run on a different machine, you might have:
+.sp
+.nf
+	remote "/etc/X 0 -l -c" xterm on secure
+.fi
+.sp
+on the server machine and
+.sp
+.nf
+	ttyv0 "/exe/xterm -L =-1+1 orpheus:0" xterm on secure
+.fi
+.sp
+on the client machine.
+.sp
+.I X
+maintains an access control list for accepting connections.  The host where
+the server runs is initially on the list.
+In addition, hosts listed the file
+\fI/etc/X*.hosts\fP,
+where \fI*\fP is the display number, are also initially on the list.
+The format of this file is a list of host names, one per line.  DECnet hosts
+are distinguished from Internet hosts by the existence of a trailing ``::'' in
+the name.  
+The access control list can be manipulated with \fIxhost(1)\fP.
+.sp
+.I X
+will catch the SIGHUP signal sent by \fIinit(8)\fP
+after the initial process (usually
+the login \fIxterm(1)\fP) started on the display terminates.
+This signal causes all connections to be closed (thereby ``disowning'' the
+terminal), all resources to be freed, and all defaults restored.
+.sp
+The X protocol is documented in ``X.doc''.
+Note that while X is running, all access to the display must be through
+the window system.
+.SH "SEE ALSO"
+X(1), xinit(1), xterm(1), bitmap(1), xwm(1), xhost(1), xload(1), xset(1), init(8),
+Xqvss(8c), Xqdss(8c), Xsun(8c), Xapollo(8c), Xapa16(8c)
+.SH DIAGNOSTICS
+Are too numerous to list them all.
+If run from \fIinit(8)\fP, errors are logged in the file \fI/usr/adm/X*msgs\fP,
+.SH FILES
+.ta \w'/usr/new/lib/X/s-code   'u
+/etc/X*.hosts	Initial access control list
+.br
+/usr/lib/X11/fonts	Font directory
+.br
+/dev/X*	Unix domain socket (if configured)
+.br
+/usr/adm/X*msgs	Error log file
+.SH BUGS
+The option syntax is inconsistent with itself and \fIxset(1)\fP.
+.sp
+If
+.I X
+dies before its clients, new clients won't be able to connect until all
+existing connections have their TCP TIME_WAIT timers expire.
+.SH AUTHORS
+Susan Angebranndt, Raymond Drewry, Philip Karlton, and Todd Newman,
+supported by a cast of thouands.  (See the protocl and Xlib
+documents for complete acknowledgements.)
+.br
+Copyright (c) 1984, 1985, 1986, 1987 by Massachusetts Institute of Technology.
+.br
+See \fIX(1)\fP for a complete copyright notice.

@@ -1,0 +1,20 @@
+NPROC=2
+OFILES=cache.o pad.o term.o menu.o remote.o sf.o padrcv.o stats.o help.o\
+	libC.o trace.o popen.o extern.o
+CC=CC
+CFLAGS=-I.. -I/usr/include
+
+libpads.a: $OFILES
+	ar cr libpads.a $OFILES
+	ranlib libpads.a
+
+trace.o: trace.c
+	cc -c -g `pwd`/trace.c
+
+$OFILES:	../pads.pri
+
+clean:
+	rm -f *.i *junk* core
+
+a.out:	test.o libpads.a
+	CC test.o libpads.a

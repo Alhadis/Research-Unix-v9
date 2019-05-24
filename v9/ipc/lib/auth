@@ -1,0 +1,16 @@
+#SERVICE	SOURCE				REM-USER	LOCAL-USER
+vsmtp		.*				.*		daemon
+.*
+.*		dk!mh/astro/.*
+.*		dk!mh/phone/.*
+.*		dk!mh/mercury/.*
+.*		dk!mh/vlsi/araki
+.*		dk!alc/ram/most
+.*		tcp!mh-astro-net/.*
+.*		tcp!mh-golem-net/.*
+.*		tcp!mh-dk127-net/.*
+.*		tcp!mh-dk122-net/.*
+.*		tcp!mh-l1225-net/.*
+.*		tcp!mh-l1225dk-net/.*
+.*		tcp!mh-math-net/.*
+.*		tcp!mh-homer-net/.*		smb

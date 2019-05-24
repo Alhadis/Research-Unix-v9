@@ -1,0 +1,10 @@
+CFLAGS	= -I../sunlib -g -DX11
+LIBS	= ../sunlib/libj.a -lX11 -lipc
+OFILES	= window.o deltext.o frameop.o instext.o newframe.o \
+	  ptofchar.o select.o string.o sux.o
+
+sux: $(OFILES)
+	cc -o sux $(CFLAGS) $(OFILES) $(LIBS)
+	strip -s sux
+
+

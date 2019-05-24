@@ -1,0 +1,49 @@
+This is a single library that allows jerq(AT&T 5620 Terminal)
+code to run on X11 or sunwindows.  It should be useful for porting
+jerq code to suns and educational for comparing the three
+different window systms.  The improved getrect routine
+(ngetrect) that does optional blocking and clipping, and the
+jerq hierarchical menus are courtesy of Jon Helfman.
+The suntools code avoids all calls to sunview except "fullscreen" in order
+to minimize the size of the executables (which are still twice as big as
+the X11 programs).
+
+Care was taken to make the library code look just like the jerq code.
+But there are still a couple of problems that require source code changes.
+These are documented in great detail in the T.M.:
+
+D. A. Kapilow and J. I. Helfman, "A 5620 Emulator Library for Version
+11 X Windows abd Suntools", 11228-880525-06TMS.
+
+For example, Cursors and Textures must be registered with the server in X11
+before use, although this is not necessary with the sun library. Fonts are
+also different, although defont can still be used in most cases.
+A new macro: defontheight can be used instead of defont.height to get
+the maximum height of characters in the default font. Most of the
+differences should be clear by glancing at the test programs:
+
+t0:	tests bitblt, rectf, screenswap, point, texture, balloc
+t1:	tests circle, ellipse, disc, eldisc, arc, elarc, segment,
+		string, and cursswitch
+t2:	tests non-hierarchical menus, string, and keyboard input
+t3:	a simple slider bar
+t4:	tests ngetrect (an improved getrect), getrect, texture, and rectf
+t5:	tests hierarchical menus
+t6:	alarm and ngetrect
+
+Preprocessor defines are used to compile the library and applications
+for different environments.  Possible window system flags are
+	-DSUNTOOLS or -DX11
+while operating system switches are
+	-DBSD (for a Sun) and -DV9 (for Ninth Edition)
+The x11 and suntools subdirectories include the appropriate mk and make files.
+Type "mk all" in each directory to build the libraries and tests if you
+have A. Hume's mk, or "make all" if you don't.
+
+There is a companion T.M. describing some of the tools that have been
+ported with the library:
+D. A. Kapilow, "A Set of (Old 5620) Tools for Version 11 X Windows
+and Suntools", 11228-880706-09TMS.
+
+Dave Kapilow		alice!dak
+Jon Helfman		alice!jon

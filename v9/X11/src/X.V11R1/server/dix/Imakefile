@@ -1,0 +1,35 @@
+SRCS = atom.c colormap.c cursor.c dispatch.c dixutils.c events.c \
+	extension.c fonts.c gc.c globals.c glyphcurs.c grabs.c \
+	initext.c main.c property.c resource.c swaprep.c swapreq.c \
+	tables.c window.c initatoms.c
+OBJS = atom.o colormap.o cursor.o dispatch.o dixutils.o events.o \
+	extension.o fonts.o gc.o globals.o glyphcurs.o grabs.o \
+	initext.o main.o property.o resource.o swaprep.o swapreq.o \
+	tables.o window.o initatoms.o
+
+CDEBUGFLAGS = ServerCDebugFlags
+   INCLUDES = -I. -I../include -I../../include
+EXT_DEFINES = ExtensionDefines
+
+NormalLibraryObjectRule()
+NormalLibraryTarget(dix,$(OBJS))
+
+DependTarget()
+
+#
+# `specially made just for initext.o.  If the Makefile changes, then
+# we make a new initext.o because the extension list may have changed.
+#
+# XXX
+# the dependency is on "./Makefile" because if it were just "Makefile",
+# the the rule for building the Makefile would be invoked if it is out
+# of date with respect to ./Imakefile or others.
+#
+initext.o: ./Makefile
+	$(CC) -c $(CFLAGS) $(EXT_DEFINES) initext.c
+
+lint:
+	lint -Cdix $(INCLUDES) $(SRCS) > lint.out
+
+../../include/Xatom.h initatoms.c:	BuiltInAtoms buildatoms
+	sh buildatoms

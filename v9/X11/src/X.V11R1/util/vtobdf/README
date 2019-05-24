@@ -1,0 +1,13 @@
+This program reads a Sun vfont file and creates a character bitmap
+distribution format file. You see, I wanted to use the serif.r.11
+font with X11; so I grabbed a copy of David Martin's vtoxfont and
+started hacking...
+
+So far it only works on fixed width fonts.
+
+    Craig Leres
+    Lawrence Berkeley Laboratory
+    One Cyclotron Road
+    Berkeley, California 94720
+
+    leres@ucbarpa.berkeley.edu

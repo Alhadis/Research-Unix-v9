@@ -1,0 +1,21 @@
+Changes required to src to run on sun.
+
+src/lib/mj/getrect.c - had to compile it with -m option because otherwise
+		mux was defined which wouldnt allow getrectb() to be
+		defined.
+
+src/sysmon/makefile - removed datakit stuff from makefile.
+src/sysmon/sysmon.c - made it an error to try to call other systems
+src/sysmon/nlist.c - same change as was made to nlist in libc.a
+
+src/32ld/32ld.c + pcheck.c
+		- added defines for mc68000
+
+sgs/3cc.c - undefined all the sun paramters for the preprocessor.
+
+sgs/* - changed makefiles to define AR32W instead of AR32WR since
+	68000 has the same word order as a 3B.
+
+sgs/comp/sty.y - function shapeshr() - first line, added test if s1
+	< 0 and if it is return 0 immediately before entering for
+	loop.

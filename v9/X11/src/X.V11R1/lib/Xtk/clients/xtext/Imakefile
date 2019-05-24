@@ -1,0 +1,6 @@
+       INCLUDES = -I$(OLDXRMSRC) -I$(TOP) -I$(TOP)/X11
+           OBJS = xtext.o
+           SRCS = xtext.c
+
+SingleProgramTarget(xtext,$(OBJS),$(XTOOLLIB) $(OLDXRMLIB) $(XLIB),)
+DependTarget()

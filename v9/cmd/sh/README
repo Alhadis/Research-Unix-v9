@@ -1,0 +1,5 @@
+Modifications from bowell
+
+makefile:
+	-removed lines with :fix in them
+	-added -DBSD4_2 to CFLAGS

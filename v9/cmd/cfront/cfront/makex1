@@ -1,0 +1,41 @@
+CC	=	CC
+CFLAGS= -O -DRETBUG -DBSD -Fc -..c -I../CC -I/usr/dak/v9src/include
+PATCH=
+OFILES	=	alloc.o dcl.o dcl2.o dcl3.o del.o error.o expand.o expr.o expr2.o \
+		lalex.o lex.o main.o norm.o norm2.o print.o repr.o \
+		simpl.o size.o table.o typ.o typ2.o y.tab.o
+cfront:	$(OFILES)
+	$(CC)	-o cfront $(OFILES)
+
+cfront.h:	token.h typedef.h
+
+y.tab.c:	gram.y
+	yacc gram.y
+
+.c.o:
+	$(CC) $(CFLAGS) $<
+
+alloc.o:	alloc.c cfront.h
+dcl.o:	dcl.c cfront.h size.h
+dcl2.o:	dcl2.c cfront.h size.h
+dcl3.o:	dcl3.c cfront.h size.h
+del.o:	del.c cfront.h
+error.o:	error.c cfront.h size.h
+expand.o:	expand.c cfront.h
+expr.o:	expr.c cfront.h size.h
+expr2.o:	expr2.c cfront.h size.h
+lalex.o:	lalex.c cfront.h tqueue.h yystype.h
+lex.o:	lex.c cfront.h size.h tqueue.h yystype.h
+main.o:	main.c cfront.h
+norm.o:	norm.c cfront.h size.h
+norm2.o:	norm2.c cfront.h size.h
+print.o:	print.c cfront.h
+repr.o:	repr.c cfront.h
+simpl.o:	simpl.c cfront.h size.h
+size.o:	size.c cfront.h size.h
+table.o:	table.c cfront.h
+typ.o:	typ.c cfront.h size.h
+typ2.o:	typ2.c cfront.h size.h
+
+y.tab.o:	y.tab.c cfront.h size.h
+	$(CC) -DGRAM -c y.tab.c 

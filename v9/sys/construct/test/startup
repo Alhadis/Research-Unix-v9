@@ -1,0 +1,40 @@
+#! /bin/sh
+fsck /dev/rsd0a /dev/rsd0g
+/etc/mount -a
+cd /usr/bin
+tar xf ubin.tar; rm ubin.tar
+ranlib /lib/libc.a
+ranlib /lib/libC.a
+cd /
+/etc/mklost+found
+cd /bin
+ln test '['
+ln -s /usr/lib/termcap /etc
+ln ed e
+ln /etc/login login
+cd /dev
+./Makedev pt
+./Makedev inet
+./Makedev le
+./Makedev ie
+cd /usr
+/etc/mklost+found
+cd /usr/include
+tar xf include.tar; rm include.tar
+cd /usr/ipc
+tar xf ipc.tar; rm ipc.tar
+cd /usr/netb
+tar xf netb.tar; rm netb.tar
+cd /usr/lib
+uncompress ulib.tar; tar xf ulib.tar;  rm ulib.tar
+cd /usr/X11
+uncompress X11.tar; tar xf X11.tar;  rm X11.tar
+cd /usr/jtools
+uncompress j.tar; tar xf j.tar;  rm j.tar
+cd /usr/jerq
+uncompress jerq.tar; tar xf jerq.tar;  rm jerq.tar
+cd /usr/stand
+./installboot bootpr /dev/sd0a
+> /cs/tcp.6000
+chmod 666 /cs/tcp.6000
+sync; sync

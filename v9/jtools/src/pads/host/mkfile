@@ -1,0 +1,26 @@
+OFILES=cache.o pad.o term.o menu.o remote.o sf.o padrcv.o stats.o help.o\
+	libC.o trace.o popen.o extern.o
+WD=/usr/jtools/src/pads/host
+cppC=/usr/lib/cpp
+cfrontC=/usr/shopiro/C++/SFcfront/cfront
+CFLAGS=-I.. -I/usr/include -c -g -DBSD
+BUILTINS="
+%.o:	%.c
+	CC $CFLAGS $WD/$stem.c
+%.o:	%.s
+	as -o $stem.o $stem.s"
+
+libpads.a: $OFILES
+	ar cr libpads.a $OFILES
+	ranlib libpads.a
+
+trace.o: trace.c
+	cc -c -g $WD/trace.c
+
+$OFILES: ../pads.pri
+
+clean:
+	rm -f *.i core
+
+a.out:	test.o libpads.a
+	cc -g test.o libpads.a

@@ -1,0 +1,301 @@
+.TH XCALC 1 "16 March 1987" "X Version 10"
+.SH NAME
+xcalc \- X based scientific calculator
+.SH SYNOPSIS
+.B xcalc
+[host:display]  [-bw <pixels>] [-stip] [-rv] [-rpn] [-analog] [=geometry]
+.SH DESCRIPTION
+.I Xcalc
+is a program that brings up a scientific calculator desk accessory.  The 
+calculator mode should remind you more than a little bit of the TI-30 or 
+HP-10C.
+.SH OPTIONS
+.PP
+.TP 14
+.B \-bw
+The border width in pixels
+.PP
+.TP 14
+.B \-stip
+Sets the 'stipple' option.  See 'defaults'.
+.PP
+.TP 14
+.B \-rv
+Reverse video (on monochrom displays).
+.PP
+.TP 14
+.B \-rpn
+Specifies Reverse Polish Notation mode, in which the calculator behaves like 
+an HP-10 calculator.  Without this flag, it will behave like a TI-30 
+calculator.
+.PP
+.TP 14
+.B \-analog
+For backwards compatability.  Try it.
+.PP
+.TP 14
+.B \=geometry
+The width and height shouldn't be set by the user, as the default size is also
+the minimum size, and anything larger than that won't be 'right'.  You can, 
+however feel free to set the position.
+.PP
+.TP 14
+.B \fIhost\fP:\fIdisplay\fP
+Normally,
+.I xcalc
+gets  the host and display number to use from the environment variable
+``DISPLAY''.  One can, however specify them explicitly.
+The
+.I host
+specifies which machine to create the
+.I xcalc
+window on, and
+the
+.I display
+argument specifies the display number.
+.SH OPERATION
+.PP
+.I Mouse Operation:
+The left button is the only one (really) used to operate the calculator.
+Pressing the AC key with the right button terminates the calculator.
+.PP
+.I Key Usage (Normal mode):
+The number keys, the +/- key, and the +, -, *, /, and = keys all do exactly 
+what you would expect them to.  It should be noted that the operators obey
+the standard rules of precedence.  Thus, entering "3+4*5=" results in "23",
+not "35".  The parentheses can be used to override this.  For example, 
+"(1+2+3)*(4+5+6)=" results in "6*15=90".  The non-obvious keys are detailed
+below.
+.PP
+.B 1/x
+replaces the number in the display with its reciprocal.
+.PP
+.B x^2
+squares the number in the display.
+.PP
+.B SQRT
+takes the square root of the number in the display.
+.PP
+.B CE/C
+when pressed once, clears the number in the display without clearing the state
+of the machine.  Allows you to re-enter a number if you screw it up.  
+Pressing it twice clears the state, also.
+.PP
+.B AC
+clears everything, the display, the state, the memory, everything.  Pressing
+it with the right button 'turns off' the calculator, in that it exits the
+program.  Somewhat more equivalent to throwing the calculator in the trash,
+if we were to pursue the analogy.
+.PP
+.B INV
+inverts the meaning of the function keys.  See the individual function keys
+for details.
+.PP
+.B sin
+computes the sine of the number in the display, as interpreted by the current
+DRG mode (see DRG, below).  If inverted, computes the arcsine.
+.PP
+.B cos
+computes the cosine, or arccosine when inverted.
+.PP
+.B tan
+computes the tangent, or arctangent when inverted.
+.PP
+.B DRG
+changes the DRG mode, as indicated by 'DEG', 'RAD', or 'GRAD' at the bottom of
+the display.  When in 'DEG' mode, numbers in the display are taken as being
+degrees.  In 'RAD' mode, numbers are in radians, and in 'GRAD' mode, numbers
+are in gradians.  When inverted, the DRG key has the nifty feature of 
+converting degrees to radians to gradians and vice-versa.  Example:  put the 
+calculator into 'DEG' mode, and type "45 INV DRG".  The display should now
+show something along the lines of ".785398", which is 45 degrees converted to
+radians.
+.PP
+.B e
+the constant 'e'.  (2.7182818...)
+.PP
+.B EE
+used for entering exponential numbers.  For example, to enter "-2.3E-4" you'd
+type "2 . 3 +/- EE 4 +/-"
+.PP
+.B log
+calculates the log (base 10) of the number in the display.  When inverted,
+raises "10.0" to the number in the display.  For example, typing "3 INV log"
+should result in "1000".
+.PP
+.B ln
+calcuates the log (base e) of the number in the display.  When inverted, 
+raises "e" to the number in the display.  For example, typing "e ln" should
+result in "1"
+.PP
+.B y^x
+raises the number on the left to the power of the number on the right.  For 
+example "2 y^x 3 =" results in "8", which is 2^3.  For a further example,
+"(1+2+3) y^x (1+2) =" equals "6 y^x 3" which equals "216".
+.PP
+.B PI
+the constant 'pi'.  (3.1415927....)
+.PP
+.B x!
+computes the factorial of the number in the display.  The number in the display
+must be an integer in the range 0-500, though, depending on your math library,
+it might overflow long before that.
+.PP
+.B STO
+copies the number in the display to the memory location.
+.PP
+.B RCL
+copies the number from the memory location to the display.
+.PP
+.B SUM
+adds the number in the display to the number in the memory location.
+.PP
+.B EXC
+swaps the number in the display with the number in the memory location.
+.PP
+.I Key Usage (RPN mode):
+The number keys, CHS (change sign), +, -, *, /, and ENTR keys all do exactly 
+what you would expect them to.  Many of the remaining keys are the same as in
+normal mode.  The differences are detailed below.
+.PP
+.B <-
+is a backspace key that can be used while typing a number.  It will erase
+digits from the display.
+.PP
+.B ON
+clears everything, the display, the state, the memory, everything.  Pressing
+it with the right button 'turns off' the calculator, in that it exits the
+program.  Somewhat more equivalent to throwing the calculator in the trash,
+if we were to pursue the analogy.
+.PP
+.B INV
+inverts the meaning of the function keys.  This would be the  "f" key
+on an HP calculator, but xcalc does not have the resolution to display
+multiple legends on each key.  See the individual function keys
+for details.
+.PP
+.B 10^x
+raises "10.0" to the number in the top of the stack.  When inverted, calculates
+the log (base 10) of the number in the display.
+.PP
+.B e^x
+raises "e" to the number in the top of the stack.  When inverted, calcuates the
+log (base e) of the number in the display.  
+.PP
+.B STO
+copies the number in the top of the stack to a memory location.  There are 10
+memory locations.  The desired memory is specified by following this
+key with pressing a digit key.
+.PP
+.B RCL
+pushes the number from the specified memory location onto the stack.
+.PP
+.B SUM
+adds the number on top of the stack to the number in the specified
+memory location.
+.PP
+.B x:y
+exchanges the numbers in the top two stack positions.
+.PP
+.B R v
+rolls the stack downward.  When inverted, rolls the stack upward.
+.PP
+.I blank
+these keys were used for programming functions on the HP11-C.  Their
+functionality has not been duplicated here.
+.PP
+.SH KEYBOARD EQUIVALENTS
+If you have the mouse in the xcalc window, you can use the keyboard to speed
+entry, as almost all of the calculator keys have a keyboard equivalent.  The
+number keys, the operator keys, and the parentheses all have the obvious
+equivalent.  The less-obvious equivalents are as follows:
+.PP
+.EX
+n:  +/-            !:  x!
+p:  PI             e:  EE
+l:  ln             ^:  y^x
+i:  INV            s:  sin
+c:  cos            t:  tan
+d:  DRG      BS, DEL:  CE/C ("<-" in RPN mode)
+CR: ENTR           
+
+.SH COLOR USAGE
+.I Xcalc
+uses a lot of colors, given the opportunity.  In the default case, it will 
+just use two colors (Foreground and Background) for everything.  This works out
+nicely.  However, if you're a color fanatic you can specify the colors used 
+for the number keys, the operator (+-*/=) keys, the function keys, the display,
+and the icon.
+.SH X DEFAULTS
+.PP
+.TP 8
+.B BorderWidth
+width of border.  Default is '2'.
+.PP
+.TP 8
+.B ReverseVideo
+reverses colors on monochrome displays
+.PP
+.TP 8
+.B Stipple
+makes the calculator background a 50% stipple.  Default is 'on' on 
+monochrome displays, 'off' on color displays.  
+.PP
+.TP 8
+.B Mode
+sets the default mode.  Values are "rpn", "analog".
+.PP
+.TP 8
+.B Foreground
+the default color used for borders and text.
+.PP
+.TP 8
+.B Background
+the default color used for the background.
+.B NKeyFore, NKeyBack
+the colors used for the number keys.
+.PP
+.TP 8
+.B OKeyFore, OKeyBack
+the colors used for the operator keys.
+.PP
+.TP 8
+.B FKeyFore, FKeyBack
+the colors used for the function keys.
+.B DispFore, DispBack
+the colors used for the display.
+.B IconFore, IconBack
+the colors used for the icon.
+.SH SAMPLE .XDEFAULTS ENTRY
+If you're running on a monochrome display, you shouldn't need any .Xdefaults
+entries for xcalc.  On a color display, you might want to try the
+following in normal mode:
+
+.EX
+xcalc.Foreground:               Black
+xcalc.Background:               LightSteelBlue
+xcalc.NKeyFore:                 Black
+xcalc.NKeyBack:                 White
+xcalc.OKeyFore:                 Aquamarine
+xcalc.OKeyBack:                 DarkSlateGray
+xcalc.FKeyFore:                 White
+xcalc.FKeyBack:                 #900
+xcalc.DispFore:                 Yellow
+xcalc.DispBack:                 #777
+xcalc.IconFore:                 Red
+xcalc.IconBack:                 White
+
+<well, *I* like them.>
+.SH BUGS
+Well, it would be really nice if you could (usefully) rescale the calculator,
+and the redraw of the keys is sort of slow.  Nothing fatal though, I think.
+
+The analog mode stuff isn't really working yet under X11.
+.SH AUTHOR
+John Bradley, University of Pennsylvania
+
+(bradley@cis.upenn.edu)
+
+RPN and analog modes added by Mark Rosenstein, MIT Project Athena
+
+<mar@athena.mit.edu>

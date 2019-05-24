@@ -1,0 +1,49 @@
+SRCS =	\
+	sunInit.c \
+	sunBW2.c \
+	sunBW2zoid.c \
+	sunCursor.c \
+	sunIo.c \
+	sunKbd.c \
+	sunMouse.c \
+	sunUtils.c \
+	sunGC.c \
+	sunCG2C.c \
+	sunCG2M.c \
+	sunCG4C.c \
+	sunKeyMap.c \
+	kbd_mode.c
+
+OFILES = sunInit.o
+
+OBJS = \
+	sunBW2.o \
+	sunBW2zoid.o \
+	sunCursor.o \
+	sunIo.o \
+	sunKbd.o \
+	sunMouse.o \
+	sunUtils.o \
+	sunGC.o \
+	sunCG2C.o \
+	sunCG2M.o \
+	sunCG4C.o \
+	sunKeyMap.o
+
+CDEBUGFLAGS = ServerCDebugFlags
+   INCLUDES = -I.  -I../../include -I../mfb -I../../dix -I../../../include
+     LFLAGS = -buxz
+
+NormalLibraryObjectRule()
+
+all:: $(OFILES) kbd_mode
+
+NormalLibraryTarget(sun,$(OBJS))
+SingleProgramTarget(kbd_mode, kbd_mode.o,,)
+InstallProgram(kbd_mode,$(BINDIR))
+InstallManPage(kbd_mode,$(MANDIR))
+DependTarget()
+InstallManPage(Xsun,$(MANDIR))
+
+lint: ${CFILES} ${LIBCFILES}
+	$(LINT) $(LFLAGS) -Clibsun $(INCLUDES) $(SRCS) >lint.out 2>&1

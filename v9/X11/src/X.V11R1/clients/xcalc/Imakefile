@@ -1,0 +1,6 @@
+LOCAL_LIBRARIES = $(XLIB)
+  SYS_LIBRARIES = -lm
+           SRCS = xcalc.c sr.c
+           OBJS = xcalc.o sr.o
+
+ComplexProgramTarget(xcalc)

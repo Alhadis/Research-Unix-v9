@@ -1,0 +1,5 @@
+LOCAL_LIBRARIES = $(XLIB) $(OLDXLIB)
+           SRCS = test.c mkPixmap.c errHndlr.c
+           OBJS = test.o mkPixmap.o errHndlr.o
+
+ComplexProgramTarget(wm)

@@ -1,0 +1,51 @@
+.\" $Header: Xqvss.man,v 1.1 87/09/14 14:45:06 toddb Exp $
+.TH XQVSS 8 "10 September 1987" "X Version 11"
+.SH NAME
+Xqvss - X window system QVSS implementation notes
+.SH DESCRIPTION
+.PP
+The QVSS hardware in the DEC VS2 is monochrome.
+The usable size is 864 lines by 1024 pixels/line.
+(Under Utrix 1.1 the driver thinks the screen is 960
+pixels wide; to fix this for a VR260 monitor, patch
+the kernel variable qv_def_scrn to 2.).
+.PP
+Probably the most irritating problem with the QVSS hardware is the
+cursor support, which is limited to 16x16.
+As only ``and'' and ``or'' operations are available in the hardware,
+the driver inverts the cursor depending upon the pixels below
+the cursor.
+The server displays a reasonable cursor in most (but not all)
+circumstances.
+.PP
+Under Ultrix-32 release 1.1 and 4.2BSD,
+the window system will be slightly unreliable due
+to a kernel problem.
+Fixed in Ultrix32 release 1.2.
+Under Ultrix-32 1.1, your best bet is to use unix domain connections
+(unix:0 as host spec's) for local connections.
+.SH OPTIONS
+.br
+\fB-bp\fP \fIpixel-value\fP	set default black-pixel color
+.br
+\fB-wp\fP \fIpixel-value\fP	set default white-pixel color
+.sp
+The server also takes all of the standard server options (See X(8)
+for a complete list.)
+.PP
+Performance needs to be better, but the server is usable; it
+uses the X11 portable monchrome framebuffer code.
+.SH "SEE ALSO"
+.PP
+.IR X (8)
+.IR X (1)
+.IR `Xlib - C Language X Interface'
+.IR `ddX - Device Dependent X Interface'
+.SH AUTHORS
+.PP
+Phil Karlton wrote the QVSS-specific pieces of X11; thanks to
+David Carver of the DEC Workstations group for work on X10.
+.br
+Copyright (c) 1984, 1985, 1986 by Massachusetts Institute of Technology.
+.br
+See X(1) for a complete Copyright notice.

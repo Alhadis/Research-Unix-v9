@@ -1,0 +1,21 @@
+Notes on xcalc:
+
+I've gotten the sucker to run on an IBM RT, under BSD 4.2, and on a MicroVAX 
+GPX, under Ultrix 1.2.  The RT is lucky enough to have the IEEE math routines.
+Under these routines, if you say "x = 1.0 / 0.0", it doesn't blow up.  
+Instead, when you decide to printf() x, it shows up as "INF".  The routines
+also have the nice feature of being terribly accurate.  Needless to say, this
+all makes writing a calculator fun/E-Z.
+
+On the MicroVAX, however, I had to use a wretched math package, one that only
+goes between 1E-38 and 1E+38, one that isn't very accurate, and one that will
+cause an FP Exception at the slightest prompting.  As a result, I had to put
+in all sorts of evil nasty 'sigvec's and 'setjmp's and things.  I think it
+takes away from the intrinsic beauty (hah!) of the code, but at least it 
+doesn't say "floating exception:  core dumped" anymore, so it's a step in
+the right direction.
+
+The point is:  If you're lucky enough to have the IEEE routines, by all means 
+add a -DIEEE to the CFLAGS line in the Makefile.
+
+-jhb, 3/16/86

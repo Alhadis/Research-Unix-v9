@@ -1,0 +1,37 @@
+#
+# 3-50
+#
+machine		"sun3"
+cpu		"SUN3_50"
+options		"sun3"
+options		"MANYPROC"
+ident		"SUN350"
+timezone	5 dst
+maxusers	8
+
+config	sdsd	unix
+
+# connections for machine type 2 (SUN3_50)
+controller	virtual 2 at nexus ?
+controller	obmem 2 at nexus ?
+controller	obio 2 at nexus ?
+
+device		zs0 at obio ? csr 0x20000 flags 3 priority 3
+device		zs1 at obio ? csr 0x00000 flags 0x103 priority 3
+device		bwtwo0 at obmem 2 csr 0x100000 priority 4
+device		le0 at obio ? csr 0x120000 priority 3
+controller	si0 at obio ? csr 0x140000 priority 2
+disk		sd0 at si0 drive 0 flags 0
+tape		st0 at si0 drive 32 flags 1
+
+pseudo-device	sp
+pseudo-device	tty	64
+pseudo-device	mesg	64
+pseudo-device	ntty	8
+pseudo-device	uarp	1
+pseudo-device	inet	1
+pseudo-device	tcp	32
+pseudo-device	udp	16
+pseudo-device	kbd	1
+pseudo-device	netb
+pseudo-device	connld

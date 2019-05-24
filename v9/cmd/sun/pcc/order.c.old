@@ -1,0 +1,7 @@
+/*	@(#)order.c.old	1.1	86/02/03	SMI	*/
+# include "cpass2.h"
+#ifdef VAX
+#	include "order.vax"
+#else
+#	include "order.68"
+#endif

@@ -1,0 +1,177 @@
+.TH REQUEST 3
+.CT 2 comm_term time_man proc_man
+.SH NAME
+request, own, wait, alarm, sleep, nap, kbdchar, rcvchar, realtime, sendchar, sendnchars, \- 5620 I/O requests
+.SH SYNOPSIS
+.B #include <jerq.h>
+.PP
+.B void request(r) int r;
+.PP
+.B int own(r) int r;
+.PP
+.B int wait(r) int r;
+.PP
+.B void alarm(t) unsigned t;
+.PP
+.B void sleep(t) unsigned t;
+.PP
+.B void nap(t) unsigned t;
+.PP
+.B long realtime();
+.PP
+.B int kbdchar();
+.PP
+.B int rcvchar();
+.PP
+.B void sendchar(c) int c;
+.PP
+.B "void sendnchars(n, cp) int n; char *cp;"
+.SH DESCRIPTION
+.I Request
+announces a program's intent to use I/O devices and resources,
+and must be called once early in a program, before
+.IR initdisplay .
+The bit vector
+.I r
+indicates which resources are to be used by
+OR'ing together one or more of the elements
+.B KBD
+(keyboard),
+.BR MOUSE ,
+.B RCV
+(characters received by terminal from Unix),
+.B SEND
+(characters sent from terminal to Unix)
+and
+.BR ALARM .
+For example,
+.B request(MOUSE|KBD)
+indicates that the process
+wants to use the mouse and keyboard.
+All resource except
+.B RCV
+are always implicitly requested.
+.PP
+.I Own
+returns a bit vector
+of which I/O resources have data available.
+For example,
+.BR own()&KBD
+indicates
+whether a character is available to be read by
+.I kbdchar
+(see below),
+.BR own()&RCV
+indicates
+whether a character is available to be read by
+.I rcvchar
+(see below) and,
+.B own()&ALARM
+indicates whether the alarm timer has fired.
+.PP
+.IR Wait 's
+argument
+.I r
+is a bit vector composed as for
+.IR request .
+.I Wait
+suspends the process,
+enabling others,
+until at least one of the requested resources is available.
+The return value is a bit vector indicating which of the requested resources
+are available \(em the same as
+.BR own()&r .
+.PP
+Processes wishing to poll for input may call
+.BR wait(CPU) ;
+it will return as soon as all available input has been queued.
+.B CPU
+is a fake resource which is always
+requested.
+The
+.B SEND
+pseudo-resource is unused;
+.B wait(SEND)
+always succeeds.
+.PP
+.I Alarm
+starts a timer which will fire
+.I t
+ticks (60ths of a second) into the future.
+A pseudo-resource
+.B ALARM
+can be used to check the status of the timer with
+.I own
+or
+.IR wait .
+.PP
+.I Nap
+is equivalent to
+.B wait(MOUSE)
+in the emulator library.
+It blocks the process until a new window event is received.
+.PP
+.I Sleep
+delays the process for
+.I t
+ticks of a 60Hz clock.
+.I Sleep
+does not interfere with
+.IR alarm ,
+and vice versa.
+.PP
+.I Realtime
+returns the number of 60Hz clock ticks since 1970 mod 32.
+.PP
+.I Kbdchar
+returns the next keyboard character typed to the process.
+If no characters have been typed, or
+.B KBD
+has not been
+.IR request ed,
+.I kbdchar
+returns
+\-1.
+.PP
+.I Rcvchar
+returns the next character received from the host,
+typically written on the standard output of the
+companion
+.I host
+process.
+If there are no characters available, or
+.B RCV
+has not been
+.IR request ed,
+.I rcvchar
+returns
+\-1.
+.PP
+.I Sendchar
+sends a single byte to the
+.I host
+process.
+.I Sendnchars
+sends to the
+.I host
+process
+.I n
+characters pointed to by
+.IR p .
+.SH EXAMPLES
+.EX
+request(KBD|RCV);
+for(;;){
+	r=wait(KBD|RCV);
+	if(r&KBD)
+		keyboard(kbdchar());
+	if(r&RCV)
+		receive(rcvchar());
+}
+.EE
+.PD0
+.IP
+Take input from either the keyboard or the host.
+.PD
+.SH SEE ALSO
+.IR button (3)

@@ -1,0 +1,28 @@
+#! /bin/csh -f
+set prntr=(-Ppostscript)
+set flags=(-device ps) noglob
+unset dv
+unsetenv dv
+set dv=$DISPLAY
+top:
+	if ($#argv > 0) then
+		switch ($argv[1])
+
+		case *\:*:
+			set dv=$argv[1]
+			shift argv
+			goto top
+
+		case -P?*:
+			set prntr = $argv[1]
+			shift argv
+			goto top
+
+		case -*:
+			set flags = ($flags $argv[1])
+			shift argv
+			goto top
+
+		endsw
+	endif
+xwd $dv | xpr $flags | lpr $prntr

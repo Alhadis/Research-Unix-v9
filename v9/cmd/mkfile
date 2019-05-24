@@ -1,0 +1,1436 @@
+#
+#	to add a command, add its name to ALL below and insert the appropriate
+#	rules to make it below (3 for files, one for dirs). copy existing
+#	rules to get it right
+#
+CFLAGS=-O
+INS=install
+MAKE=make
+ENVIRON='install(){
+	cp $1 $4
+	strip $4
+	chmod $3 $4
+	chown $2 $4
+}
+dirins(){
+	$MAKE clean && $MAKE && $MAKE install && $MAKE clean
+}'
+ALL=2621 300 300s 4014 450 512restor AllCharges Charges PDP11\
+	ac accton adb analyze ap apnews apply apsend ar arcv arff\
+	as asa ascii asd asd++ at awk backup bad144 basename basic\
+	bc bcd bundle byteyears c2 cal calendar call cat cb cbt cc\
+	ccom cf cflow cflow cfront charge chdate checkeq chmod chown\
+	clear clri cmp col comm compact compat compress config coreid\
+	cp cpio cpp cref cron ct ctags cu cut cvcrypt cyntax d202\
+	daemon date dblbuf dc dcheck dd deroff descrypt df dict diction diff\
+	diff3 dimpress dircmp dired dis dkname dkstat dmesg docgen\
+	dskcpy du dump dumpcatch dumpdir echo ed efl egrep eqn equal\
+	error ether ex expand expr f77 factor false fcopy fgrep file\
+	find findo flcopy fmt fold fsck fsplit getopt getty getuid\
+	grap graph grep groups halt hang hdr head hideblock hoc hp\
+	icheck icon id ideal idiff idle init iostat ipa join kasb\
+	kill labmake last lcomp ld learn lex lfactor library lim\
+	limiter lint ln load log logdir login look ls m4 make makekey man\
+	map markbad mc mesg mips mk mkbitfs mkdir mkfs mknod mkstr\
+	mm mmt monk morse mount movie mt mv ncheck neqn netfsbug\
+	netnews newer newgrp news nice nm nohup number numdate od\
+	oops p pack paper pascal passwd passwdx paste pcc1 pfort\
+	pic pico pl plot poly postscript pp pr prefer pret primes\
+	printenv printf procmount prof ps pstat pti ptx punct pwd\
+	pwintf quot random ranlib rarepl rates ratfor readslow\
+	reboot reccp refer reloc remshent renice restor rev revpag\
+	rm rmdir sa savecore sdb sed seq server setlog settod sh\
+	sharer shares showq shstats size sleep smash sno snocone\
+	sort sp spell spitbol spline split spool stat strip struct\
+	stty style su sum swapon sync tabs tail tape tar tbl tblmount tee\
+	telno termcap test time tk touch town tp tpr tr trace\
+	track treesum troff true tsort tty twig ucds udemon ul\
+	umount und unexpand uniq units upas update user usgmake\
+	ustats uucp uudecode uudiff uuencode v7 v8 view2d vis visi\
+	vmstat vpr w wall wc weather weather where which who worm\
+	write wwb wwv xargs xref xstr yacc yes
+
+
+default:Q:
+	echo there is no default target!
+2621:	2621.c
+	$CC $CFLAGS -o 2621 2621.c
+/usr/bin/2621:	2621
+	$INS 2621 bin,bin 775 $target
+2621.ins:	/usr/bin/2621
+300:	300.c
+	$CC $CFLAGS -o 300 300.c
+/usr/bin/300:	300
+	$INS 300 bin,bin 775 $target
+300.ins:	/usr/bin/300
+300s:	300s.c
+	$CC $CFLAGS -o 300s 300s.c
+/usr/bin/300s:	300s
+	$INS 300s bin,bin 775 $target
+300s.ins:	/usr/bin/300s
+4014:	4014.c
+	$CC $CFLAGS -o 4014 4014.c
+/usr/bin/4014:	4014
+	$INS 4014 bin,bin 775 $target
+4014.ins:	/usr/bin/4014
+450:	450.c
+	$CC $CFLAGS -o 450 450.c
+/usr/bin/450:	450
+	$INS 450 bin,bin 775 $target
+450.ins:	/usr/bin/450
+512restor:	512restor.c
+	$CC $CFLAGS -o 512restor 512restor.c
+/etc/512restor:	512restor
+	$INS 512restor bin,bin 775 $target
+512restor.ins:	/etc/512restor
+AllCharges:	AllCharges.sh
+	cp AllCharges.sh AllCharges
+/usr/bin/AllCharges:	AllCharges
+	$INS AllCharges bin,bin 775 $target
+AllCharges.ins:	/usr/bin/AllCharges
+Charges:	Charges.sh
+	cp Charges.sh Charges
+/usr/bin/Charges:	Charges
+	$INS Charges bin,bin 775 $target
+Charges.ins:	/usr/bin/Charges
+PDP11:V:
+	cd PDP11; dirins
+ac:	ac.c
+	$CC $CFLAGS -o ac ac.c
+/etc/ac:	ac
+	$INS ac bin,bin 775 $target
+ac.ins:	/etc/ac
+accton:	accton.c
+	$CC $CFLAGS -o accton accton.c
+/etc/accton:	accton
+	$INS accton bin,bin 775 $target
+accton.ins:	/etc/accton
+adb:V:
+	cd adb; dirins
+analyze:	analyze.c
+	$CC $CFLAGS -o analyze analyze.c
+/etc/analyze:	analyze
+	$INS analyze bin,bin 775 $target
+analyze.ins:	/etc/analyze
+ap:V:
+	cd ap; dirins
+apnews:	apnews.sh
+	cp apnews.sh apnews
+/usr/bin/apnews:	apnews
+	$INS apnews bin,bin 775 $target
+apnews.ins:	/usr/bin/apnews
+apply:	apply.c
+	$CC $CFLAGS -o apply apply.c
+/usr/bin/apply:	apply
+	$INS apply bin,bin 775 $target
+apply.ins:	/usr/bin/apply
+apsend:V:
+	cd apsend; dirins
+ar:	ar.c
+	$CC $CFLAGS -o ar ar.c
+/bin/ar:	ar
+	$INS ar bin,bin 775 $target
+ar.ins:	/bin/ar
+arcv:	arcv.c
+	$CC $CFLAGS -o arcv arcv.c
+/usr/bin/arcv:	arcv
+	$INS arcv bin,bin 775 $target
+arcv.ins:	/usr/bin/arcv
+arff:	arff.c
+	$CC $CFLAGS -o arff arff.c
+/bin/arff:	arff
+	$INS arff bin,bin 775 $target
+arff.ins:	/bin/arff
+as:V:
+	cd as; dirins
+asa:	asa.c
+	$CC $CFLAGS -o asa asa.c
+/usr/bin/asa:	asa
+	$INS asa bin,bin 775 $target
+asa.ins:	/usr/bin/asa
+ascii:	ascii.c
+	$CC $CFLAGS -o ascii ascii.c
+/usr/bin/ascii:	ascii
+	$INS ascii bin,bin 775 $target
+ascii.ins:	/usr/bin/ascii
+asd:V:
+	cd asd; dirins
+asd++:V:
+	cd asd++; dirins
+at:V:
+	cd at; dirins
+awk:V:
+	cd awk; dirins
+backup:V:
+	cd backup; dirins
+bad144:	bad144.c
+	$CC $CFLAGS -o bad144 bad144.c
+/etc/bad144:	bad144
+	$INS bad144 bin,bin 775 $target
+bad144.ins:	/etc/bad144
+basename:	basename.c
+	$CC $CFLAGS -o basename basename.c
+/usr/bin/basename:	basename
+	$INS basename bin,bin 775 $target
+basename.ins:	/usr/bin/basename
+basic:V:
+	cd basic; dirins
+bc:	bc.y
+	yacc bc.y
+/usr/bin/bc:	bc
+	$INS bc bin,bin 775 $target
+bc.ins:	/usr/bin/bc
+bcd:	bcd.c
+	$CC $CFLAGS -o bcd bcd.c
+/usr/bin/bcd:	bcd
+	$INS bcd bin,bin 775 $target
+bcd.ins:	/usr/bin/bcd
+bigcore: bigcore.c
+	$CC $CFLAGS -o bigcore bigcore.c
+/usr/bin/bigcore: bigcore
+	$INS bigcore bin,bin 775 $target
+bundle:	bundle.sh
+	cp bundle.sh bundle
+/usr/bin/bundle:	bundle
+	$INS bundle bin,bin 775 $target
+bundle.ins:	/usr/bin/bundle
+byteyears:	byteyears.c
+	$CC $CFLAGS -o byteyears byteyears.c
+/usr/bin/byteyears:	byteyears
+	$INS byteyears bin,bin 775 $target
+byteyears.ins:	/usr/bin/byteyears
+c2:V:
+	cd c2; dirins
+cal:	cal.c
+	$CC $CFLAGS -o cal cal.c
+/usr/bin/cal:	cal
+	$INS cal bin,bin 775 $target
+cal.ins:	/usr/bin/cal
+calendar:V:
+	cd calendar; dirins
+call:	call.c
+	$CC $CFLAGS -o call call.c
+/usr/bin/call:	call
+	$INS call bin,bin 775 $target
+call.ins:	/usr/bin/call
+cat:	cat.c
+	$CC $CFLAGS -o cat cat.c
+/bin/cat:	cat
+	$INS cat bin,bin 775 $target
+cat.ins:	/bin/cat
+cb:V:
+	cd cb; dirins
+cbt:V:
+	cd cbt; dirins
+cc:	cc.c
+	$CC $CFLAGS -o cc cc.c
+/bin/cc:	cc
+	$INS cc bin,bin 775 $target
+cc.ins:	/bin/cc
+ccom:V:
+	cd ccom; dirins
+cf:V:
+	cd cf; dirins
+cflow:V:
+	cd cflow; dirins
+cflow:	cflow.sh
+	cp cflow.sh cflow
+/usr/bin/cflow:	cflow
+	$INS cflow bin,bin 775 $target
+cflow.ins:	/usr/bin/cflow
+cfront:V:
+	cd cfront; dirins
+charge:	charge.c
+	$CC $CFLAGS -o charge charge.c
+/usr/bin/charge:	charge
+	$INS charge bin,bin 775 $target
+charge.ins:	/usr/bin/charge
+chdate:	chdate.c
+	$CC $CFLAGS -o chdate chdate.c
+/usr/bin/chdate:	chdate
+	$INS chdate bin,bin 775 $target
+chdate.ins:	/usr/bin/chdate
+checkeq:	checkeq.c
+	$CC $CFLAGS -o checkeq checkeq.c
+/usr/bin/checkeq:	checkeq
+	$INS checkeq bin,bin 775 $target
+checkeq.ins:	/usr/bin/checkeq
+chmod:	chmod.c
+	$CC $CFLAGS -o chmod chmod.c
+/bin/chmod:	chmod
+	$INS chmod bin,bin 775 $target
+chmod.ins:	/bin/chmod
+chown:	chown.c
+	$CC $CFLAGS -o chown chown.c
+/etc/chown:	chown
+	$INS chown bin,bin 775 $target
+chown.ins:	/etc/chown
+clear:V:
+	cd clear; dirins
+clri:	clri.c
+	$CC $CFLAGS -o clri clri.c
+/etc/clri:	clri
+	$INS clri bin,bin 775 $target
+clri.ins:	/etc/clri
+cmp:	cmp.c
+	$CC $CFLAGS -o cmp cmp.c
+/bin/cmp:	cmp
+	$INS cmp bin,bin 775 $target
+cmp.ins:	/bin/cmp
+col:	col.c
+	$CC $CFLAGS -o col col.c
+/usr/bin/col:	col
+	$INS col bin,bin 775 $target
+col.ins:	/usr/bin/col
+comm:	comm.c
+	$CC $CFLAGS -o comm comm.c
+/usr/bin/comm:	comm
+	$INS comm bin,bin 775 $target
+comm.ins:	/usr/bin/comm
+compact:V:
+	cd compact; dirins
+compat:V:
+	cd compat; dirins
+compress:V:
+	cd compress; dirins
+config:V:
+	cd config; dirins
+coreid:	coreid.c
+	$CC $CFLAGS -o coreid coreid.c
+/usr/bin/coreid:	coreid
+	$INS coreid bin,bin 775 $target
+coreid.ins:	/usr/bin/coreid
+cp:V:
+	cd cp; dirins
+cpio:	cpio.c
+	$CC $CFLAGS -o cpio cpio.c
+/usr/bin/cpio:	cpio
+	$INS cpio bin,bin 775 $target
+cpio.ins:	/usr/bin/cpio
+cpp:V:
+	cd cpp; dirins
+cref:V:
+	cd cref; dirins
+cron:	cron.c
+	$CC $CFLAGS -o cron cron.c
+/etc/cron:	cron
+	$INS cron bin,bin 775 $target
+cron.ins:	/etc/cron
+ct:V:
+	cd ct; dirins
+ctags:	ctags.c
+	$CC $CFLAGS -o ctags ctags.c
+/usr/bin/ctags:	ctags
+	$INS ctags bin,bin 775 $target
+ctags.ins:	/usr/bin/ctags
+cu:V:
+	cd cu; dirins
+cut:	cut.c
+	$CC $CFLAGS -o cut cut.c
+/usr/bin/cut:	cut
+	$INS cut bin,bin 775 $target
+cut.ins:	/usr/bin/cut
+cvcrypt:	cvcrypt.c
+	$CC $CFLAGS -o cvcrypt cvcrypt.c
+/usr/bin/cvcrypt:	cvcrypt
+	$INS cvcrypt bin,bin 775 $target
+cvcrypt.ins:	/usr/bin/cvcrypt
+cyntax:V:
+	cd cyntax; dirins
+d202:	d202.sh
+	cp d202.sh d202
+/usr/bin/d202:	d202
+	$INS d202 bin,bin 775 $target
+d202.ins:	/usr/bin/d202
+daemon:V:
+	cd daemon; dirins
+date:	date.c
+	$CC $CFLAGS -o date date.c
+/bin/date:	date
+	$INS date bin,bin 775 $target
+date.ins:	/bin/date
+dblbuf:	dblbuf.c
+	$CC $CFLAGS -o dblbuf dblbuf.c
+/usr/bin/dblbuf:	dblbuf
+	$INS dblbuf bin,bin 775 $target
+dc:V:
+	cd dc; dirins
+dcheck:	dcheck.c
+	$CC $CFLAGS -o dcheck dcheck.c
+/etc/dcheck:	dcheck
+	$INS dcheck bin,bin 775 $target
+dcheck.ins:	/etc/dcheck
+dd:	dd.c
+	$CC $CFLAGS -o dd dd.c
+/bin/dd:	dd
+	$INS dd bin,bin 775 $target
+dd.ins:	/bin/dd
+deroff:	deroff.c
+	$CC $CFLAGS -o deroff deroff.c
+/usr/bin/deroff:	deroff
+	$INS deroff bin,bin 775 $target
+deroff.ins:	/usr/bin/deroff
+descrypt:V:
+	cd descrypt; dirins
+df:	df.c
+	$CC $CFLAGS -o df df.c
+/bin/df:	df
+	$INS df bin,bin 775 $target
+df.ins:	/bin/df
+dict:V:
+	cd dict; dirins
+diction:V:
+	cd diction; dirins
+diff:V:
+	cd diff; dirins
+diff3:V:
+	cd diff3; dirins
+dimpress:V:
+	cd dimpress; dirins
+dircmp:	dircmp.sh
+	cp dircmp.sh dircmp
+/usr/bin/dircmp:	dircmp
+	$INS dircmp bin,bin 775 $target
+dircmp.ins:	/usr/bin/dircmp
+dired:V:
+	cd dired; dirins
+dis:	dis.c
+	$CC $CFLAGS -o dis dis.c
+/usr/bin/dis:	dis
+	$INS dis bin,bin 775 $target
+dis.ins:	/usr/bin/dis
+dkname:	dkname.c
+	$CC $CFLAGS -o dkname dkname.c
+/usr/bin/dkname:	dkname
+	$INS dkname bin,bin 775 $target
+dkname.ins:	/usr/bin/dkname
+dkstat:	dkstat.c
+	$CC $CFLAGS -o dkstat dkstat.c
+/usr/bin/dkstat:	dkstat
+	$INS dkstat bin,bin 775 $target
+dkstat.ins:	/usr/bin/dkstat
+dmesg:	dmesg.c
+	$CC $CFLAGS -o dmesg dmesg.c
+/etc/dmesg:	dmesg
+	$INS dmesg bin,bin 775 $target
+dmesg.ins:	/etc/dmesg
+docgen:	docgen.c
+	$CC $CFLAGS -o docgen docgen.c
+/usr/bin/docgen:	docgen
+	$INS docgen bin,bin 775 $target
+docgen.ins:	/usr/bin/docgen
+dskcpy:	dskcpy.c
+	$CC $CFLAGS -o dskcpy dskcpy.c
+/etc/dskcpy:	dskcpy
+	$INS dskcpy bin,bin 775 $target
+dskcpy.ins:	/etc/dskcpy
+du:	du.c
+	$CC $CFLAGS -o du du.c
+/bin/du:	du
+	$INS du bin,bin 775 $target
+du.ins:	/bin/du
+dump:V:
+	cd dump; dirins
+dumpcatch:	dumpcatch.c
+	$CC $CFLAGS -o dumpcatch dumpcatch.c
+/usr/bin/dumpcatch:	dumpcatch
+	$INS dumpcatch bin,bin 775 $target
+dumpcatch.ins:	/usr/bin/dumpcatch
+dumpdir:	dumpdir.c
+	$CC $CFLAGS -o dumpdir dumpdir.c
+/etc/dumpdir:	dumpdir
+	$INS dumpdir bin,bin 775 $target
+dumpdir.ins:	/etc/dumpdir
+echo:	echo.c
+	$CC $CFLAGS -o echo echo.c
+/bin/echo:	echo
+	$INS echo bin,bin 775 $target
+echo.ins:	/bin/echo
+ed:	ed.c
+	$CC $CFLAGS -o ed ed.c
+/bin/ed:	ed
+	$INS ed bin,bin 775 $target
+ed.ins:	/bin/ed
+efl:V:
+	cd efl; dirins
+egrep:V:
+	cd egrep; MAKE=mk; export MAKE; dirins
+eqn:V:
+	cd eqn; dirins
+equal:V:
+	cd equal; dirins
+error:V:
+	cd error; dirins
+ether:V:
+	cd ether; dirins
+ex:V:
+	cd ex; dirins
+expand:	expand.c
+	$CC $CFLAGS -o expand expand.c
+/usr/bin/expand:	expand
+	$INS expand bin,bin 775 $target
+expand.ins:	/usr/bin/expand
+expr:V:
+	cd expr; dirins
+f77:V:
+	cd f77; dirins
+factor:V:
+	cd factor; dirins
+false:	false.sh
+	cp false.sh false
+/bin/false:	false
+	$INS false bin,bin 775 $target
+false.ins:	/bin/false
+fcopy:	fcopy.c
+	$CC $CFLAGS -o fcopy fcopy.c
+/usr/bin/fcopy:	fcopy
+	$INS fcopy bin,bin 775 $target
+fcopy.ins:	/usr/bin/fcopy
+fgrep:	fgrep.c
+	$CC $CFLAGS -o fgrep fgrep.c
+/usr/bin/fgrep:	fgrep
+	$INS fgrep bin,bin 775 $target
+fgrep.ins:	/usr/bin/fgrep
+file:	file.c
+	$CC $CFLAGS -o file file.c
+/usr/bin/file:	file
+	$INS file bin,bin 775 $target
+file.ins:	/usr/bin/file
+find:	find.c
+	$CC $CFLAGS -o find find.c
+/usr/bin/find:	find
+	$INS find bin,bin 775 $target
+find.ins:	/usr/bin/find
+findo:	findo.c
+	$CC $CFLAGS -o findo findo.c
+/usr/bin/findo:	findo
+	$INS findo bin,bin 775 $target
+findo.ins:	/usr/bin/findo
+flcopy:	flcopy.c
+	$CC $CFLAGS -o flcopy flcopy.c
+/usr/bin/flcopy:	flcopy
+	$INS flcopy bin,bin 775 $target
+flcopy.ins:	/usr/bin/flcopy
+fmt:	fmt.c
+	$CC $CFLAGS -o fmt fmt.c
+/usr/bin/fmt:	fmt
+	$INS fmt bin,bin 775 $target
+fmt.ins:	/usr/bin/fmt
+fold:	fold.c
+	$CC $CFLAGS -o fold fold.c
+/usr/bin/fold:	fold
+	$INS fold bin,bin 775 $target
+fold.ins:	/usr/bin/fold
+fsck:	fsck.c
+	$CC $CFLAGS -o fsck fsck.c
+/etc/fsck:	fsck
+	$INS fsck bin,bin 775 $target
+fsck.ins:	/etc/fsck
+fsplit:	fsplit.c
+	$CC $CFLAGS -o fsplit fsplit.c
+/usr/bin/fsplit:	fsplit
+	$INS fsplit bin,bin 775 $target
+fsplit.ins:	/usr/bin/fsplit
+getopt:	getopt.c
+	$CC $CFLAGS -o getopt getopt.c
+/usr/bin/getopt:	getopt
+	$INS getopt bin,bin 775 $target
+getopt.ins:	/usr/bin/getopt
+getty:	getty.c
+	$CC $CFLAGS -o getty getty.c
+/etc/getty:	getty
+	$INS getty bin,bin 775 $target
+getty.ins:	/etc/getty
+getuid:	getuid.c
+	$CC $CFLAGS -o getuid getuid.c
+/usr/bin/getuid:	getuid
+	$INS getuid bin,bin 775 $target
+getuid.ins:	/usr/bin/getuid
+grap:V:
+	cd grap; dirins
+graph:V:
+	cd graph; dirins
+grep:	grep.c
+	$CC $CFLAGS -o grep grep.c
+/bin/grep:	grep
+	$INS grep bin,bin 775 $target
+grep.ins:	/bin/grep
+groups:	groups.c
+	$CC $CFLAGS -o groups groups.c
+/usr/bin/groups:	groups
+	$INS groups bin,bin 775 $target
+groups.ins:	/usr/bin/groups
+halt:	halt.c
+	$CC $CFLAGS -o halt halt.c
+/etc/halt:	halt
+	$INS halt bin,bin 775 $target
+halt.ins:	/etc/halt
+hang:	hang.c
+	$CC $CFLAGS -o hang hang.c
+/usr/bin/hang:	hang
+	$INS hang bin,bin 775 $target
+hang.ins:	/usr/bin/hang
+hdr:V:
+	cd hdr; dirins
+head:	head.c
+	$CC $CFLAGS -o head head.c
+/usr/bin/head:	head
+	$INS head bin,bin 775 $target
+head.ins:	/usr/bin/head
+hideblock:	hideblock.c
+	$CC $CFLAGS -o hideblock hideblock.c
+/etc/hideblock:	hideblock
+	$INS hideblock bin,bin 775 $target
+hideblock.ins:	/etc/hideblock
+hoc:V:
+	cd hoc; dirins
+hp:	hp.c
+	$CC $CFLAGS -o hp hp.c
+/usr/bin/hp:	hp
+	$INS hp bin,bin 775 $target
+hp.ins:	/usr/bin/hp
+icheck:	icheck.c
+	$CC $CFLAGS -o icheck icheck.c
+/etc/icheck:	icheck
+	$INS icheck bin,bin 775 $target
+icheck.ins:	/etc/icheck
+icon:V:
+	cd icon; dirins
+id:	id.c
+	$CC $CFLAGS -o id id.c
+/usr/bin/id:	id
+	$INS id bin,bin 775 $target
+id.ins:	/usr/bin/id
+ideal:V:
+	cd ideal; dirins
+idiff:	idiff.c
+	$CC $CFLAGS -o idiff idiff.c
+/usr/bin/idiff:	idiff
+	$INS idiff bin,bin 775 $target
+idiff.ins:	/usr/bin/idiff
+idle:	idle.c
+	$CC $CFLAGS -o idle idle.c
+/usr/bin/idle:	idle
+	$INS idle bin,bin 775 $target
+idle.ins:	/usr/bin/idle
+init:	init.c
+	$CC $CFLAGS -o init init.c
+/etc/init:	init
+	$INS init bin,bin 775 $target
+init.ins:	/etc/init
+iostat:	iostat.c
+	$CC $CFLAGS -o iostat iostat.c
+/bin/iostat:	iostat
+	$INS iostat bin,bin 775 $target
+iostat.ins:	/bin/iostat
+ipa:V:
+	cd ipa; dirins
+join:	join.c
+	$CC $CFLAGS -o join join.c
+/usr/bin/join:	join
+	$INS join bin,bin 775 $target
+join.ins:	/usr/bin/join
+kasb:V:
+	cd kasb; dirins
+kill:	kill.c
+	$CC $CFLAGS -o kill kill.c
+/bin/kill:	kill
+	$INS kill bin,bin 775 $target
+kill.ins:	/bin/kill
+labmake:	labmake.c
+	$CC $CFLAGS -o labmake labmake.c
+/usr/bin/labmake:	labmake
+	$INS labmake bin,bin 775 $target
+labmake.ins:	/usr/bin/labmake
+last:	last.c
+	$CC $CFLAGS -o last last.c
+/usr/bin/last:	last
+	$INS last bin,bin 775 $target
+last.ins:	/usr/bin/last
+lcomp:V:
+	cd lcomp; dirins
+ld:	ld.c
+	$CC $CFLAGS -o ld ld.c
+/bin/ld:	ld
+	$INS ld bin,bin 775 $target
+ld.ins:	/bin/ld
+learn:V:
+	cd learn; dirins
+lex:V:
+	cd lex; dirins
+lfactor:V:
+	cd lfactor; dirins
+library:V:
+	cd library; dirins
+lim:	lim.c
+	$CC $CFLAGS -o lim lim.c
+/usr/bin/lim:	lim
+	$INS lim bin,bin 775 $target
+lim.ins:	/usr/bin/lim
+limiter: limiter.c
+	$CC $CFLAGS -o limiter limiter.c
+/etc/limiter: limiter
+limiter.ins: /etc/limiter
+	$INS limiter ,bin 775 $target
+lint:V:
+	cd lint; dirins
+ln:	ln.c
+	$CC $CFLAGS -o ln ln.c
+/bin/ln:	ln
+	$INS ln bin,bin 775 $target
+ln.ins:	/bin/ln
+load:V:
+	cd load; dirins
+log:	log.c
+	$CC $CFLAGS -o log log.c
+/usr/bin/log:	log
+	$INS log bin,bin 775 $target
+log.ins:	/usr/bin/log
+logdir:	logdir.c
+	$CC $CFLAGS -o logdir logdir.c
+/usr/bin/logdir:	logdir
+	$INS logdir bin,bin 775 $target
+logdir.ins:	/usr/bin/logdir
+login:	login.c
+	$CC $CFLAGS -o login login.c
+/bin/login:	login
+	$INS login bin,bin 775 $target
+login.ins:	/bin/login
+look:	look.c
+	$CC $CFLAGS -o look look.c
+/usr/bin/look:	look
+	$INS look bin,bin 775 $target
+look.ins:	/usr/bin/look
+ls:	ls.c
+	$CC $CFLAGS -o ls ls.c
+/bin/ls:	ls
+	$INS ls bin,bin 775 $target
+ls.ins:	/bin/ls
+m4:V:
+	cd m4; dirins
+make:V:
+	cd make; dirins
+makekey:	makekey.c
+	$CC $CFLAGS -o makekey makekey.c
+/usr/lib/makekey:	makekey
+	$INS makekey bin,bin 775 $target
+makekey.ins:	/usr/lib/makekey
+man:V:
+	cd man; dirins
+map:V:
+	cd map; dirins
+markbad:	markbad.c
+	$CC $CFLAGS -o markbad markbad.c
+/usr/bin/markbad:	markbad
+	$INS markbad bin,bin 775 $target
+markbad.ins:	/usr/bin/markbad
+mc:	mc.c
+	$CC $CFLAGS -o mc mc.c
+/usr/bin/mc:	mc
+	$INS mc bin,bin 775 $target
+mc.ins:	/usr/bin/mc
+mesg:	mesg.c
+	$CC $CFLAGS -o mesg mesg.c
+/usr/bin/mesg:	mesg
+	$INS mesg bin,bin 775 $target
+mesg.ins:	/usr/bin/mesg
+mips:	mips.c
+	$CC $CFLAGS -o mips mips.c
+/usr/bin/mips:	mips
+	$INS mips bin,bin 775 $target
+mips.ins:	/usr/bin/mips
+mk:V:
+	cd mk; dirins
+mkbitfs:	mkbitfs.c
+	$CC $CFLAGS -o mkbitfs mkbitfs.c
+/etc/mkbitfs:	mkbitfs
+	$INS mkbitfs bin,bin 775 $target
+mkbitfs.ins:	/etc/mkbitfs
+mkdir:	mkdir.c
+	$CC $CFLAGS -o mkdir mkdir.c
+/bin/mkdir:	mkdir
+	$INS mkdir bin,bin 775 $target
+mkdir.ins:	/bin/mkdir
+mkfs:	mkfs.c
+	$CC $CFLAGS -o mkfs mkfs.c
+/etc/mkfs:	mkfs
+	$INS mkfs bin,bin 775 $target
+mkfs.ins:	/etc/mkfs
+mknod:	mknod.c
+	$CC $CFLAGS -o mknod mknod.c
+/etc/mknod:	mknod
+	$INS mknod bin,bin 775 $target
+mknod.ins:	/etc/mknod
+mkstr:	mkstr.c
+	$CC $CFLAGS -o mkstr mkstr.c
+/usr/bin/mkstr:	mkstr
+	$INS mkstr bin,bin 775 $target
+mkstr.ins:	/usr/bin/mkstr
+mm:	mm.sh
+	cp mm.sh mm
+/usr/bin/mm:	mm
+	$INS mm bin,bin 775 $target
+mm.ins:	/usr/bin/mm
+mmt:	mmt.sh
+	cp mmt.sh mmt
+/usr/bin/mmt:	mmt
+	$INS mmt bin,bin 775 $target
+mmt.ins:	/usr/bin/mmt
+monk:V:
+	cd monk; dirins
+morse:	morse.c
+	$CC $CFLAGS -o morse morse.c
+/usr/bin/morse:	morse
+	$INS morse bin,bin 775 $target
+morse.ins:	/usr/bin/morse
+mount:	mount.c
+	$CC $CFLAGS -o mount mount.c
+/etc/mount:	mount
+	$INS mount bin,bin 775 $target
+mount.ins:	/etc/mount
+movie:V:
+	cd movie; dirins
+mt:	mt.c
+	$CC $CFLAGS -o mt mt.c
+/bin/mt:	mt
+	$INS mt bin,bin 775 $target
+mt.ins:	/bin/mt
+mv:	mv.c
+	$CC $CFLAGS -o mv mv.c
+/bin/mv:	mv
+	$INS mv bin,bin 775 $target
+mv.ins:	/bin/mv
+ncheck:	ncheck.c
+	$CC $CFLAGS -o ncheck ncheck.c
+/etc/ncheck:	ncheck
+	$INS ncheck bin,bin 775 $target
+ncheck.ins:	/etc/ncheck
+neqn:V:
+	cd neqn; dirins
+netfsbug:	netfsbug.c
+	$CC $CFLAGS -o netfsbug netfsbug.c
+/usr/bin/netfsbug:	netfsbug
+	$INS netfsbug bin,bin 775 $target
+netfsbug.ins:	/usr/bin/netfsbug
+netnews:V:
+	cd netnews; dirins
+newer:	newer.c
+	$CC $CFLAGS -o newer newer.c
+/usr/bin/newer:	newer
+	$INS newer bin,bin 775 $target
+newer.ins:	/usr/bin/newer
+newgrp:	newgrp.c
+	$CC $CFLAGS -o newgrp newgrp.c
+/bin/newgrp:	newgrp
+	$INS newgrp bin,bin 775 $target
+newgrp.ins:	/bin/newgrp
+news:	news.c
+	$CC $CFLAGS -o news news.c
+/usr/bin/news:	news
+	$INS news bin,bin 775 $target
+news.ins:	/usr/bin/news
+nice:	nice.c
+	$CC $CFLAGS -o nice nice.c
+/bin/nice:	nice
+	$INS nice bin,bin 775 $target
+nice.ins:	/bin/nice
+nm:	nm.c
+	$CC $CFLAGS -o nm nm.c
+/bin/nm:	nm
+	$INS nm bin,bin 775 $target
+nm.ins:	/bin/nm
+nohup:	nohup.sh
+	cp nohup.sh nohup
+/bin/nohup:	nohup
+	$INS nohup bin,bin 775 $target
+nohup.ins:	/bin/nohup
+number:	number.c
+	$CC $CFLAGS -o number number.c
+/usr/bin/number:	number
+	$INS number bin,bin 775 $target
+number.ins:	/usr/bin/number
+numdate:V:
+	cd numdate; dirins
+od:	od.c
+	$CC $CFLAGS -o od od.c
+/bin/od:	od
+	$INS od bin,bin 775 $target
+od.ins:	/bin/od
+oops:V:
+	cd oops; dirins
+p:V:
+	cd p; dirins
+pack:V:
+	cd pack; dirins
+paper:V:
+	cd paper; dirins
+pascal:V:
+	cd pascal; dirins
+passwdx:	passwdx.c
+	$CC $CFLAGS -o passwdx passwdx.c
+/bin/passwdx:	passwdx
+	$INS passwdx root,bin 4775 $target
+passwdx.ins:	/bin/passwdx
+passwd:	passwd.sh
+	cp passwd.sh passwd
+/bin/passwd:	passwd
+	$INS passwd bin,bin 775 $target
+passwd.ins:	/bin/passwd
+paste:	paste.c
+	$CC $CFLAGS -o paste paste.c
+/usr/bin/paste:	paste
+	$INS paste bin,bin 775 $target
+paste.ins:	/usr/bin/paste
+pcc1:V:
+	cd pcc1; dirins
+pfort:V:
+	cd pfort; dirins
+pic:V:
+	cd pic; dirins
+pico:V:
+	cd pico; dirins
+pl:	pl.c
+	$CC $CFLAGS -o pl pl.c
+/usr/bin/pl:	pl
+	$INS pl bin,bin 775 $target
+pl.ins:	/usr/bin/pl
+plot:V:
+	cd plot; dirins
+poly:V:
+	cd poly; dirins
+postscript:V:
+	cd postscript; dirins
+pp:V:
+	cd pp; dirins
+pr:	pr.c
+	$CC $CFLAGS -o pr pr.c
+/bin/pr:	pr
+	$INS pr bin,bin 775 $target
+pr.ins:	/bin/pr
+prefer:V:
+	cd prefer; dirins
+pret:V:
+	cd pret; dirins
+primes:V:
+	cd primes; dirins
+printenv:	printenv.c
+	$CC $CFLAGS -o printenv printenv.c
+/usr/bin/printenv:	printenv
+	$INS printenv bin,bin 775 $target
+printenv.ins:	/usr/bin/printenv
+printf:	printf.c
+	$CC $CFLAGS -o printf printf.c
+/usr/bin/printf:	printf
+	$INS printf bin,bin 775 $target
+printf.ins:	/usr/bin/printf
+procmount:	procmount.c
+	$CC $CFLAGS -o procmount procmount.c
+/usr/bin/procmount:	procmount
+	$INS procmount bin,bin 775 $target
+# If you don't want to plot, take out the -Dplot
+prof:	prof.c
+	$CC $CFLAGS -Dplot -o prof prof.c
+/usr/bin/prof:	prof
+	$INS prof bin,bin 775 $target
+procmount.ins:	/usr/bin/procmount
+prof:V:
+	cd prof; dirins
+ps:V:
+	cd ps; dirins
+pstat:	pstat.c
+	$CC $CFLAGS -o pstat pstat.c
+/bin/pstat:	pstat
+	$INS pstat bin,bin 775 $target
+pstat.ins:	/bin/pstat
+pti:	pti.c
+	$CC $CFLAGS -o pti pti.c
+/usr/bin/pti:	pti
+	$INS pti bin,bin 775 $target
+pti.ins:	/usr/bin/pti
+ptx:	ptx.c
+	$CC $CFLAGS -o ptx ptx.c
+/usr/bin/ptx:	ptx
+	$INS ptx bin,bin 775 $target
+ptx.ins:	/usr/bin/ptx
+punct:V:
+	cd punct; dirins
+pwd:	pwd.c
+	$CC $CFLAGS -o pwd pwd.c
+/bin/pwd:	pwd
+	$INS pwd bin,bin 775 $target
+pwd.ins:	/bin/pwd
+pwintf:	pwintf.c
+	$CC $CFLAGS -o pwintf pwintf.c
+/usr/bin/pwintf:	pwintf
+	$INS pwintf bin,bin 775 $target
+pwintf.ins:	/usr/bin/pwintf
+quot:	quot.c
+	$CC $CFLAGS -o quot quot.c
+/etc/quot:	quot
+	$INS quot bin,bin 775 $target
+quot.ins:	/etc/quot
+random:	random.c
+	$CC $CFLAGS -o random random.c
+/usr/bin/random:	random
+	$INS random bin,bin 775 $target
+random.ins:	/usr/bin/random
+ranlib:	ranlib.c
+	$CC $CFLAGS -o ranlib ranlib.c
+/usr/bin/ranlib:	ranlib
+	$INS ranlib bin,bin 775 $target
+ranlib.ins:	/usr/bin/ranlib
+rarepl:V:
+	cd rarepl; dirins
+rates:	rates.c
+	$CC $CFLAGS -o rates rates.c
+/usr/bin/rates:	rates
+	$INS rates bin,bin 775 $target
+rates.ins:	/usr/bin/rates
+ratfor:V:
+	cd ratfor; dirins
+readslow:	readslow.c
+	$CC $CFLAGS -o readslow readslow.c
+/usr/bin/readslow:	readslow
+	$INS readslow bin,bin 775 $target
+readslow.ins:	/usr/bin/readslow
+reboot:	reboot.c
+	$CC $CFLAGS -o reboot reboot.c
+/etc/reboot:	reboot
+	$INS reboot bin,bin 775 $target
+reboot.ins:	/etc/reboot
+reccp:	reccp.c
+	$CC $CFLAGS -o reccp reccp.c
+/usr/bin/reccp:	reccp
+	$INS reccp bin,bin 775 $target
+reccp.ins:	/usr/bin/reccp
+refer:V:
+	cd refer; dirins
+reloc:	reloc.c
+	$CC $CFLAGS -o reloc reloc.c
+/usr/bin/reloc:	reloc
+	$INS reloc bin,bin 775 $target
+reloc.ins:	/usr/bin/reloc
+remshent:	remshent.c
+	$CC $CFLAGS -o remshent remshent.c
+/usr/bin/remshent:	remshent
+	$INS remshent bin,bin 775 $target
+remshent.ins:	/usr/bin/remshent
+renice:	renice.c
+	$CC $CFLAGS -o renice renice.c
+/etc/renice:	renice
+	$INS renice bin,bin 775 $target
+renice.ins:	/etc/renice
+restor:	restor.c
+	$CC $CFLAGS -o restor restor.c
+/etc/restor:	restor
+	$INS restor bin,bin 775 $target
+restor.ins:	/etc/restor
+rev:	rev.c
+	$CC $CFLAGS -o rev rev.c
+/usr/bin/rev:	rev
+	$INS rev bin,bin 775 $target
+rev.ins:	/usr/bin/rev
+revpag:	revpag.c
+	$CC $CFLAGS -o revpag revpag.c
+/usr/bin/revpag:	revpag
+	$INS revpag bin,bin 775 $target
+revpag.ins:	/usr/bin/revpag
+rm:	rm.c
+	$CC $CFLAGS -o rm rm.c
+/bin/rm:	rm
+	$INS rm bin,bin 775 $target
+rm.ins:	/bin/rm
+rmdir:	rmdir.c
+	$CC $CFLAGS -o rmdir rmdir.c
+/bin/rmdir:	rmdir
+	$INS rmdir bin,bin 775 $target
+rmdir.ins:	/bin/rmdir
+sa:	sa.c
+	$CC $CFLAGS -o sa sa.c
+/etc/sa:	sa
+	$INS sa bin,bin 775 $target
+sa.ins:	/etc/sa
+savecore:	savecore.c
+	$CC $CFLAGS -o savecore savecore.c
+/etc/savecore:	savecore
+	$INS savecore bin,bin 775 $target
+savecore.ins:	/etc/savecore
+sdb:V:
+	cd sdb; dirins
+sed:V:
+	cd sed; dirins
+seq:	seq.c
+	$CC $CFLAGS -o seq seq.c
+/usr/bin/seq:	seq
+	$INS seq bin,bin 775 $target
+seq.ins:	/usr/bin/seq
+server:V:
+	cd server; dirins
+setlog:	setlog.c
+	$CC $CFLAGS -o setlog setlog.c
+/etc/setlog:	setlog
+	$INS setlog bin,bin 775 $target
+setlog.ins:	/etc/setlog
+settod:V:
+	cd settod; dirins
+sh:V:
+	cd sh; dirins
+sharer:	sharer.c
+	$CC $CFLAGS -o sharer sharer.c
+/usr/bin/sharer:	sharer
+	$INS sharer bin,bin 775 $target
+sharer.ins:	/usr/bin/sharer
+shares:	shares.sh
+	cp shares.sh shares
+/usr/bin/shares:	shares
+	$INS shares bin,bin 775 $target
+shares.ins:	/usr/bin/shares
+showq:	showq.c
+	$CC $CFLAGS -o showq showq.c
+/etc/showq:	showq
+	$INS showq bin,bin 775 $target
+showq.ins:	/etc/showq
+shstats:	shstats.c
+	$CC $CFLAGS -o shstats shstats.c
+/usr/bin/shstats:	shstats
+	$INS shstats bin,bin 775 $target
+shstats.ins:	/usr/bin/shstats
+size:	size.c
+	$CC $CFLAGS -o size size.c
+/bin/size:	size
+	$INS size bin,bin 775 $target
+size.ins:	/bin/size
+sleep:	sleep.c
+	$CC $CFLAGS -o sleep sleep.c
+/usr/bin/sleep:	sleep
+	$INS sleep bin,bin 775 $target
+sleep.ins:	/usr/bin/sleep
+smash:	smash.c
+	$CC $CFLAGS -o smash smash.c
+/etc/smash:	smash
+	$INS smash bin,bin 775 $target
+smash.ins:	/etc/smash
+sno:V:
+	cd sno; dirins
+snocone:V:
+	cd snocone; dirins
+sort:	sort.c
+	$CC $CFLAGS -o sort sort.c
+/usr/bin/sort:	sort
+	$INS sort bin,bin 775 $target
+sort.ins:	/usr/bin/sort
+sp:	sp.c
+	$CC $CFLAGS -o sp sp.c
+/usr/bin/sp:	sp
+	$INS sp bin,bin 775 $target
+sp.ins:	/usr/bin/sp
+spell:V:
+	cd spell; dirins
+spitbol:V:
+	cd spitbol; dirins
+spline:	spline.c
+	$CC $CFLAGS -o spline spline.c
+/usr/bin/spline:	spline
+	$INS spline bin,bin 775 $target
+spline.ins:	/usr/bin/spline
+split:	split.c
+	$CC $CFLAGS -o split split.c
+/usr/bin/split:	split
+	$INS split bin,bin 775 $target
+split.ins:	/usr/bin/split
+spool:V:
+	cd spool; dirins
+stat:	stat.c
+	$CC $CFLAGS -o stat stat.c
+/usr/bin/stat:	stat
+	$INS stat bin,bin 775 $target
+stat.ins:	/usr/bin/stat
+strip:V:
+	cd strip; dirins
+struct:V:
+	cd struct; dirins
+stty:	stty.c
+	$CC $CFLAGS -o stty stty.c
+/bin/stty:	stty
+	$INS stty bin,bin 775 $target
+stty.ins:	/bin/stty
+style:V:
+	cd style; dirins
+su:	su.c
+	$CC $CFLAGS -o su su.c
+/etc/su:	su
+	$INS su bin,bin 775 $target
+su.ins:	/etc/su
+sum:	sum.c
+	$CC $CFLAGS -o sum sum.c
+/usr/bin/sum:	sum
+	$INS sum bin,bin 775 $target
+sum.ins:	/usr/bin/sum
+swapon:	swapon.c
+	$CC $CFLAGS -o swapon swapon.c
+/etc/swapon:	swapon
+	$INS swapon bin,bin 775 $target
+swapon.ins:	/etc/swapon
+sync:	sync.c
+	$CC $CFLAGS -o sync sync.c
+/bin/sync:	sync
+	$INS sync bin,bin 775 $target
+sync.ins:	/bin/sync
+tabs:	tabs.c
+	$CC $CFLAGS -o tabs tabs.c
+/usr/bin/tabs:	tabs
+	$INS tabs bin,bin 775 $target
+tabs.ins:	/usr/bin/tabs
+tail:	tail.c
+	$CC $CFLAGS -o tail tail.c
+/usr/bin/tail:	tail
+	$INS tail bin,bin 775 $target
+tail.ins:	/usr/bin/tail
+tape:	tape.c
+	$CC $CFLAGS -o tape tape.c
+/usr/bin/tape:	tape
+	$INS tape bin,bin 775 $target
+tape.ins:	/usr/bin/tape
+tar:	tar.c
+	$CC $CFLAGS -o tar tar.c
+/bin/tar:	tar
+	$INS tar bin,bin 775 $target
+tar.ins:	/bin/tar
+tbl:V:
+	cd tbl; dirins
+tblmount:	tblmount.c
+	$CC $CFLAGS -o tblmount tblmount.c
+/usr/bin/tblmount:	tblmount
+	$INS tblmount bin,bin 775 $target
+tblmount.ins:	/usr/bin/tblmount
+tee:	tee.c
+	$CC $CFLAGS -o tee tee.c
+/usr/bin/tee:	tee
+	$INS tee bin,bin 775 $target
+tee.ins:	/usr/bin/tee
+telno:	telno.c
+	$CC $CFLAGS -o telno telno.c -lipc
+/usr/bin/telno:	telno
+	$INS telno bin,bin 775 $target
+telno.ins:	/usr/bin/telno
+termcap:V:
+	cd termcap; dirins
+test:	test.c
+	$CC $CFLAGS -o test test.c
+/bin/test:	test
+	$INS test bin,bin 775 $target
+test.ins:	/bin/test
+time:	time.c
+	$CC $CFLAGS -o time time.c
+/bin/time:	time
+	$INS time bin,bin 775 $target
+time.ins:	/bin/time
+tk:	tk.c
+	$CC $CFLAGS -o tk tk.c
+/usr/bin/tk:	tk
+	$INS tk bin,bin 775 $target
+tk.ins:	/usr/bin/tk
+touch:	touch.c
+	$CC $CFLAGS -o touch touch.c
+/usr/bin/touch:	touch
+	$INS touch bin,bin 775 $target
+touch.ins:	/usr/bin/touch
+town:V:
+	cd town; dirins
+tp:V:
+	cd tp; dirins
+tpr:	tpr.c
+	$CC $CFLAGS -o tpr tpr.c
+/usr/bin/tpr:	tpr
+	$INS tpr bin,bin 775 $target
+tpr.ins:	/usr/bin/tpr
+tr:	tr.c
+	$CC $CFLAGS -o tr tr.c
+/usr/bin/tr:	tr
+	$INS tr bin,bin 775 $target
+tr.ins:	/usr/bin/tr
+trace:V:
+	cd trace; dirins
+track:	track.c
+	$CC $CFLAGS -o track track.c
+/bin/track:	track
+	$INS track bin,bin 775 $target
+track.ins:	/bin/track
+treesum:	treesum.c
+	$CC $CFLAGS -o treesum treesum.c
+/usr/bin/treesum:	treesum
+	$INS treesum bin,bin 775 $target
+treesum.ins:	/usr/bin/treesum
+troff:V:
+	cd troff; dirins
+true:	true.sh
+	cp true.sh true
+/bin/true:	true
+	$INS true bin,bin 775 $target
+true.ins:	/bin/true
+tsort:V:
+	cd tsort; dirins
+tty:	tty.c
+	$CC $CFLAGS -o tty tty.c
+/usr/bin/tty:	tty
+	$INS tty bin,bin 775 $target
+tty.ins:	/usr/bin/tty
+twig:V:
+	cd twig; dirins
+ucds:	ucds.sh
+	cp ucds.sh ucds
+/usr/bin/ucds:	ucds
+	$INS ucds bin,bin 775 $target
+ucds.ins:	/usr/bin/ucds
+udemon:V:
+	cd udemon; dirins
+ul:V:
+	cd ul; dirins
+umount:	umount.c
+	$CC $CFLAGS -o umount umount.c
+/etc/umount:	umount
+	$INS umount bin,bin 775 $target
+umount.ins:	/etc/umount
+und:	und.c
+	$CC $CFLAGS -o und und.c
+/usr/bin/und:	und
+	$INS und bin,bin 775 $target
+und.ins:	/usr/bin/und
+unexpand:	unexpand.c
+	$CC $CFLAGS -o unexpand unexpand.c
+/usr/bin/unexpand:	unexpand
+	$INS unexpand bin,bin 775 $target
+unexpand.ins:	/usr/bin/unexpand
+uniq:	uniq.c
+	$CC $CFLAGS -o uniq uniq.c
+/usr/bin/uniq:	uniq
+	$INS uniq bin,bin 775 $target
+uniq.ins:	/usr/bin/uniq
+units:V:
+	cd units; dirins
+upas:V:
+	cd upas; dirins
+update:	update.c
+	$CC $CFLAGS -o update update.c
+/etc/update:	update
+	$INS update bin,bin 775 $target
+update.ins:	/etc/update
+user:	user.c
+	$CC $CFLAGS -o user user.c
+/usr/bin/user:	user
+	$INS user bin,bin 775 $target
+user.ins:	/usr/bin/user
+usgmake:V:
+	cd usgmake; dirins
+ustats:	ustats.c
+	$CC $CFLAGS -o ustats ustats.c
+/usr/bin/ustats:	ustats
+	$INS ustats bin,bin 775 $target
+ustats.ins:	/usr/bin/ustats
+uucp:V:
+	cd uucp; dirins
+uudecode:	uudecode.c
+	$CC $CFLAGS -o uudecode uudecode.c
+/usr/bin/uudecode:	uudecode
+	$INS uudecode bin,bin 775 $target
+uudecode.ins:	/usr/bin/uudecode
+uudiff:V:
+	cd uudiff; dirins
+uuencode:	uuencode.c
+	$CC $CFLAGS -o uuencode uuencode.c
+/usr/bin/uuencode:	uuencode
+	$INS uuencode bin,bin 775 $target
+uuencode.ins:	/usr/bin/uuencode
+v7:	v7.c
+	$CC $CFLAGS -o v7 v7.c
+/usr/bin/v7:	v7
+	$INS v7 bin,bin 775 $target
+v7.ins:	/usr/bin/v7
+v8:	v8.c
+	$CC $CFLAGS -o v8 v8.c
+/usr/bin/v8:	v8
+	$INS v8 bin,bin 775 $target
+v8.ins:	/usr/bin/v8
+view2d:V:
+	cd view2d; dirins
+vis:	vis.c
+	$CC $CFLAGS -o vis vis.c
+/usr/bin/vis:	vis
+	$INS vis bin,bin 775 $target
+vis.ins:	/usr/bin/vis
+visi:V:
+	cd visi; dirins
+vmstat:V:
+	cd vmstat; dirins
+vpr:	vpr.c
+	$CC $CFLAGS -o vpr vpr.c
+/usr/bin/vpr:	vpr
+	$INS vpr bin,bin 775 $target
+vpr.ins:	/usr/bin/vpr
+w:	w.c
+	$CC $CFLAGS -o w w.c
+/usr/bin/w:	w
+	$INS w bin,bin 775 $target
+w.ins:	/usr/bin/w
+wall:	wall.c
+	$CC $CFLAGS -o wall wall.c
+/etc/wall:	wall
+	$INS wall bin,bin 775 $target
+wall.ins:	/etc/wall
+wc:	wc.c
+	$CC $CFLAGS -o wc wc.c
+/usr/bin/wc:	wc
+	$INS wc bin,bin 775 $target
+wc.ins:	/usr/bin/wc
+weather:V:
+	cd weather; dirins
+weather:	weather.sh
+	cp weather.sh weather
+/usr/bin/weather:	weather
+	$INS weather bin,bin 775 $target
+weather.ins:	/usr/bin/weather
+where:	where.sh
+	cp where.sh where
+/usr/bin/where:	where
+	$INS where bin,bin 775 $target
+where.ins:	/usr/bin/where
+which:	which.sh
+	cp which.sh which
+/usr/bin/which:	which
+	$INS which bin,bin 775 $target
+which.ins:	/usr/bin/which
+who:	who.c
+	$CC $CFLAGS -o who who.c
+/bin/who:	who
+	$INS who bin,bin 775 $target
+who.ins:	/bin/who
+worm:V:
+	cd worm; dirins
+write:	write.c
+	$CC $CFLAGS -o write write.c
+/bin/write:	write
+	$INS write bin,bin 775 $target
+write.ins:	/bin/write
+wwb:V:
+	cd wwb; dirins
+wwv:V:
+	cd wwv; dirins
+xargs:	xargs.c
+	$CC $CFLAGS -o xargs xargs.c
+/usr/bin/xargs:	xargs
+	$INS xargs bin,bin 775 $target
+xargs.ins:	/usr/bin/xargs
+xref:V:
+	cd xref; dirins
+xstr:	xstr.c
+	$CC $CFLAGS -o xstr xstr.c
+/usr/bin/xstr:	xstr
+	$INS xstr bin,bin 775 $target
+xstr.ins:	/usr/bin/xstr
+yacc:V:
+	cd yacc; dirins
+yes:	yes.c
+	$CC $CFLAGS -o yes yes.c
+/usr/bin/yes:	yes
+	$INS yes bin,bin 775 $target
+yes.ins:	/usr/bin/yes

@@ -1,0 +1,9 @@
+#! /bin/sh
+# Install the boot program on the disk.
+# Since minimum write size is a device block, we must first read the label
+dd if=$2 of=label bs=1b count=1
+cat label $1 > tmpboot
+rm label
+dd if=tmpboot of=$2 bs=16b count=1 conv=sync
+rm tmpboot
+sync

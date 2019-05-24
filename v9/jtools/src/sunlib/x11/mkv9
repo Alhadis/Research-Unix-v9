@@ -1,0 +1,24 @@
+CFLAGS  = -g -I.. -DX11 -DXBUG
+LIB     = libj.a
+LIBS    = -lX11 -lipc
+NPROC	= 2
+OFILES = add.o bitblt.o button.o circle.o cos.o jerq.o menuhit.o mhit.o\
+        muxbuf.o wait.o snd.o kbdrcv.o rcvfill.o sizehints.o ToBitmap.o\
+	sun4.o getpoint.o
+TESTS = t0 t1 t2 t3 t4 t5
+
+%.o:    ../%.c
+        $CC $CFLAGS -c ../$stem.c
+
+$LIB: $OFILES ../jerq.h
+	rm -f $LIB
+        ar cr $LIB $OFILES
+        ranlib $LIB
+
+$OFILES: ../jerq.h
+
+t%:      ../t%.c $LIB
+        $CC -o $target $CFLAGS $prereq $LIBS
+	strip -s $target
+
+all:    $LIB $TESTS

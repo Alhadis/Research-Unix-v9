@@ -1,0 +1,52 @@
+            TOP = TOPDIR
+             AS = as
+             CC = cc
+            CPP = /lib/cpp
+             LD = ld
+           LINT = lint
+           MAKE = make
+    CDEBUGFLAGS = -O
+        DESTDIR =
+
+/* These define the server(s) you want */
+#define XqvssServer Xqvss
+#define XqdssServer Xqdss
+
+/* define this as you like for server compilation */
+#define	ServerCDebugFlags	-g -DDEBUG
+
+/* This defines the extensions you want */
+/* #define ExtensionDefines	-DZOID -DBEZIER */
+#define ExtensionDefines
+
+#define DebugLibX		YES	/* debugged X library */
+#define ProfileLibX		NO	/* profiled X library */
+#define DebugOldLibX		NO	/* debugged old X library */
+#define ProfileOldLibX		NO	/* profiled old X library */
+#define DebugLibXtk		NO	/* debugged toolkit library */
+#define ProfileLibXtk		NO	/* profiled toolkit library */
+#define DebugOldLibXtk		NO	/* debugged old toolkit library */
+#define ProfileOldLibXtk	NO	/* profiled old toolkit library */
+#define DebugOldLibXMenu	YES	/* debugged old XMenu library */
+#define ProfileOldLibXMenu	NO	/* profiled old XMenu library */
+#define DebugLibXext		NO	/* debugged Xext library */
+#define ProfileLibXext		NO	/* profiled Xext library */
+#define DebugLibXrm		YES	/* debugged Xrm library */
+#define ProfileLibXrm		NO	/* profiled Xrm library */
+#define DebugOldLibXrm		YES	/* debugged old Xrm library */
+#define ProfileOldLibXrm	NO	/* profiled old Xrm library */
+
+#define BigEndianArchitecture	NO	/* only the toolkit need this now */
+
+/*
+ * Uncomment this if you have cpp sources.
+ */
+/* #define CppSourcesPresent /usr/src/lib/cpp */
+
+/*
+ * use only one tab here.
+ */
+#define ManSuffix	n	/* for /usr/man/man?/manpage.? */
+
+/* uncomment this if your make program has MAKEFLAGS but not MFLAGS */
+/* #define ConstructMFLAGS */

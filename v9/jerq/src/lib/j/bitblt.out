@@ -1,0 +1,2573 @@
+#	line 99999
+	.file	"bitblt.c"
+	.data
+	.text
+	.align	4
+	.def	bitblt;	.val	bitblt;	.scl	2;	.type	044;	.endef
+	.globl	bitblt
+bitblt:
+	save	&.R1
+	addw2	&.F1,%sp
+#	/* BITBLT()	Moves bits around on the screen, and does a LOT of it
+#	 *
+#	 *	WARNING
+#	 *	WARNING:  to any future modifier of this code.  This is highly 
+#	 * 		hand optimized code, it pushes the frame pointer and
+#	 *		references locals off the stack pointer, 
+#	 *		and it even simulates register
+#	 *		allocation.  Be very careful if you edit this.
+#	 */
+#	
+#	#include <jerq.h>
+#			/* alignment codes for narrow rectangles */
+#	#define S_STRADDLE	0x4	/* source straddles a word boundary */
+#	#define D_STRADDLE	0x8	/* dest straddles a word boundary */
+#	#define LEFTDIR	8
+#	#define NOSHIFT 4
+#	#define DAMMIT	4		/* you'll see why */
+#	#undef	sw
+#	#define DX1	m
+#	
+#	bitblt(sm,r,dm,p,fc)
+#	Bitmap *sm,*dm;
+#	Rectangle r;
+#	Point p;
+#	int fc;
+#	{
+#		register Word *source,*dest;		/* %r8-%r7 */
+#		register Word sw, dw;			/* %r6-%r5 */
+#		register UWord m;			/* %r4     */
+#		register int i;				/* %r3     */
+#	
+#		int a,b,j,h,w,dx1,px31,rx31;
+#		unsigned int mask1,mask2,mask3,mask4,ntmask1,ntmask2;
+#		int dummy1, dummy2;		/* for future use, CANNOT CHANGE */
+#						/* NUMBER OF LOCALS DUE TO %fp 	*/
+#						/* TRICKS			*/
+#		/* clip to the source Bitmap */
+#		if(r.origin.x < sm->rect.origin.x)
+	addw3	&8,0(%ap),%r0
+	cmph	4(%ap),0(%r0)
+	jge	.L32
+#			r.origin.x=sm->rect.origin.x;
+	addw3	&8,0(%ap),%r0
+	movh	0(%r0),4(%ap)
+.L32:
+#		if(r.corner.x > sm->rect.corner.x)
+	addw3	&12,0(%ap),%r0
+	cmph	8(%ap),0(%r0)
+	jle	.L33
+#			r.corner.x=sm->rect.corner.x;
+	addw3	&12,0(%ap),%r0
+	movh	0(%r0),8(%ap)
+.L33:
+#		if(r.origin.y < sm->rect.origin.y)
+	addw3	&10,0(%ap),%r0
+	cmph	6(%ap),0(%r0)
+	jge	.L34
+#			r.origin.y=sm->rect.origin.y;
+	addw3	&10,0(%ap),%r0
+	movh	0(%r0),6(%ap)
+.L34:
+#		if(r.corner.y > sm->rect.corner.y)
+	addw3	&14,0(%ap),%r0
+	cmph	10(%ap),0(%r0)
+	jle	.L35
+#			r.corner.y=sm->rect.corner.y;
+	addw3	&14,0(%ap),%r0
+	movh	0(%r0),10(%ap)
+.L35:
+#		/*
+#		 * If the sm->rect and r are disjoint, r is now degenerate,
+#		 * due to the clipping, and the next clipping code will reject it.
+#		 * This is safe because we will only increase origin or decrease corner.
+#		 */
+#		/* clip to the destination Bitmap */
+#		if(p.x < dm->rect.origin.x){
+	addw3	&8,12(%ap),%r0
+	cmph	16(%ap),0(%r0)
+	jge	.L36
+#			r.origin.x+=dm->rect.origin.x-p.x;
+	addw3	&8,12(%ap),%r0
+	subh3	16(%ap),0(%r0),%r0
+	addh2	%r0,4(%ap)
+#			p.x=dm->rect.origin.x;
+	addw3	&8,12(%ap),%r0
+	movh	0(%r0),16(%ap)
+.L36:
+#		}
+#		if(p.y < dm->rect.origin.y){
+	addw3	&10,12(%ap),%r0
+	cmph	18(%ap),0(%r0)
+	jge	.L37
+#			r.origin.y+=dm->rect.origin.y-p.y;
+	addw3	&10,12(%ap),%r0
+	subh3	18(%ap),0(%r0),%r0
+	addh2	%r0,6(%ap)
+#			p.y=dm->rect.origin.y;
+	addw3	&10,12(%ap),%r0
+	movh	0(%r0),18(%ap)
+.L37:
+#		}
+#		if(r.corner.x-r.origin.x > dm->rect.corner.x-p.x)
+	subh3	4(%ap),8(%ap),%r0
+	addw3	&12,12(%ap),%r1
+	subh3	16(%ap),0(%r1),%r1
+	cmpw	%r0,%r1
+	jle	.L38
+#			r.corner.x=r.origin.x+(dm->rect.corner.x-p.x);
+	addw3	&12,12(%ap),%r0
+	subh3	16(%ap),0(%r0),%r0
+	addh2	4(%ap),%r0
+	movh	%r0,8(%ap)
+.L38:
+#		if(r.corner.y-r.origin.y > dm->rect.corner.y-p.y)
+	subh3	6(%ap),10(%ap),%r0
+	addw3	&14,12(%ap),%r1
+	subh3	18(%ap),0(%r1),%r1
+	cmpw	%r0,%r1
+	jle	.L39
+#			r.corner.y=r.origin.y+(dm->rect.corner.y-p.y);
+	addw3	&14,12(%ap),%r0
+	subh3	18(%ap),0(%r0),%r0
+	addh2	6(%ap),%r0
+	movh	%r0,10(%ap)
+.L39:
+#		i = r.corner.y - r.origin.y;	/* going to be h */
+	subh3	6(%ap),10(%ap),%r0
+	movw	%r0,%r3
+#		dw = r.corner.x - r.origin.x - 1;	/* going to be dx1 */
+	subh3	4(%ap),8(%ap),%r0
+	subw2	&1,%r0
+	movw	%r0,%r5
+#		if (i <= 0 || dw < 0)
+	cmpw	%r3,&0
+	jle	.L41
+	cmpw	%r5,&0
+	jge	.L40
+.L41:
+	jmp	.L31
+.L40:
+#			return;
+#		if (dw < 32)
+	cmpw	%r5,&32
+	jge	.L42
+	jmp	.L43
+.L42:
+#			goto narrow;
+#		DX1 = dw;
+	movw	%r5,%r4
+#		h = i; 
+	movw	%r3,12(%fp)
+#		ntmask1 = topbits[p.x & 0x1f];
+	andh3	&31,16(%ap),%r0
+	LLSW3	&2,%r0,%r0
+	movw	topbits(%r0),48(%fp)
+#		mask1 = ~ntmask1;
+	mcomw	48(%fp),%r0
+	movw	%r0,32(%fp)
+#		mask2 = topbits[((p.x+DX1) & 31) + 1];
+	movbhw	16(%ap),%r0
+	addw2	%r4,%r0
+	andw2	&31,%r0
+	addw2	&1,%r0
+	LLSW3	&2,%r0,%r0
+	movw	topbits(%r0),36(%fp)
+#		ntmask2 = ~mask2;
+	mcomw	36(%fp),%r0
+	movw	%r0,52(%fp)
+#		w = ((p.x+DX1) >> 5) - (p.x >> 5);	/* inner loop+1: sub 1 later*/
+	movbhw	16(%ap),%r0
+	addw2	%r4,%r0
+	LRSW3	&5,%r0,%r0
+	movbhw	16(%ap),%r1
+	LRSW3	&5,%r1,%r1
+	subw2	%r1,%r0
+	movw	%r0,16(%fp)
+#		sw = ((sm->width - w) << 2);	/* sleazy hack to avoid shift */
+	addw3	&4,0(%ap),%r0
+	subw3	16(%fp),0(%r0),%r0
+	LLSW3	&2,%r0,%r0
+	movw	%r0,%r6
+#		dw = ((dm->width - w) << 2);	/* in outer, inner loops */
+	addw3	&4,12(%ap),%r0
+	subw3	16(%fp),0(%r0),%r0
+	LLSW3	&2,%r0,%r0
+	movw	%r0,%r5
+#		if (sm == dm) {		/* may have to mess with loop order */
+	cmpw	0(%ap),12(%ap)
+	jne	.L44
+#			if (r.origin.y < p.y) {		/* swap top with bottom */
+	cmph	6(%ap),18(%ap)
+	jge	.L45
+#				r.origin.y += i-1;
+	movtwh	%r3,%r0
+	subh2	&1,%r0
+	addh2	%r0,6(%ap)
+#				p.y += i-1;
+	movtwh	%r3,%r0
+	subh2	&1,%r0
+	addh2	%r0,18(%ap)
+#				if (r.origin.x < p.x) {	/* swap left with right */
+	cmph	4(%ap),16(%ap)
+	jge	.L46
+#					fc |= LEFTDIR;
+	orw2	&8,20(%ap)
+#					r.origin.x = r.origin.x + DX1;
+	movtwh	%r4,%r0
+	addh2	4(%ap),%r0
+	movh	%r0,4(%ap)
+#					p.x = p.x + DX1;
+	movtwh	%r4,%r0
+	addh2	16(%ap),%r0
+	movh	%r0,16(%ap)
+#					sw = -sw;
+	mnegw	%r6,%r0
+	movw	%r0,%r6
+#					dw = -dw;
+	mnegw	%r5,%r0
+	movw	%r0,%r5
+	jmp	.L47
+.L46:
+#				}
+#				else
+#				{
+#					sw -= (sm->width << 3);	/* -(w+n) == (w-n) - 2*w  */
+	addw3	&4,0(%ap),%r0
+	LLSW3	&3,0(%r0),%r0
+	subw2	%r0,%r6
+#					dw -= (dm->width << 3) ;
+	addw3	&4,12(%ap),%r0
+	LLSW3	&3,0(%r0),%r0
+	subw2	%r0,%r5
+.L47:
+	jmp	.L48
+.L45:
+#				}
+#			}
+#			else
+#			{
+#				if (r.origin.x < p.x) {	/* swap left with right */
+	cmph	4(%ap),16(%ap)
+	jge	.L49
+#					fc |= LEFTDIR;
+	orw2	&8,20(%ap)
+#					r.origin.x = r.origin.x + DX1;
+	movtwh	%r4,%r0
+	addh2	4(%ap),%r0
+	movh	%r0,4(%ap)
+#					p.x = p.x + DX1;
+	movtwh	%r4,%r0
+	addh2	16(%ap),%r0
+	movh	%r0,16(%ap)
+#					sw = (sm->width + w) << 2;
+	addw3	&4,0(%ap),%r0
+	addw3	16(%fp),0(%r0),%r0
+	LLSW3	&2,%r0,%r0
+	movw	%r0,%r6
+#					dw = (dm->width + w) << 2;
+	addw3	&4,12(%ap),%r0
+	addw3	16(%fp),0(%r0),%r0
+	LLSW3	&2,%r0,%r0
+	movw	%r0,%r5
+.L49:
+.L48:
+.L44:
+#				}
+#			}
+#		}
+#		w--;			/* subtract the 1 like we promised */
+	subw2	&1,16(%fp)
+#		px31 = p.x & 0x1f;		/* commonly used expression */
+	andh3	&31,16(%ap),%r0
+	movw	%r0,24(%fp)
+#		rx31 = r.origin.x & 0x1f;	/* commonly used expression */
+	andh3	&31,4(%ap),%r0
+	movw	%r0,28(%fp)
+#		dest = addr(dm,p);
+	pushw	12(%ap)
+	pushw	16(%ap)
+	call	&2,addr
+	movw	%r0,%r7
+#		source = addr(sm,r.origin);
+	pushw	0(%ap)
+	pushw	4(%ap)
+	call	&2,addr
+	movw	%r0,%r8
+#		a = px31 - rx31;
+	subw3	28(%fp),24(%fp),%r0
+	movw	%r0,0(%fp)
+#		if(a == 0)
+	cmpw	0(%fp),&0
+	jne	.L50
+#			fc |= NOSHIFT;
+	orw2	&4,20(%ap)
+	jmp	.L51
+.L50:
+#		else if (a < 0)
+	cmpw	0(%fp),&0
+	jge	.L52
+#			a += 32;
+	addw2	&32,0(%fp)
+.L52:
+.L51:
+#			/* a == 0 means no shift, remember that */
+#		b = 32 - a;
+	subw3	0(%fp),&32,%r0
+	movw	%r0,4(%fp)
+#		switch (fc) {
+	movw	20(%ap),%r0
+	jmp	.L54
+.L55:
+#	
+#		case F_OR | NOSHIFT | LEFTDIR:
+#			b = w>>2;
+	LRSW3	&2,16(%fp),%r0
+	movw	%r0,4(%fp)
+#			w = w&3;
+	andw3	&3,16(%fp),%r0
+	movw	%r0,16(%fp)
+#			m = h;		/* m is free => use it */
+	movw	12(%fp),%r4
+.L58:
+#			do {
+#				*dest-- |= mask2 & *source--;
+	movw	%r7,%r0
+	subw2	&4,%r7
+	movw	%r8,%r1
+	subw2	&4,%r8
+	andw3	0(%r1),36(%fp),%r1
+	orw2	%r1,0(%r0)
+#				if ((i = b) > 0) do {
+	movw	4(%fp),%r3
+	jnpos	.L59
+.L62:
+#					*dest |= *source;
+	orw2	0(%r8),0(%r7)
+#					*(dest-1) |= *(source-1);
+	orw2	-4(%r8),-4(%r7)
+#					*(dest-2) |= *(source-2);
+	orw2	-8(%r8),-8(%r7)
+#					*(dest-3) |= *(source-3);
+	orw2	-12(%r8),-12(%r7)
+#					dest -= 4;
+	subw2	&16,%r7
+#					source -= 4;
+	subw2	&16,%r8
+.L61:
+#				} while (--i > 0);
+	subw2	&1,%r3
+	jpos	.L62
+.L60:
+.L59:
+#				if ((i = w) > 0) do {
+	movw	16(%fp),%r3
+	jnpos	.L63
+.L66:
+#					*dest-- |= *source--;
+	movw	%r7,%r0
+	subw2	&4,%r7
+	movw	%r8,%r1
+	subw2	&4,%r8
+	orw2	0(%r1),0(%r0)
+.L65:
+#				} while (--i > 0);
+	subw2	&1,%r3
+	jpos	.L66
+.L64:
+.L63:
+#				*dest |= mask1 & *source;
+	andw3	0(%r8),32(%fp),%r0
+	orw2	%r0,0(%r7)
+ ADDW2	%r6,%r8
+ ADDW2	%r5,%r7
+.L57:
+#				asm(" ADDW2	%r6,%r8");	/*source += sw; */
+#				asm(" ADDW2	%r5,%r7");	/*dest += dw; */
+#			} while (--m != 0);
+	subw2	&1,%r4
+	jnz	.L58
+.L56:
+	jmp	.L53
+.L67:
+#			break;
+#		case F_OR | LEFTDIR:
+#			if ((px31) < (rx31))
+	cmpw	24(%fp),28(%fp)
+	jge	.L68
+#				source++;	/* adjust for pipeline */
+	addw2	&4,%r8
+.L68:
+.L71:
+#			do {
+#				m = *source--;	/* m is a free register */
+	movw	%r8,%r0
+	subw2	&4,%r8
+	movw	0(%r0),%r4
+#				*dest-- |= (((m >> a) | (*source << b)) & mask2);
+	movw	%r7,%r0
+	subw2	&4,%r7
+	LRSW3	0(%fp),%r4,%r1
+	LLSW3	4(%fp),0(%r8),%r2
+	orw2	%r2,%r1
+	andw2	36(%fp),%r1
+	orw2	%r1,0(%r0)
+#				if ((i=w) > 0) do {
+	movw	16(%fp),%r3
+	jnpos	.L72
+.L75:
+#					m = (*source--) >> a;
+	movw	%r8,%r0
+	subw2	&4,%r8
+	LRSW3	0(%fp),0(%r0),%r0
+	movw	%r0,%r4
+#					*dest-- |= m | (*source << b);
+	movw	%r7,%r0
+	subw2	&4,%r7
+	LLSW3	4(%fp),0(%r8),%r1
+	orw2	%r4,%r1
+	orw2	%r1,0(%r0)
+.L74:
+#				} while (--i > 0);
+	subw2	&1,%r3
+	jpos	.L75
+.L73:
+.L72:
+#				m = *source;	/* m is a free register */
+	movw	0(%r8),%r4
+#				*dest |= (((m >> a) | (*(source-1) << b)) & mask1);
+	LRSW3	0(%fp),%r4,%r0
+	LLSW3	4(%fp),-4(%r8),%r1
+	orw2	%r1,%r0
+	andw2	32(%fp),%r0
+	orw2	%r0,0(%r7)
+ addw2	%r6,%r8
+ addw2	%r5,%r7
+.L70:
+#				asm(" addw2	%r6,%r8");	/*source += sw; */
+#				asm(" addw2	%r5,%r7");	/*dest += dw; */
+#			} while (--h > 0);
+	subw2	&1,12(%fp)
+	jpos	.L71
+.L69:
+	jmp	.L53
+.L76:
+#			break;
+#		case F_OR | NOSHIFT:
+#			b = w>>2;
+	LRSW3	&2,16(%fp),%r0
+	movw	%r0,4(%fp)
+#			w = w&3;
+	andw3	&3,16(%fp),%r0
+	movw	%r0,16(%fp)
+#			m = h;		/* m is free => use it */
+	movw	12(%fp),%r4
+.L79:
+#			do {
+#				*dest++ |= (mask1 & *source++);
+	movw	%r7,%r0
+	addw2	&4,%r7
+	movw	%r8,%r1
+	addw2	&4,%r8
+	andw3	0(%r1),32(%fp),%r1
+	orw2	%r1,0(%r0)
+#				if ((i = b) > 0) do {
+	movw	4(%fp),%r3
+	jnpos	.L80
+.L83:
+#					*dest |= *source;
+	orw2	0(%r8),0(%r7)
+#					*(dest+1) |= *(source+1);
+	orw2	4(%r8),4(%r7)
+#					*(dest+2) |= *(source+2);
+	orw2	8(%r8),8(%r7)
+#					*(dest+3) |= *(source+3);
+	orw2	12(%r8),12(%r7)
+#					dest += 4;
+	addw2	&16,%r7
+#					source += 4;
+	addw2	&16,%r8
+.L82:
+#				} while (--i > 0);
+	subw2	&1,%r3
+	jpos	.L83
+.L81:
+.L80:
+#				if ((i = w) > 0) do {
+	movw	16(%fp),%r3
+	jnpos	.L84
+.L87:
+#					*dest++ |= *source++;
+	movw	%r7,%r0
+	addw2	&4,%r7
+	movw	%r8,%r1
+	addw2	&4,%r8
+	orw2	0(%r1),0(%r0)
+.L86:
+#				} while (--i > 0);
+	subw2	&1,%r3
+	jpos	.L87
+.L85:
+.L84:
+#				*dest |= (mask2 & *source);
+	andw3	0(%r8),36(%fp),%r0
+	orw2	%r0,0(%r7)
+ addw2	%r6,%r8
+ addw2	%r5,%r7
+.L78:
+#				asm(" addw2	%r6,%r8");	/*source += sw; */
+#				asm(" addw2	%r5,%r7");	/*dest += dw; */
+#			} while (--m != 0);
+	subw2	&1,%r4
+	jnz	.L79
+.L77:
+	jmp	.L53
+.L88:
+#			break;
+#		case F_OR:
+#			if ((px31) > (rx31))
+	cmpw	24(%fp),28(%fp)
+	jle	.L89
+#				source--;	/* adjust for pipeline */
+	subw2	&4,%r8
+.L89:
+.L92:
+#			do {
+#				m = *source++;	/* m is a free register */
+	movw	%r8,%r0
+	addw2	&4,%r8
+	movw	0(%r0),%r4
+#				*dest++ |= (((m << b) | (*source >> a)) & mask1);
+	movw	%r7,%r0
+	addw2	&4,%r7
+	LLSW3	4(%fp),%r4,%r1
+	LRSW3	0(%fp),0(%r8),%r2
+	orw2	%r2,%r1
+	andw2	32(%fp),%r1
+	orw2	%r1,0(%r0)
+#				if ((i=w) > 0) do {
+	movw	16(%fp),%r3
+	jnpos	.L93
+.L96:
+#					m = (*source++) << b;
+	movw	%r8,%r0
+	addw2	&4,%r8
+	LLSW3	4(%fp),0(%r0),%r0
+	movw	%r0,%r4
+#					*dest++ |= m | (*source >> a);
+	movw	%r7,%r0
+	addw2	&4,%r7
+	LRSW3	0(%fp),0(%r8),%r1
+	orw2	%r4,%r1
+	orw2	%r1,0(%r0)
+.L95:
+#				} while (--i > 0);
+	subw2	&1,%r3
+	jpos	.L96
+.L94:
+.L93:
+#				m = *source;	/* m is a free register */
+	movw	0(%r8),%r4
+#				*dest |= (((m << b) | (*(source+1) >> a)) & mask2);
+	LLSW3	4(%fp),%r4,%r0
+	LRSW3	0(%fp),4(%r8),%r1
+	orw2	%r1,%r0
+	andw2	36(%fp),%r0
+	orw2	%r0,0(%r7)
+ addw2	%r6,%r8
+ addw2	%r5,%r7
+.L91:
+#				asm(" addw2	%r6,%r8");	/*source += sw; */
+#				asm(" addw2	%r5,%r7");	/*dest += dw; */
+#			} while (--h > 0);
+	subw2	&1,12(%fp)
+	jpos	.L92
+.L90:
+	jmp	.L53
+.L97:
+#			break;
+#		case F_CLR | NOSHIFT | LEFTDIR:
+#			b = w>>2;
+	LRSW3	&2,16(%fp),%r0
+	movw	%r0,4(%fp)
+#			w = w&3;
+	andw3	&3,16(%fp),%r0
+	movw	%r0,16(%fp)
+#			m = h;		/* m is free => use it */
+	movw	12(%fp),%r4
+.L100:
+#			do {
+#				*dest-- &= ~(mask2 & *source--);
+	movw	%r7,%r0
+	subw2	&4,%r7
+	movw	%r8,%r1
+	subw2	&4,%r8
+	andw3	0(%r1),36(%fp),%r1
+	mcomw	%r1,%r1
+	andw2	%r1,0(%r0)
+#				if ((i = b) > 0) do {
+	movw	4(%fp),%r3
+	jnpos	.L101
+.L104:
+#					*dest &= ~(*source);
+	mcomw	0(%r8),%r0
+	andw2	%r0,0(%r7)
+#					*(dest-1) &= ~(*(source-1));
+	mcomw	-4(%r8),%r0
+	andw2	%r0,-4(%r7)
+#					*(dest-2) &= ~(*(source-2));
+	mcomw	-8(%r8),%r0
+	andw2	%r0,-8(%r7)
+#					*(dest-3) &= ~(*(source-3));
+	mcomw	-12(%r8),%r0
+	andw2	%r0,-12(%r7)
+#					dest -= 4;
+	subw2	&16,%r7
+#					source -= 4;
+	subw2	&16,%r8
+.L103:
+#				} while (--i > 0);
+	subw2	&1,%r3
+	jpos	.L104
+.L102:
+.L101:
+#				if ((i = w) > 0) do {
+	movw	16(%fp),%r3
+	jnpos	.L105
+.L108:
+#					*dest-- &= ~(*source--);
+	movw	%r7,%r0
+	subw2	&4,%r7
+	movw	%r8,%r1
+	subw2	&4,%r8
+	mcomw	0(%r1),%r1
+	andw2	%r1,0(%r0)
+.L107:
+#				} while (--i > 0);
+	subw2	&1,%r3
+	jpos	.L108
+.L106:
+.L105:
+#				*dest &= ~(mask1 & *source);
+	andw3	0(%r8),32(%fp),%r0
+	mcomw	%r0,%r0
+	andw2	%r0,0(%r7)
+ addw2	%r6,%r8
+ addw2	%r5,%r7
+.L99:
+#				asm(" addw2	%r6,%r8");	/*source += sw; */
+#				asm(" addw2	%r5,%r7");	/*dest += dw; */
+#			} while (--m != 0);
+	subw2	&1,%r4
+	jnz	.L100
+.L98:
+	jmp	.L53
+.L109:
+#			break;
+#		case F_CLR | LEFTDIR:
+#			if ((px31) < (rx31))
+	cmpw	24(%fp),28(%fp)
+	jge	.L110
+#				source++;	/* adjust for pipeline */
+	addw2	&4,%r8
+.L110:
+.L113:
+#			do {
+#				m = *source--;	/* m is a free register */
+	movw	%r8,%r0
+	subw2	&4,%r8
+	movw	0(%r0),%r4
+#				*dest-- &= ~((((m >> a) | (*source << b)) & mask2));
+	movw	%r7,%r0
+	subw2	&4,%r7
+	LRSW3	0(%fp),%r4,%r1
+	LLSW3	4(%fp),0(%r8),%r2
+	orw2	%r2,%r1
+	andw2	36(%fp),%r1
+	mcomw	%r1,%r1
+	andw2	%r1,0(%r0)
+#				if ((i=w) > 0) do {
+	movw	16(%fp),%r3
+	jnpos	.L114
+.L117:
+#					m = (*source--) >> a;
+	movw	%r8,%r0
+	subw2	&4,%r8
+	LRSW3	0(%fp),0(%r0),%r0
+	movw	%r0,%r4
+#					*dest-- &= ~(m | (*source << b));
+	movw	%r7,%r0
+	subw2	&4,%r7
+	LLSW3	4(%fp),0(%r8),%r1
+	orw2	%r4,%r1
+	mcomw	%r1,%r1
+	andw2	%r1,0(%r0)
+.L116:
+#				} while (--i > 0);
+	subw2	&1,%r3
+	jpos	.L117
+.L115:
+.L114:
+#				m = *source;	/* m is a free register */
+	movw	0(%r8),%r4
+#				*dest &= ~((((m >> a) | (*(source-1) << b)) & mask1));
+	LRSW3	0(%fp),%r4,%r0
+	LLSW3	4(%fp),-4(%r8),%r1
+	orw2	%r1,%r0
+	andw2	32(%fp),%r0
+	mcomw	%r0,%r0
+	andw2	%r0,0(%r7)
+ addw2	%r6,%r8
+ addw2	%r5,%r7
+.L112:
+#				asm(" addw2	%r6,%r8");	/*source += sw; */
+#				asm(" addw2	%r5,%r7");	/*dest += dw; */
+#			} while (--h > 0);
+	subw2	&1,12(%fp)
+	jpos	.L113
+.L111:
+	jmp	.L53
+.L118:
+#			break;
+#		case F_CLR | NOSHIFT:
+#			b = w>>2;
+	LRSW3	&2,16(%fp),%r0
+	movw	%r0,4(%fp)
+#			w = w&3;
+	andw3	&3,16(%fp),%r0
+	movw	%r0,16(%fp)
+#			m = h;		/* m is free => use it */
+	movw	12(%fp),%r4
+.L121:
+#			do {
+#				*dest++ &= ~((mask1 & *source++));
+	movw	%r7,%r0
+	addw2	&4,%r7
+	movw	%r8,%r1
+	addw2	&4,%r8
+	andw3	0(%r1),32(%fp),%r1
+	mcomw	%r1,%r1
+	andw2	%r1,0(%r0)
+#				if ((i = b) > 0) do {
+	movw	4(%fp),%r3
+	jnpos	.L122
+.L125:
+#					*dest &= ~(*source);
+	mcomw	0(%r8),%r0
+	andw2	%r0,0(%r7)
+#					*(dest+1) &= ~(*(source+1));
+	mcomw	4(%r8),%r0
+	andw2	%r0,4(%r7)
+#					*(dest+2) &= ~(*(source+2));
+	mcomw	8(%r8),%r0
+	andw2	%r0,8(%r7)
+#					*(dest+3) &= ~(*(source+3));
+	mcomw	12(%r8),%r0
+	andw2	%r0,12(%r7)
+#					dest += 4;
+	addw2	&16,%r7
+#					source += 4;
+	addw2	&16,%r8
+.L124:
+#				} while (--i > 0);
+	subw2	&1,%r3
+	jpos	.L125
+.L123:
+.L122:
+#				if ((i = w) > 0) do {
+	movw	16(%fp),%r3
+	jnpos	.L126
+.L129:
+#					*dest++ &= ~(*source++);
+	movw	%r7,%r0
+	addw2	&4,%r7
+	movw	%r8,%r1
+	addw2	&4,%r8
+	mcomw	0(%r1),%r1
+	andw2	%r1,0(%r0)
+.L128:
+#				} while (--i > 0);
+	subw2	&1,%r3
+	jpos	.L129
+.L127:
+.L126:
+#				*dest &= ~((mask2 & *source));
+	andw3	0(%r8),36(%fp),%r0
+	mcomw	%r0,%r0
+	andw2	%r0,0(%r7)
+ addw2	%r6,%r8
+ addw2	%r5,%r7
+.L120:
+#				asm(" addw2	%r6,%r8");	/*source += sw; */
+#				asm(" addw2	%r5,%r7");	/*dest += dw; */
+#			} while (--m != 0);
+	subw2	&1,%r4
+	jnz	.L121
+.L119:
+	jmp	.L53
+.L130:
+#			break;
+#		case F_CLR:
+#			if ((px31) > (rx31))
+	cmpw	24(%fp),28(%fp)
+	jle	.L131
+#				source--;	/* adjust for pipeline */
+	subw2	&4,%r8
+.L131:
+.L134:
+#			do {
+#				m = *source++;	/* m is a free register */
+	movw	%r8,%r0
+	addw2	&4,%r8
+	movw	0(%r0),%r4
+#				*dest++ &= ~((((m << b) | (*source >> a)) & mask1));
+	movw	%r7,%r0
+	addw2	&4,%r7
+	LLSW3	4(%fp),%r4,%r1
+	LRSW3	0(%fp),0(%r8),%r2
+	orw2	%r2,%r1
+	andw2	32(%fp),%r1
+	mcomw	%r1,%r1
+	andw2	%r1,0(%r0)
+#				if ((i=w) > 0) do {
+	movw	16(%fp),%r3
+	jnpos	.L135
+.L138:
+#					m = (*source++) << b;
+	movw	%r8,%r0
+	addw2	&4,%r8
+	LLSW3	4(%fp),0(%r0),%r0
+	movw	%r0,%r4
+#					*dest++ &= ~(m | (*source >> a));
+	movw	%r7,%r0
+	addw2	&4,%r7
+	LRSW3	0(%fp),0(%r8),%r1
+	orw2	%r4,%r1
+	mcomw	%r1,%r1
+	andw2	%r1,0(%r0)
+.L137:
+#				} while (--i > 0);
+	subw2	&1,%r3
+	jpos	.L138
+.L136:
+.L135:
+#				m = *source;	/* m is a free register */
+	movw	0(%r8),%r4
+#				*dest &= ~((((m << b) | (*(source+1) >> a)) & mask2));
+	LLSW3	4(%fp),%r4,%r0
+	LRSW3	0(%fp),4(%r8),%r1
+	orw2	%r1,%r0
+	andw2	36(%fp),%r0
+	mcomw	%r0,%r0
+	andw2	%r0,0(%r7)
+ addw2	%r6,%r8
+ addw2	%r5,%r7
+.L133:
+#				asm(" addw2	%r6,%r8");	/*source += sw; */
+#				asm(" addw2	%r5,%r7");	/*dest += dw; */
+#			} while (--h > 0);
+	subw2	&1,12(%fp)
+	jpos	.L134
+.L132:
+	jmp	.L53
+.L139:
+#			break;
+#		case F_XOR | NOSHIFT | LEFTDIR:
+#			b = w>>2;
+	LRSW3	&2,16(%fp),%r0
+	movw	%r0,4(%fp)
+#			w = w&3;
+	andw3	&3,16(%fp),%r0
+	movw	%r0,16(%fp)
+#			m = h;		/* m is free => use it */
+	movw	12(%fp),%r4
+.L142:
+#			do {
+#				*dest-- ^= mask2 & *source--;
+	movw	%r7,%r0
+	subw2	&4,%r7
+	movw	%r8,%r1
+	subw2	&4,%r8
+	andw3	0(%r1),36(%fp),%r1
+	xorw2	%r1,0(%r0)
+#				if ((i = b) > 0) do {
+	movw	4(%fp),%r3
+	jnpos	.L143
+.L146:
+#					*dest ^= *source;
+	xorw2	0(%r8),0(%r7)
+#					*(dest-1) ^= *(source-1);
+	xorw2	-4(%r8),-4(%r7)
+#					*(dest-2) ^= *(source-2);
+	xorw2	-8(%r8),-8(%r7)
+#					*(dest-3) ^= *(source-3);
+	xorw2	-12(%r8),-12(%r7)
+#					dest -= 4;
+	subw2	&16,%r7
+#					source -= 4;
+	subw2	&16,%r8
+.L145:
+#				} while (--i > 0);
+	subw2	&1,%r3
+	jpos	.L146
+.L144:
+.L143:
+#				if ((i = w) > 0) do {
+	movw	16(%fp),%r3
+	jnpos	.L147
+.L150:
+#					*dest-- ^= *source--;
+	movw	%r7,%r0
+	subw2	&4,%r7
+	movw	%r8,%r1
+	subw2	&4,%r8
+	xorw2	0(%r1),0(%r0)
+.L149:
+#				} while (--i > 0);
+	subw2	&1,%r3
+	jpos	.L150
+.L148:
+.L147:
+#				*dest ^= mask1 & *source;
+	andw3	0(%r8),32(%fp),%r0
+	xorw2	%r0,0(%r7)
+ addw2	%r6,%r8
+ addw2	%r5,%r7
+.L141:
+#				asm(" addw2	%r6,%r8");	/*source += sw; */
+#				asm(" addw2	%r5,%r7");	/*dest += dw; */
+#			} while (--m != 0);
+	subw2	&1,%r4
+	jnz	.L142
+.L140:
+	jmp	.L53
+.L151:
+#			break;
+#		case F_XOR | LEFTDIR:
+#			if ((px31) < (rx31))
+	cmpw	24(%fp),28(%fp)
+	jge	.L152
+#				source++;	/* adjust for pipeline */
+	addw2	&4,%r8
+.L152:
+.L155:
+#			do {
+#				m = *source--;	/* m is a free register */
+	movw	%r8,%r0
+	subw2	&4,%r8
+	movw	0(%r0),%r4
+#				*dest-- ^= (((m >> a) | (*source << b)) & mask2);
+	movw	%r7,%r0
+	subw2	&4,%r7
+	LRSW3	0(%fp),%r4,%r1
+	LLSW3	4(%fp),0(%r8),%r2
+	orw2	%r2,%r1
+	andw2	36(%fp),%r1
+	xorw2	%r1,0(%r0)
+#				if ((i=w) > 0) do {
+	movw	16(%fp),%r3
+	jnpos	.L156
+.L159:
+#					m = (*source--) >> a;
+	movw	%r8,%r0
+	subw2	&4,%r8
+	LRSW3	0(%fp),0(%r0),%r0
+	movw	%r0,%r4
+#					*dest-- ^= m | (*source << b);
+	movw	%r7,%r0
+	subw2	&4,%r7
+	LLSW3	4(%fp),0(%r8),%r1
+	orw2	%r4,%r1
+	xorw2	%r1,0(%r0)
+.L158:
+#				} while (--i > 0);
+	subw2	&1,%r3
+	jpos	.L159
+.L157:
+.L156:
+#				m = *source;	/* m is a free register */
+	movw	0(%r8),%r4
+#				*dest ^= (((m >> a) | (*(source-1) << b)) & mask1);
+	LRSW3	0(%fp),%r4,%r0
+	LLSW3	4(%fp),-4(%r8),%r1
+	orw2	%r1,%r0
+	andw2	32(%fp),%r0
+	xorw2	%r0,0(%r7)
+ addw2	%r6,%r8
+ addw2	%r5,%r7
+.L154:
+#				asm(" addw2	%r6,%r8");	/*source += sw; */
+#				asm(" addw2	%r5,%r7");	/*dest += dw; */
+#			} while (--h > 0);
+	subw2	&1,12(%fp)
+	jpos	.L155
+.L153:
+	jmp	.L53
+.L160:
+#			break;
+#		case F_XOR | NOSHIFT:
+#			b = w>>2;
+	LRSW3	&2,16(%fp),%r0
+	movw	%r0,4(%fp)
+#			w = w&3;
+	andw3	&3,16(%fp),%r0
+	movw	%r0,16(%fp)
+#			m = h;		/* m is free => use it */
+	movw	12(%fp),%r4
+.L163:
+#			do {
+#				*dest++ ^= (mask1 & *source++);
+	movw	%r7,%r0
+	addw2	&4,%r7
+	movw	%r8,%r1
+	addw2	&4,%r8
+	andw3	0(%r1),32(%fp),%r1
+	xorw2	%r1,0(%r0)
+#				if ((i = b) > 0) do {
+	movw	4(%fp),%r3
+	jnpos	.L164
+.L167:
+#					*dest ^= *source;
+	xorw2	0(%r8),0(%r7)
+#					*(dest+1) ^= *(source+1);
+	xorw2	4(%r8),4(%r7)
+#					*(dest+2) ^= *(source+2);
+	xorw2	8(%r8),8(%r7)
+#					*(dest+3) ^= *(source+3);
+	xorw2	12(%r8),12(%r7)
+#					dest += 4;
+	addw2	&16,%r7
+#					source += 4;
+	addw2	&16,%r8
+.L166:
+#				} while (--i > 0);
+	subw2	&1,%r3
+	jpos	.L167
+.L165:
+.L164:
+#				if ((i = w) > 0) do {
+	movw	16(%fp),%r3
+	jnpos	.L168
+.L171:
+#					*dest++ ^= *source++;
+	movw	%r7,%r0
+	addw2	&4,%r7
+	movw	%r8,%r1
+	addw2	&4,%r8
+	xorw2	0(%r1),0(%r0)
+.L170:
+#				} while (--i > 0);
+	subw2	&1,%r3
+	jpos	.L171
+.L169:
+.L168:
+#				*dest ^= (mask2 & *source);
+	andw3	0(%r8),36(%fp),%r0
+	xorw2	%r0,0(%r7)
+ addw2	%r6,%r8
+ addw2	%r5,%r7
+.L162:
+#				asm(" addw2	%r6,%r8");	/*source += sw; */
+#				asm(" addw2	%r5,%r7");	/*dest += dw; */
+#			} while (--m != 0);
+	subw2	&1,%r4
+	jnz	.L163
+.L161:
+	jmp	.L53
+.L172:
+#			break;
+#		case F_XOR:
+#			if ((px31) > (rx31))
+	cmpw	24(%fp),28(%fp)
+	jle	.L173
+#				source--;	/* adjust for pipeline */
+	subw2	&4,%r8
+.L173:
+ PUSHW %ap
+#			asm(" PUSHW %ap");
+#			m = topbits[a];
+	LLSW3	&2,0(%fp),%r0
+	movw	topbits(%r0),%r4
+ MCOMW %r4, %r1
+ MOVW %r4, %r2
+ MOVW 0(%fp),%ap
+ PUSHW %fp
+BW_XORLOOP:
+ ROTW %ap, 0(%r8), %r4
+ ANDW2 %r2,%r4
+ ADDW2 &4,%r8
+ ROTW %ap,0(%r8),%r0
+ ANDW3 %r0,%r1,%fp
+ ORW2 %r4,%fp
+ ANDW2 -0x28(%sp),%fp
+ XORW2 %fp,0(%r7)
+ ADDW2 &4,%r7
+ MOVW -0x38(%sp),%r3
+ BEB BW_XORINNER
+.L176:
+ ANDW3 %r2,%r0,%r4
+ ADDW2 &4,%r8
+ ROTW %ap, 0(%r8),%r0
+ ANDW3 %r0,%r1,%fp
+ ORW2 %r4,%fp
+ XORW2 %fp,0(%r7)
+ ADDW2 &4, %r7
+.L175:
+#			asm(" MCOMW %r4, %r1");
+#			asm(" MOVW %r4, %r2");
+#			asm(" MOVW 0(%fp),%ap");
+#			asm(" PUSHW %fp");
+#		asm("BW_XORLOOP:");
+#			asm(" ROTW %ap, 0(%r8), %r4");
+#			asm(" ANDW2 %r2,%r4");
+#			asm(" ADDW2 &4,%r8");
+#			asm(" ROTW %ap,0(%r8),%r0");
+#			asm(" ANDW3 %r0,%r1,%fp");
+#			asm(" ORW2 %r4,%fp");
+#			asm(" ANDW2 -0x28(%sp),%fp");
+#			asm(" XORW2 %fp,0(%r7)");
+#			asm(" ADDW2 &4,%r7");
+#				/* if (i = w) */
+#			asm(" MOVW -0x38(%sp),%r3");
+#			asm(" BEB BW_XORINNER");
+#			do{
+#				asm(" ANDW3 %r2,%r0,%r4");
+#				asm(" ADDW2 &4,%r8");
+#				asm(" ROTW %ap, 0(%r8),%r0");
+#				asm(" ANDW3 %r0,%r1,%fp");
+#				asm(" ORW2 %r4,%fp");
+#				asm(" XORW2 %fp,0(%r7)");
+#				asm(" ADDW2 &4, %r7");
+#			} while (--i > 0);
+	subw2	&1,%r3
+	jpos	.L176
+.L174:
+BW_XORINNER:
+ ROTW %ap, 0(%r8),%r4
+ ANDW2 %r2,%r4
+ LRSW3 %ap, 4(%r8),%r0
+ ORW2 %r4,%r0
+ ANDW2 -0x24(%sp),%r0
+ XORW2 %r0,0(%r7)
+ ADDW2	%r6,%r8
+ ADDW2	%r5,%r7
+ DECW -0x3c(%sp)
+ BGB BW_XORLOOP
+ POPW %fp
+ POPW %ap
+	jmp	.L53
+.L177:
+#		asm("BW_XORINNER:");
+#			asm(" ROTW %ap, 0(%r8),%r4");
+#			asm(" ANDW2 %r2,%r4");
+#			asm(" LRSW3 %ap, 4(%r8),%r0");
+#			asm(" ORW2 %r4,%r0");
+#			asm(" ANDW2 -0x24(%sp),%r0");
+#			asm(" XORW2 %r0,0(%r7)");
+#			asm(" ADDW2	%r6,%r8");	/*source += sw; */
+#			asm(" ADDW2	%r5,%r7");	/*dest += dw; */
+#				/* } while (--h > 0); */
+#			asm(" DECW -0x3c(%sp)");
+#			asm(" BGB BW_XORLOOP");
+#	
+#			asm(" POPW %fp");
+#			asm(" POPW %ap");
+#	
+#		/* above is similar to: 
+#	/*		do {
+#	/*			m = *source++ << b;	/* m is a free register */
+#	/*			*dest++ ^= ((m & LMASK) | ((*source >> a)& RMASK) & mask1);
+#	/*			if ((i=w) > 0) do {
+#	/*				m = ((*source++) << b) & LMASK;
+#	/*				*dest++ ^= m | ((*source >> a)&RMASK);
+#	/*			} while (--i > 0);
+#	/*			m = *source;	/* m is a free register */
+#	/*			*dest ^= (((m << b) | (*(source+1) >> a)) & mask2);
+#	/*			asm(" addw2	%r6,%r8");	/*source += sw; */
+#	/*			asm(" addw2	%r5,%r7");	/*dest += dw; */
+#	/*		} while (--h > 0);		*/
+#			break;
+#		case F_STORE | NOSHIFT | LEFTDIR:
+#			b = w>>2;
+	LRSW3	&2,16(%fp),%r0
+	movw	%r0,4(%fp)
+#			w = w&3;
+	andw3	&3,16(%fp),%r0
+	movw	%r0,16(%fp)
+#			m = h;		/* m is free => use it */
+	movw	12(%fp),%r4
+.L180:
+#			do {
+#				*dest = (ntmask2 & *dest) | (mask2 & *source--);
+	andw3	0(%r7),52(%fp),%r0
+	movw	%r8,%r1
+	subw2	&4,%r8
+	andw3	0(%r1),36(%fp),%r1
+	orw2	%r1,%r0
+	movw	%r0,0(%r7)
+#				--dest;
+	subw2	&4,%r7
+#				if ((i = b) > 0) do {
+	movw	4(%fp),%r3
+	jnpos	.L181
+.L184:
+#					*dest = *source;
+	movw	0(%r8),0(%r7)
+#					*(dest-1) = *(source-1);
+	movw	-4(%r8),-4(%r7)
+#					*(dest-2) = *(source-2);
+	movw	-8(%r8),-8(%r7)
+#					*(dest-3) = *(source-3);
+	movw	-12(%r8),-12(%r7)
+#					dest -= 4;
+	subw2	&16,%r7
+#					source -= 4;
+	subw2	&16,%r8
+.L183:
+#				} while (--i > 0);
+	subw2	&1,%r3
+	jpos	.L184
+.L182:
+.L181:
+#				if ((i = w) > 0) do {
+	movw	16(%fp),%r3
+	jnpos	.L185
+.L188:
+#					*dest-- = *source--;
+	movw	%r7,%r0
+	subw2	&4,%r7
+	movw	%r8,%r1
+	subw2	&4,%r8
+	movw	0(%r1),0(%r0)
+.L187:
+#				} while (--i > 0);
+	subw2	&1,%r3
+	jpos	.L188
+.L186:
+.L185:
+#				*dest = (ntmask1 & *dest) | (mask1 & *source);
+	andw3	0(%r7),48(%fp),%r0
+	andw3	0(%r8),32(%fp),%r1
+	orw2	%r1,%r0
+	movw	%r0,0(%r7)
+ addw2	%r6,%r8
+ addw2	%r5,%r7
+.L179:
+#				asm(" addw2	%r6,%r8");	/*source += sw; */
+#				asm(" addw2	%r5,%r7");	/*dest += dw; */
+#			} while (--m != 0);
+	subw2	&1,%r4
+	jnz	.L180
+.L178:
+	jmp	.L53
+.L189:
+#			break;
+#		case F_STORE | LEFTDIR:
+#			if ((px31) < (rx31))
+	cmpw	24(%fp),28(%fp)
+	jge	.L190
+#				source++;	/* adjust for pipeline */
+	addw2	&4,%r8
+.L190:
+.L193:
+#			do {
+#				m = *source--;	/* m is a free register */
+	movw	%r8,%r0
+	subw2	&4,%r8
+	movw	0(%r0),%r4
+#				*dest = (((m >> a) | (*source << b)) & mask2) |
+#							 (*dest & ntmask2);
+	LRSW3	0(%fp),%r4,%r0
+	LLSW3	4(%fp),0(%r8),%r1
+	orw2	%r1,%r0
+	andw2	36(%fp),%r0
+	andw3	52(%fp),0(%r7),%r1
+	orw2	%r1,%r0
+	movw	%r0,0(%r7)
+#				--dest;
+	subw2	&4,%r7
+#				if ((i=w) > 0) do {
+	movw	16(%fp),%r3
+	jnpos	.L194
+.L197:
+#					m = (*source--) >> a;
+	movw	%r8,%r0
+	subw2	&4,%r8
+	LRSW3	0(%fp),0(%r0),%r0
+	movw	%r0,%r4
+#					*dest-- = m | (*source << b);
+	movw	%r7,%r0
+	subw2	&4,%r7
+	LLSW3	4(%fp),0(%r8),%r1
+	orw2	%r4,%r1
+	movw	%r1,0(%r0)
+.L196:
+#				} while (--i > 0);
+	subw2	&1,%r3
+	jpos	.L197
+.L195:
+.L194:
+#				m = *source;	/* m is a free register */
+	movw	0(%r8),%r4
+#				*dest = (((m >> a) | (*(source-1) << b)) & mask1) |
+#							 (*dest & ntmask1);
+	LRSW3	0(%fp),%r4,%r0
+	LLSW3	4(%fp),-4(%r8),%r1
+	orw2	%r1,%r0
+	andw2	32(%fp),%r0
+	andw3	48(%fp),0(%r7),%r1
+	orw2	%r1,%r0
+	movw	%r0,0(%r7)
+ addw2	%r6,%r8
+ addw2	%r5,%r7
+.L192:
+#				asm(" addw2	%r6,%r8");	/*source += sw; */
+#				asm(" addw2	%r5,%r7");	/*dest += dw; */
+#			} while (--h > 0);
+	subw2	&1,12(%fp)
+	jpos	.L193
+.L191:
+	jmp	.L53
+.L198:
+#			break;
+#		case F_STORE | NOSHIFT:
+#			if (w > 25)
+	cmpw	16(%fp),&25
+	jle	.L199
+	jmp	.L200
+.L199:
+#				goto widestore;
+#			i = 25 - w;
+	subw3	16(%fp),&25,%r0
+	movw	%r0,%r3
+#			m = (i << 2) + (i << 1);
+	LLSW3	&2,%r3,%r0
+	LLSW3	&1,%r3,%r1
+	addw2	%r1,%r0
+	movw	%r0,%r4
+ LLSW3 &0x2,0x10(%fp),%r0
+ ADDW2 &4,%r0
+ MOVAW B_FS_N,%r1
+ ADDW2 %r4,%r1
+#			
+#			asm(" LLSW3 &0x2,0x10(%fp),%r0");	/* bytewidth in r0*/
+#			asm(" ADDW2 &4,%r0");	/* r0 +=4 for loop offsets */
+#			asm(" MOVAW B_FS_N,%r1");
+#			asm(" ADDW2 %r4,%r1");	/* r1 += &label, or jump addr*/
+#			m = h;		/* m is free reg, use it as height */
+	movw	12(%fp),%r4
+ MOVW 0x20(%fp),%r2
+ PUSHW %ap
+ MOVW 0x24(%fp),%ap
+ PUSHW %fp
+ MOVW %r1,%fp
+.L203:
+ XORW3 0(%r7),0(%r8),%r1
+ ANDW2 %r2,%r1
+ XORW2 %r1,0(%r7)
+ JMP     0(%fp)
+B_FS_N: 
+ MOVW    0x64(%r8),0x64(%r7)
+ MOVW    0x60(%r8),0x60(%r7)
+ MOVW    0x5c(%r8),0x5c(%r7)
+ MOVW    0x58(%r8),0x58(%r7)
+ MOVW    0x54(%r8),0x54(%r7)
+ MOVW    0x50(%r8),0x50(%r7)
+ MOVW    0x4c(%r8),0x4c(%r7)
+ MOVW    0x48(%r8),0x48(%r7)
+ MOVW    0x44(%r8),0x44(%r7)
+ MOVW    0x40(%r8),0x40(%r7)
+ MOVW    0x3c(%r8),0x3c(%r7)
+ MOVW    0x38(%r8),0x38(%r7)
+ MOVW    0x34(%r8),0x34(%r7)
+ MOVW    0x30(%r8),0x30(%r7)
+ MOVW    0x2c(%r8),0x2c(%r7)
+ MOVW    0x28(%r8),0x28(%r7)
+ MOVW    0x24(%r8),0x24(%r7)
+ MOVW    0x20(%r8),0x20(%r7)
+ MOVW    0x1c(%r8),0x1c(%r7)
+ MOVW    0x18(%r8),0x18(%r7)
+ MOVW    0x14(%r8),0x14(%r7)
+ MOVW    0x10(%r8),0x10(%r7)
+ MOVW    0xc(%r8),0xc(%r7)
+ MOVW    0x8(%r8),0x8(%r7)
+ MOVW    0x4(%r8),0x4(%r7)
+ ADDW2   %r0,%r8
+ ADDW2   %r0,%r7
+ XORW3 0(%r7),0(%r8),%r1
+ ANDW2 %ap,%r1
+ XORW2 %r1,0(%r7)
+ ADDW2   %r6,%r8
+ ADDW2   %r5,%r7
+.L202:
+#			asm(" MOVW 0x20(%fp),%r2");	/* r2 = mask1 */
+#			asm(" PUSHW %ap");	/* save fp and ap */
+#			asm(" MOVW 0x24(%fp),%ap");	/* ap = mask2 */
+#			asm(" PUSHW %fp");
+#			asm(" MOVW %r1,%fp");	/* put jump index into fp */
+#	
+#			do{
+#	
+#			asm(" XORW3 0(%r7),0(%r8),%r1");
+#			asm(" ANDW2 %r2,%r1");
+#			asm(" XORW2 %r1,0(%r7)");
+#	
+#			asm(" JMP     0(%fp)");
+#			asm("B_FS_N: ");		/* label */
+#			asm(" MOVW    0x64(%r8),0x64(%r7)");
+#			asm(" MOVW    0x60(%r8),0x60(%r7)"); asm(" MOVW    0x5c(%r8),0x5c(%r7)");
+#			asm(" MOVW    0x58(%r8),0x58(%r7)"); asm(" MOVW    0x54(%r8),0x54(%r7)");
+#			asm(" MOVW    0x50(%r8),0x50(%r7)"); asm(" MOVW    0x4c(%r8),0x4c(%r7)"); asm(" MOVW    0x48(%r8),0x48(%r7)"); asm(" MOVW    0x44(%r8),0x44(%r7)");
+#			asm(" MOVW    0x40(%r8),0x40(%r7)"); asm(" MOVW    0x3c(%r8),0x3c(%r7)"); asm(" MOVW    0x38(%r8),0x38(%r7)"); asm(" MOVW    0x34(%r8),0x34(%r7)");
+#			asm(" MOVW    0x30(%r8),0x30(%r7)"); asm(" MOVW    0x2c(%r8),0x2c(%r7)"); asm(" MOVW    0x28(%r8),0x28(%r7)"); asm(" MOVW    0x24(%r8),0x24(%r7)");
+#			asm(" MOVW    0x20(%r8),0x20(%r7)"); asm(" MOVW    0x1c(%r8),0x1c(%r7)"); asm(" MOVW    0x18(%r8),0x18(%r7)");
+#			asm(" MOVW    0x14(%r8),0x14(%r7)");
+#			asm(" MOVW    0x10(%r8),0x10(%r7)");
+#			asm(" MOVW    0xc(%r8),0xc(%r7)");
+#			asm(" MOVW    0x8(%r8),0x8(%r7)");
+#			asm(" MOVW    0x4(%r8),0x4(%r7)");
+#			asm(" ADDW2   %r0,%r8");
+#			asm(" ADDW2   %r0,%r7");
+#			asm(" XORW3 0(%r7),0(%r8),%r1");
+#			asm(" ANDW2 %ap,%r1");	/* ap has mask2 */
+#			asm(" XORW2 %r1,0(%r7)");
+#			asm(" ADDW2   %r6,%r8");
+#			asm(" ADDW2   %r5,%r7");
+#		} while (--m != 0);
+	subw2	&1,%r4
+	jnz	.L203
+.L201:
+ POPW %fp
+ POPW %ap
+	jmp	.L53
+.L200:
+#			asm(" POPW %fp");
+#			asm(" POPW %ap");
+#		break;
+#		/* ABOVE ALMOST EQUAL TO : */
+#	widestore:
+#			b = w >> 2;
+	LRSW3	&2,16(%fp),%r0
+	movw	%r0,4(%fp)
+#			w = w & 3;
+	andw3	&3,16(%fp),%r0
+	movw	%r0,16(%fp)
+#			m = h;
+	movw	12(%fp),%r4
+.L206:
+#			do {
+#				*dest = (ntmask1 & *dest) | (mask1 & *source++);
+	andw3	0(%r7),48(%fp),%r0
+	movw	%r8,%r1
+	addw2	&4,%r8
+	andw3	0(%r1),32(%fp),%r1
+	orw2	%r1,%r0
+	movw	%r0,0(%r7)
+#				dest++;
+	addw2	&4,%r7
+#				if ((i = b) > 0) do {
+	movw	4(%fp),%r3
+	jnpos	.L207
+.L210:
+#					*dest = *source;
+	movw	0(%r8),0(%r7)
+#					*(dest+1) = *(source+1);
+	movw	4(%r8),4(%r7)
+#					*(dest+2) = *(source+2);
+	movw	8(%r8),8(%r7)
+#					*(dest+3) = *(source+3);
+	movw	12(%r8),12(%r7)
+#					dest += 4;
+	addw2	&16,%r7
+#					source += 4;
+	addw2	&16,%r8
+.L209:
+#				} while (--i > 0);
+	subw2	&1,%r3
+	jpos	.L210
+.L208:
+.L207:
+#				if ((i = w) > 0) do {
+	movw	16(%fp),%r3
+	jnpos	.L211
+.L214:
+#					*dest++ = *source++;
+	movw	%r7,%r0
+	addw2	&4,%r7
+	movw	%r8,%r1
+	addw2	&4,%r8
+	movw	0(%r1),0(%r0)
+.L213:
+#				} while (--i > 0);
+	subw2	&1,%r3
+	jpos	.L214
+.L212:
+.L211:
+#				*dest = (ntmask2 & *dest) | (mask2 & *source);
+	andw3	0(%r7),52(%fp),%r0
+	andw3	0(%r8),36(%fp),%r1
+	orw2	%r1,%r0
+	movw	%r0,0(%r7)
+ addw2	%r6,%r8
+ addw2	%r5,%r7
+.L205:
+#				asm(" addw2	%r6,%r8");
+#				asm(" addw2	%r5,%r7");
+#			} while (--m != 0);
+	subw2	&1,%r4
+	jnz	.L206
+.L204:
+	jmp	.L53
+.L215:
+#			break;
+#		case F_STORE:
+#			if ((px31) > (rx31))
+	cmpw	24(%fp),28(%fp)
+	jle	.L216
+#				source--;	/* adjust for pipeline */
+	subw2	&4,%r8
+.L216:
+.L219:
+#			do {
+#				m = *source++;	/* m is a free register */
+	movw	%r8,%r0
+	addw2	&4,%r8
+	movw	0(%r0),%r4
+#				*dest = (((m << b) | (*source >> a)) & mask1) |
+#							 (*dest & ntmask1);
+	LLSW3	4(%fp),%r4,%r0
+	LRSW3	0(%fp),0(%r8),%r1
+	orw2	%r1,%r0
+	andw2	32(%fp),%r0
+	andw3	48(%fp),0(%r7),%r1
+	orw2	%r1,%r0
+	movw	%r0,0(%r7)
+#				dest++;
+	addw2	&4,%r7
+#				if ((i=w) > 0) do {
+	movw	16(%fp),%r3
+	jnpos	.L220
+.L223:
+#					m = (*source++) << b;
+	movw	%r8,%r0
+	addw2	&4,%r8
+	LLSW3	4(%fp),0(%r0),%r0
+	movw	%r0,%r4
+#					*dest++ = m | (*source >> a);
+	movw	%r7,%r0
+	addw2	&4,%r7
+	LRSW3	0(%fp),0(%r8),%r1
+	orw2	%r4,%r1
+	movw	%r1,0(%r0)
+.L222:
+#				} while (--i > 0);
+	subw2	&1,%r3
+	jpos	.L223
+.L221:
+.L220:
+#				m = *source;	/* m is a free register */
+	movw	0(%r8),%r4
+#				*dest = (((m << b) | (*(source+1) >> a)) & mask2) |
+#							 (*dest & ntmask2);
+	LLSW3	4(%fp),%r4,%r0
+	LRSW3	0(%fp),4(%r8),%r1
+	orw2	%r1,%r0
+	andw2	36(%fp),%r0
+	andw3	52(%fp),0(%r7),%r1
+	orw2	%r1,%r0
+	movw	%r0,0(%r7)
+ addw2	%r6,%r8
+ addw2	%r5,%r7
+.L218:
+#				asm(" addw2	%r6,%r8");	/*source += sw; */
+#				asm(" addw2	%r5,%r7");	/*dest += dw; */
+#			} while (--h > 0);
+	subw2	&1,12(%fp)
+	jpos	.L219
+.L217:
+	jmp	.L53
+.L54:
+	cmpw	%r0,&0
+	jl	.L224
+	cmpw	%r0,&15
+	jg	.L224
+	ALSW3	&2,%r0,%r0
+	jmp	*.L225(%r0)
+	.data
+	.align	4
+#SWBEG
+.L225:
+	.word	.L215
+	.word	.L88
+	.word	.L130
+	.word	.L172
+	.word	.L198
+	.word	.L76
+	.word	.L118
+	.word	.L160
+	.word	.L189
+	.word	.L67
+	.word	.L109
+	.word	.L151
+	.word	.L177
+	.word	.L55
+	.word	.L97
+	.word	.L139
+#SWEND
+	.text
+.L224:
+.L53:
+	jmp	.L31
+.L43:
+#			break;
+#		}
+#	
+#		return;
+#	narrow:
+#		/*
+#		 * width is 32 bits or less.  There are four basic cases
+#	 	 * (in addition to the function code), which depend on whether
+#		 * the source and dest straddle word boundaries or not
+#		 */
+#	
+#		m = p.x & 31;		/* commonly used expression  */
+	andh3	&31,16(%ap),%r0
+	movw	%r0,%r4
+#		sw = r.origin.x & 31;		/* commonly used expression  */
+	andh3	&31,4(%ap),%r0
+	movw	%r0,%r6
+#		if (sw + dw > 31)	/* if source is NOT aligned */
+	addw3	%r5,%r6,%r0
+	cmpw	%r0,&31
+	jle	.L226
+#		{
+#			fc |= S_STRADDLE;
+	orw2	&4,20(%ap)
+#			mask1 = ONES >> sw;
+	LRSW3	%r6,&-1,%r0
+	movw	%r0,32(%fp)
+#			mask2 = topbits[((sw + dw) & 31) + 1];
+	addw3	%r5,%r6,%r0
+	andw2	&31,%r0
+	addw2	&1,%r0
+	LLSW3	&2,%r0,%r0
+	movw	topbits(%r0),36(%fp)
+.L226:
+#		}
+#	
+#		if (m + dw > 31)	/* if dest is NOT aligned */
+	addw3	%r5,%r4,%r0
+	cmpw	%r0,&31
+	jleu	.L227
+#		{
+#			fc |= D_STRADDLE;
+	orw2	&8,20(%ap)
+#			mask3 = ONES >> m;
+	LRSW3	%r4,&-1,%r0
+	movw	%r0,40(%fp)
+#			mask4 = topbits[((m + dw) & 31) + 1];
+	addw3	%r5,%r4,%r0
+	andw2	&31,%r0
+	addw2	&1,%r0
+	LLSW3	&2,%r0,%r0
+	movw	topbits(%r0),44(%fp)
+.L227:
+#		}
+#		px31 = m;
+	movw	%r4,24(%fp)
+#		m = m - sw;
+	subw3	%r6,%r4,%r0
+	movw	%r0,%r4
+#		a = dw;
+	movw	%r5,0(%fp)
+#	
+#		if ((sm == dm) && (r.origin.y < p.y))
+	cmpw	0(%ap),12(%ap)
+	jne	.L228
+	cmph	6(%ap),18(%ap)
+	jge	.L228
+.L229:
+#		{	/* may have to mess with loop order */
+#			r.origin.y += i-1;
+	movtwh	%r3,%r0
+	subh2	&1,%r0
+	addh2	%r0,6(%ap)
+#			p.y += i-1;
+	movtwh	%r3,%r0
+	subh2	&1,%r0
+	addh2	%r0,18(%ap)
+#			sw = -(sm->width << 2);	/* sleazy hack to avoid shift */
+	addw3	&4,0(%ap),%r0
+	LLSW3	&2,0(%r0),%r0
+	mnegw	%r0,%r0
+	movw	%r0,%r6
+#			dw = -(dm->width << 2);	/* in outer, inner loops */
+	addw3	&4,12(%ap),%r0
+	LLSW3	&2,0(%r0),%r0
+	mnegw	%r0,%r0
+	movw	%r0,%r5
+	jmp	.L230
+.L228:
+#		}
+#		else
+#		{
+#			sw = sm->width << 2;
+	addw3	&4,0(%ap),%r0
+	LLSW3	&2,0(%r0),%r0
+	movw	%r0,%r6
+#			dw = dm->width << 2;
+	addw3	&4,12(%ap),%r0
+	LLSW3	&2,0(%r0),%r0
+	movw	%r0,%r5
+.L230:
+#		}
+#	
+#		source = addr(sm,r.origin);
+	pushw	0(%ap)
+	pushw	4(%ap)
+	call	&2,addr
+	movw	%r0,%r8
+#		dest = addr(dm,p);
+	pushw	12(%ap)
+	pushw	16(%ap)
+	call	&2,addr
+	movw	%r0,%r7
+#	
+#		switch(fc)
+	movw	20(%ap),%r0
+	jmp	.L232
+.L233:
+#		{
+#		case F_STORE:
+#			mask1 = topbits[a+1] >> (px31);
+	addw3	&1,0(%fp),%r0
+	LLSW3	&2,%r0,%r0
+	LRSW3	24(%fp),topbits(%r0),%r0
+	movw	%r0,32(%fp)
+ MOVW 0x20(%fp),%r1
+.L236:
+ ROTW %r4,0(%r8),%r2
+ XORW2 0(%r7),%r2
+ ANDW2 %r1,%r2
+ XORW2 %r2,0(%r7)
+ ADDW2 %r6, %r8
+ ADDW2 %r5, %r7
+.L235:
+#			asm(" MOVW 0x20(%fp),%r1");
+#			do {
+#				asm(" ROTW %r4,0(%r8),%r2");
+#				asm(" XORW2 0(%r7),%r2");
+#				asm(" ANDW2 %r1,%r2");
+#				asm(" XORW2 %r2,0(%r7)");
+#				asm(" ADDW2 %r6, %r8");
+#				asm(" ADDW2 %r5, %r7");
+#			} while (--i > 0);
+	subw2	&1,%r3
+	jpos	.L236
+.L234:
+	jmp	.L231
+.L237:
+#			break;
+#		case F_STORE | S_STRADDLE:
+#			mask4 = 32 - m;		/* REALLY the other shift count */
+	subw3	%r4,&32,%r0
+	movw	%r0,44(%fp)
+#			mask3 = topbits[a+1] >> px31;
+	addw3	&1,0(%fp),%r0
+	LLSW3	&2,%r0,%r0
+	LRSW3	24(%fp),topbits(%r0),%r0
+	movw	%r0,40(%fp)
+ PUSHW %ap
+ MOVW 0x28(%fp),%r0
+ MOVW 0x2c(%fp),%ap
+.L240:
+ LLSW3 %ap,0(%r8),%r1
+ LRSW3 %r4,4(%r8),%r2
+ ORW2  %r2, %r1
+ XORW2 0(%r7),%r1
+ ANDW2 %r0,%r1
+ XORW2 %r1,0(%r7)
+ ADDW2 %r6, %r8
+ ADDW2 %r5, %r7
+.L239:
+#			asm(" PUSHW %ap");	/* store ap on stack */
+#			asm(" MOVW 0x28(%fp),%r0");	/* put mask3 in r0 */
+#			asm(" MOVW 0x2c(%fp),%ap");	/* put other shift in ap */
+#	
+#			do {
+#				asm(" LLSW3 %ap,0(%r8),%r1"); /* 32-m,lft shft */
+#				asm(" LRSW3 %r4,4(%r8),%r2");	/* m, right shift */
+#				asm(" ORW2  %r2, %r1");
+#				asm(" XORW2 0(%r7),%r1");
+#				asm(" ANDW2 %r0,%r1");
+#				asm(" XORW2 %r1,0(%r7)");
+#				asm(" ADDW2 %r6, %r8");
+#				asm(" ADDW2 %r5, %r7");
+#			} while (--i > 0);
+	subw2	&1,%r3
+	jpos	.L240
+.L238:
+ POPW %ap
+	jmp	.L231
+.L241:
+ PUSHW %ap
+ MOVW 0x28(%fp),%r0
+ MOVW 0x2c(%fp),%ap
+.L244:
+ ROTW %r4,0(%r8),%r1
+ XORW3 0(%r7),%r1,%r2
+ ANDW2 %r0,%r2
+ XORW2 %r2,0(%r7)
+ XORW2 4(%r7),%r1
+ ANDW2 %ap,%r1
+ XORW2 %r1,4(%r7)
+ ADDW2 %r6, %r8
+ ADDW2 %r5, %r7
+.L243:
+#			asm(" POPW %ap");	/* restore ap from stack */
+#			break;
+#		case F_STORE | D_STRADDLE:
+#			asm(" PUSHW %ap");	/* store ap on stack */
+#			asm(" MOVW 0x28(%fp),%r0");	/* put mask3 in r0 */
+#			asm(" MOVW 0x2c(%fp),%ap");	/* put mask4 in ap */
+#			do {
+#				asm(" ROTW %r4,0(%r8),%r1");
+#				asm(" XORW3 0(%r7),%r1,%r2");
+#				asm(" ANDW2 %r0,%r2");
+#				asm(" XORW2 %r2,0(%r7)");
+#				asm(" XORW2 4(%r7),%r1");
+#				asm(" ANDW2 %ap,%r1");
+#				asm(" XORW2 %r1,4(%r7)");
+#				asm(" ADDW2 %r6, %r8");
+#				asm(" ADDW2 %r5, %r7");
+#			    } while (--i > 0);
+	subw2	&1,%r3
+	jpos	.L244
+.L242:
+ POPW %ap
+	jmp	.L231
+.L245:
+ PUSHW %ap
+ SUBW3 %r4,&0x20,%ap
+ MOVW 0x20(%fp),%r0
+ MOVW 0x24(%fp),%r2
+ PUSHW %fp
+.L248:
+ ANDW3 %r0, 0(%r8), %r1
+ ANDW3 %r2, 4(%r8),%ap
+ ORW2 %ap, %r1
+ ROTW %r4, %r1, %r1
+ XORW3 0(%r7), %r1, %ap
+ ANDW2 0x28(%fp), %ap
+ XORW2 %ap, 0(%r7)
+ XORW2 4(%r7), %r1
+ ANDW2 0x2c(%fp), %r1
+ XORW2 %r1, 4(%r7)
+ ADDW2 %r6, %r8
+ ADDW2 %r5, %r7
+.L247:
+#			asm(" POPW %ap");	/* restore ap from stack */
+#			break;
+#		case F_STORE | S_STRADDLE | D_STRADDLE:
+#			asm(" PUSHW %ap");	/* store ap on stack */
+#			asm(" SUBW3 %r4,&0x20,%ap");	/* right shift distance */
+#			asm(" MOVW 0x20(%fp),%r0");	/* r0 <- mask1 */
+#			asm(" MOVW 0x24(%fp),%r2");	/* r2 <- mask2 */
+#			asm(" PUSHW %fp");	/* store fp on stack */
+#			do {
+#				asm(" ANDW3 %r0, 0(%r8), %r1");
+#				asm(" ANDW3 %r2, 4(%r8),%ap");
+#				asm(" ORW2 %ap, %r1");
+#				asm(" ROTW %r4, %r1, %r1");
+#				asm(" XORW3 0(%r7), %r1, %ap");
+#				asm(" ANDW2 0x28(%fp), %ap");
+#				asm(" XORW2 %ap, 0(%r7)");
+#				asm(" XORW2 4(%r7), %r1");
+#				asm(" ANDW2 0x2c(%fp), %r1");
+#				asm(" XORW2 %r1, 4(%r7)");
+#				asm(" ADDW2 %r6, %r8");
+#				asm(" ADDW2 %r5, %r7");
+#			} while (--i > 0);
+	subw2	&1,%r3
+	jpos	.L248
+.L246:
+ POPW %fp
+ POPW %ap
+	jmp	.L231
+.L249:
+#			asm(" POPW %fp");	/* restore fp from stack */
+#			asm(" POPW %ap");	/* restore ap from stack */
+#			break;
+#		case F_OR:
+#			 mask1 = topbits[a+1] >> px31;
+	addw3	&1,0(%fp),%r0
+	LLSW3	&2,%r0,%r0
+	LRSW3	24(%fp),topbits(%r0),%r0
+	movw	%r0,32(%fp)
+ MOVW 0x20(%fp),%r1
+.L252:
+ ROTW %r4,0(%r8),%r2
+ ANDW2 %r1,%r2
+ ORW2 %r2,0(%r7)
+ ADDW2 %r6, %r8
+ ADDW2 %r5, %r7
+.L251:
+#			asm(" MOVW 0x20(%fp),%r1");	/* mask1 */
+#			do {
+#				asm(" ROTW %r4,0(%r8),%r2");
+#				asm(" ANDW2 %r1,%r2");
+#				asm(" ORW2 %r2,0(%r7)");
+#				asm(" ADDW2 %r6, %r8");
+#				asm(" ADDW2 %r5, %r7");
+#			} while (--i > 0);
+	subw2	&1,%r3
+	jpos	.L252
+.L250:
+	jmp	.L231
+.L253:
+ MOVW 0x20(%fp),%r0
+ PUSHW %ap
+ MOVW 0x24(%fp),%ap
+.L256:
+ ANDW3 %r0,0(%r8),%r2
+ ANDW3 %ap,4(%r8),%r1
+ ORW2 %r2,%r1
+ ROTW %r4,%r1,%r1
+ ORW2 %r1,0(%r7)
+ ADDW2 %r6, %r8
+ ADDW2 %r5, %r7
+.L255:
+#			break;
+#		case F_OR | S_STRADDLE:
+#			asm(" MOVW 0x20(%fp),%r0");	/* store mask1 in a reg */
+#			asm(" PUSHW %ap");	/* store ap on stack */
+#			asm(" MOVW 0x24(%fp),%ap");	/* store mask1 in a reg */
+#	
+#			do {
+#				asm(" ANDW3 %r0,0(%r8),%r2"); /* x20(fp)=mask1 */
+#				asm(" ANDW3 %ap,4(%r8),%r1"); /* x24(fp)=mask2 */
+#				asm(" ORW2 %r2,%r1");
+#				asm(" ROTW %r4,%r1,%r1");
+#				asm(" ORW2 %r1,0(%r7)");
+#				asm(" ADDW2 %r6, %r8");
+#				asm(" ADDW2 %r5, %r7");
+#			} while (--i > 0);
+	subw2	&1,%r3
+	jpos	.L256
+.L254:
+ POPW %ap
+	jmp	.L231
+.L257:
+#			asm(" POPW %ap");	/* restore ap from stack */
+#			break;
+#		case F_OR | D_STRADDLE:
+#			if (a <= 16)			/* very narrow, 17 bits max */
+	cmpw	0(%fp),&16
+	jg	.L258
+ MOVW &0xffff0000,%r2
+ ORW3 0x28(%fp),0x2c(%fp),%r0
+.L261:
+ ROTW %r4,0(%r8),%r1
+ ANDW2 %r0,%r1
+ ORH2 %r1,2(%r7)
+ ANDW2 %r2, %r1
+ ORW2 %r1, 4(%r7)
+ ADDW2 %r6, %r8
+ ADDW2 %r5, %r7
+.L260:
+#			{
+#			asm(" MOVW &0xffff0000,%r2");
+#			asm(" ORW3 0x28(%fp),0x2c(%fp),%r0");	/* compute mask */
+#			do {
+#				asm(" ROTW %r4,0(%r8),%r1");
+#				asm(" ANDW2 %r0,%r1");	/* mask */
+#				asm(" ORH2 %r1,2(%r7)");
+#				asm(" ANDW2 %r2, %r1");
+#				asm(" ORW2 %r1, 4(%r7)");
+#				asm(" ADDW2 %r6, %r8");
+#				asm(" ADDW2 %r5, %r7");
+#			   } while (--i > 0);
+	subw2	&1,%r3
+	jpos	.L261
+.L259:
+	jmp	.L262
+.L258:
+ MOVW 0x28(%fp),%r0
+ PUSHW %ap
+ MOVW 0x2c(%fp),%ap
+.L265:
+ ROTW %r4,0(%r8),%r1
+ ANDW3 %r0,%r1,%r2
+ ORW2 %r2,0(%r7)
+ ANDW2 %ap,%r1
+ ORW2 %r1,4(%r7)
+ ADDW2 %r6, %r8
+ ADDW2 %r5, %r7
+.L264:
+#			}
+#			else
+#			{
+#			asm(" MOVW 0x28(%fp),%r0");	/* store mask3 in a reg */
+#			asm(" PUSHW %ap");	/* store ap on stack */
+#			asm(" MOVW 0x2c(%fp),%ap");	/* store mask4 in a reg */
+#			do {
+#				asm(" ROTW %r4,0(%r8),%r1");
+#				asm(" ANDW3 %r0,%r1,%r2");
+#				asm(" ORW2 %r2,0(%r7)");
+#				asm(" ANDW2 %ap,%r1");
+#				asm(" ORW2 %r1,4(%r7)");
+#				asm(" ADDW2 %r6, %r8");
+#				asm(" ADDW2 %r5, %r7");
+#			    } while (--i > 0);
+	subw2	&1,%r3
+	jpos	.L265
+.L263:
+ POPW %ap
+.L262:
+	jmp	.L231
+.L266:
+ MOVW 0x20(%fp),%r0
+ PUSHW %ap
+ MOVW 0x24(%fp),%ap
+#			asm(" POPW %ap");	/* restore ap from stack */
+#			}
+#			break;
+#		case F_OR | S_STRADDLE | D_STRADDLE:
+#			asm(" MOVW 0x20(%fp),%r0");	/* store mask1 in a reg */
+#			asm(" PUSHW %ap");	/* store ap on stack */
+#			asm(" MOVW 0x24(%fp),%ap");	/* store mask2 in a reg */
+#			if (a > 16){		/* not super narrow */
+	cmpw	0(%fp),&16
+	jle	.L267
+.L270:
+ ANDW3 %r0,0(%r8),%r1
+ ANDW3 %ap,4(%r8),%r2
+ ORW2 %r2,%r1
+ ROTW %r4,%r1,%r1
+ ANDW3 0x28(%fp),%r1,%r2
+ ORW2 %r2,0(%r7)
+ ANDW2 0x2c(%fp),%r1
+ ORW2 %r1,4(%r7)
+ ADDW2 %r6, %r8
+ ADDW2 %r5, %r7
+.L269:
+#			do {
+#				asm(" ANDW3 %r0,0(%r8),%r1");
+#				asm(" ANDW3 %ap,4(%r8),%r2");
+#				asm(" ORW2 %r2,%r1");
+#				asm(" ROTW %r4,%r1,%r1");
+#				asm(" ANDW3 0x28(%fp),%r1,%r2");
+#				asm(" ORW2 %r2,0(%r7)");
+#				asm(" ANDW2 0x2c(%fp),%r1");
+#				asm(" ORW2 %r1,4(%r7)");
+#				asm(" ADDW2 %r6, %r8");
+#				asm(" ADDW2 %r5, %r7");
+#			} while (--i > 0);
+	subw2	&1,%r3
+	jpos	.L270
+.L268:
+	jmp	.L271
+.L267:
+.L274:
+ ANDW3 %r0,0(%r8),%r1
+ ANDW3 %ap,4(%r8),%r2
+ ORW2 %r2,%r1
+ ROTW %r4,%r1,%r1
+ ORH2 %r1,2(%r7)
+ ANDW2 &0xffff0000,%r1
+ ORW2 %r1,4(%r7)
+ ADDW2 %r6, %r8
+ ADDW2 %r5, %r7
+.L273:
+#			}
+#			else
+#			{
+#			do {
+#				asm(" ANDW3 %r0,0(%r8),%r1");
+#				asm(" ANDW3 %ap,4(%r8),%r2");
+#				asm(" ORW2 %r2,%r1");
+#				asm(" ROTW %r4,%r1,%r1");
+#				asm(" ORH2 %r1,2(%r7)");
+#				asm(" ANDW2 &0xffff0000,%r1");
+#				asm(" ORW2 %r1,4(%r7)");
+#				asm(" ADDW2 %r6, %r8");
+#				asm(" ADDW2 %r5, %r7");
+#			} while (--i > 0);
+	subw2	&1,%r3
+	jpos	.L274
+.L272:
+.L271:
+ POPW %ap
+	jmp	.L231
+.L275:
+#			}
+#			asm(" POPW %ap");	/* restore ap from stack */
+#			break;
+#		case F_CLR:
+#			mask1 = topbits[a+1] >> px31;
+	addw3	&1,0(%fp),%r0
+	LLSW3	&2,%r0,%r0
+	LRSW3	24(%fp),topbits(%r0),%r0
+	movw	%r0,32(%fp)
+ MOVW 0x20(%fp),%r1
+.L278:
+ ROTW %r4,0(%r8),%r2
+ ANDW2 %r1,%r2
+ MCOMW %r2,%r2
+ ANDW2 %r2,0(%r7)
+ ADDW2 %r6, %r8
+ ADDW2 %r5, %r7
+.L277:
+#			asm(" MOVW 0x20(%fp),%r1");	/* mask1 */
+#			do {
+#				asm(" ROTW %r4,0(%r8),%r2");
+#				asm(" ANDW2 %r1,%r2");
+#				asm(" MCOMW %r2,%r2");
+#				asm(" ANDW2 %r2,0(%r7)");
+#				asm(" ADDW2 %r6, %r8");
+#				asm(" ADDW2 %r5, %r7");
+#			} while (--i > 0);
+	subw2	&1,%r3
+	jpos	.L278
+.L276:
+	jmp	.L231
+.L279:
+ MOVW 0x20(%fp),%r0
+ PUSHW %ap
+ MOVW 0x24(%fp),%ap
+.L282:
+ ANDW3 %r0,0(%r8),%r2
+ ANDW3 %ap,4(%r8),%r1
+ ORW2 %r2,%r1
+ ROTW %r4,%r1,%r1
+ MCOMW %r1,%r1
+ ANDW2 %r1,0(%r7)
+ ADDW2 %r6, %r8
+ ADDW2 %r5, %r7
+.L281:
+#			break;
+#		case F_CLR | S_STRADDLE:
+#			asm(" MOVW 0x20(%fp),%r0");	/* store mask1 in a reg */
+#			asm(" PUSHW %ap");	/* store ap on stack */
+#			asm(" MOVW 0x24(%fp),%ap");	/* store mask1 in a reg */
+#	
+#			do {
+#				asm(" ANDW3 %r0,0(%r8),%r2"); /* x20(fp)=mask1 */
+#				asm(" ANDW3 %ap,4(%r8),%r1"); /* x24(fp)=mask2 */
+#				asm(" ORW2 %r2,%r1");
+#				asm(" ROTW %r4,%r1,%r1");
+#				asm(" MCOMW %r1,%r1");
+#				asm(" ANDW2 %r1,0(%r7)");
+#				asm(" ADDW2 %r6, %r8");
+#				asm(" ADDW2 %r5, %r7");
+#			} while (--i > 0);
+	subw2	&1,%r3
+	jpos	.L282
+.L280:
+ POPW %ap
+	jmp	.L231
+.L283:
+#			asm(" POPW %ap");	/* restore ap from stack */
+#			break;
+#		case F_CLR | D_STRADDLE:
+#			if (a <= 16)			/* very narrow, 17 bits max */
+	cmpw	0(%fp),&16
+	jg	.L284
+ MOVW &0xffff,%r2
+ ORW3 0x28(%fp),0x2c(%fp),%r0
+.L287:
+ ROTW %r4,0(%r8),%r1
+ ANDW2 %r0,%r1
+ MCOMW %r1,%r1
+ ANDH2 %r1,2(%r7)
+ ORW2 %r2,%r1
+ ANDW2 %r1,4(%r7)
+ ADDW2 %r6, %r8
+ ADDW2 %r5, %r7
+.L286:
+#			{
+#			asm(" MOVW &0xffff,%r2");
+#			asm(" ORW3 0x28(%fp),0x2c(%fp),%r0");	/* compute mask */
+#			do {
+#				asm(" ROTW %r4,0(%r8),%r1");
+#				asm(" ANDW2 %r0,%r1");	/* mask */
+#				asm(" MCOMW %r1,%r1");
+#				asm(" ANDH2 %r1,2(%r7)");
+#				asm(" ORW2 %r2,%r1");
+#				asm(" ANDW2 %r1,4(%r7)");
+#				asm(" ADDW2 %r6, %r8");
+#				asm(" ADDW2 %r5, %r7");
+#			   } while (--i > 0);
+	subw2	&1,%r3
+	jpos	.L287
+.L285:
+	jmp	.L288
+.L284:
+ MOVW 0x28(%fp),%r0
+ PUSHW %ap
+ MOVW 0x2c(%fp),%ap
+.L291:
+ ROTW %r4,0(%r8),%r1
+ ANDW3 %r0,%r1,%r2
+ MCOMW %r2,%r2
+ ANDW2 %r2,0(%r7)
+ ANDW2 %ap,%r1
+ MCOMW %r1,%r1
+ ANDW2 %r1,4(%r7)
+ ADDW2 %r6, %r8
+ ADDW2 %r5, %r7
+.L290:
+#			}
+#			else
+#			{
+#			asm(" MOVW 0x28(%fp),%r0");	/* store mask3 in a reg */
+#			asm(" PUSHW %ap");	/* store ap on stack */
+#			asm(" MOVW 0x2c(%fp),%ap");	/* store mask4 in a reg */
+#			do {
+#				asm(" ROTW %r4,0(%r8),%r1");
+#				asm(" ANDW3 %r0,%r1,%r2");
+#				asm(" MCOMW %r2,%r2");
+#				asm(" ANDW2 %r2,0(%r7)");
+#				asm(" ANDW2 %ap,%r1");
+#				asm(" MCOMW %r1,%r1");
+#				asm(" ANDW2 %r1,4(%r7)");
+#				asm(" ADDW2 %r6, %r8");
+#				asm(" ADDW2 %r5, %r7");
+#			    } while (--i > 0);
+	subw2	&1,%r3
+	jpos	.L291
+.L289:
+ POPW %ap
+.L288:
+	jmp	.L231
+.L292:
+ MOVW 0x20(%fp),%r0
+ PUSHW %ap
+ MOVW 0x24(%fp),%ap
+#			asm(" POPW %ap");	/* restore ap from stack */
+#			}
+#			break;
+#		case F_CLR | S_STRADDLE | D_STRADDLE:
+#			asm(" MOVW 0x20(%fp),%r0");	/* store mask1 in a reg */
+#			asm(" PUSHW %ap");	/* store ap on stack */
+#			asm(" MOVW 0x24(%fp),%ap");	/* store mask2 in a reg */
+#			if (a > 16){		/* not super narrow */
+	cmpw	0(%fp),&16
+	jle	.L293
+.L296:
+ ANDW3 %r0,0(%r8),%r1
+ ANDW3 %ap,4(%r8),%r2
+ ORW2 %r2,%r1
+ ROTW %r4,%r1,%r1
+ ANDW3 0x28(%fp),%r1,%r2
+ MCOMW %r2,%r2
+ ANDW2 %r2,0(%r7)
+ ANDW2 0x2c(%fp),%r1
+ MCOMW %r1,%r1
+ ANDW2 %r1,4(%r7)
+ ADDW2 %r6, %r8
+ ADDW2 %r5, %r7
+.L295:
+#			do {
+#				asm(" ANDW3 %r0,0(%r8),%r1");
+#				asm(" ANDW3 %ap,4(%r8),%r2");
+#				asm(" ORW2 %r2,%r1");
+#				asm(" ROTW %r4,%r1,%r1");
+#				asm(" ANDW3 0x28(%fp),%r1,%r2");
+#				asm(" MCOMW %r2,%r2");
+#				asm(" ANDW2 %r2,0(%r7)");
+#				asm(" ANDW2 0x2c(%fp),%r1");
+#				asm(" MCOMW %r1,%r1");
+#				asm(" ANDW2 %r1,4(%r7)");
+#				asm(" ADDW2 %r6, %r8");
+#				asm(" ADDW2 %r5, %r7");
+#			} while (--i > 0);
+	subw2	&1,%r3
+	jpos	.L296
+.L294:
+	jmp	.L297
+.L293:
+.L300:
+ ANDW3 %r0,0(%r8),%r1
+ ANDW3 %ap,4(%r8),%r2
+ ORW2 %r2,%r1
+ ROTW %r4,%r1,%r1
+ MCOMW %r1,%r1
+ ANDH2 %r1,2(%r7)
+ ORW2 &0xffff,%r1
+ ANDW2 %r1,4(%r7)
+ ADDW2 %r6, %r8
+ ADDW2 %r5, %r7
+.L299:
+#			}
+#			else
+#			{
+#			do {
+#				asm(" ANDW3 %r0,0(%r8),%r1");
+#				asm(" ANDW3 %ap,4(%r8),%r2");
+#				asm(" ORW2 %r2,%r1");
+#				asm(" ROTW %r4,%r1,%r1");
+#				asm(" MCOMW %r1,%r1");
+#				asm(" ANDH2 %r1,2(%r7)");
+#				asm(" ORW2 &0xffff,%r1");
+#				asm(" ANDW2 %r1,4(%r7)");
+#				asm(" ADDW2 %r6, %r8");
+#				asm(" ADDW2 %r5, %r7");
+#			} while (--i > 0);
+	subw2	&1,%r3
+	jpos	.L300
+.L298:
+.L297:
+ POPW %ap
+	jmp	.L231
+.L301:
+#			}
+#			asm(" POPW %ap");	/* restore ap from stack */
+#			break;
+#		case F_XOR:
+#			mask1 = topbits[a+1] >> px31;
+	addw3	&1,0(%fp),%r0
+	LLSW3	&2,%r0,%r0
+	LRSW3	24(%fp),topbits(%r0),%r0
+	movw	%r0,32(%fp)
+ MOVW 0x20(%fp),%r1
+.L304:
+ ROTW %r4,0(%r8),%r2
+ ANDW2 %r1,%r2
+ XORW2 %r2,0(%r7)
+ ADDW2 %r6, %r8
+ ADDW2 %r5, %r7
+.L303:
+#			asm(" MOVW 0x20(%fp),%r1");	/* mask1 */
+#			do {
+#				asm(" ROTW %r4,0(%r8),%r2");
+#				asm(" ANDW2 %r1,%r2");
+#				asm(" XORW2 %r2,0(%r7)");
+#				asm(" ADDW2 %r6, %r8");
+#				asm(" ADDW2 %r5, %r7");
+#			} while (--i > 0);
+	subw2	&1,%r3
+	jpos	.L304
+.L302:
+	jmp	.L231
+.L305:
+ MOVW 0x20(%fp),%r0
+ PUSHW %ap
+ MOVW 0x24(%fp),%ap
+.L308:
+ ANDW3 %r0,0(%r8),%r2
+ ANDW3 %ap,4(%r8),%r1
+ ORW2 %r2,%r1
+ ROTW %r4,%r1,%r1
+ XORW2 %r1,0(%r7)
+ ADDW2 %r6, %r8
+ ADDW2 %r5, %r7
+.L307:
+#			break;
+#		case F_XOR | S_STRADDLE:
+#			asm(" MOVW 0x20(%fp),%r0");	/* store mask1 in a reg */
+#			asm(" PUSHW %ap");	/* store ap on stack */
+#			asm(" MOVW 0x24(%fp),%ap");	/* store mask1 in a reg */
+#	
+#			do {
+#				asm(" ANDW3 %r0,0(%r8),%r2"); /* x20(fp)=mask1 */
+#				asm(" ANDW3 %ap,4(%r8),%r1"); /* x24(fp)=mask2 */
+#				asm(" ORW2 %r2,%r1");
+#				asm(" ROTW %r4,%r1,%r1");
+#				asm(" XORW2 %r1,0(%r7)");
+#				asm(" ADDW2 %r6, %r8");
+#				asm(" ADDW2 %r5, %r7");
+#			} while (--i > 0);
+	subw2	&1,%r3
+	jpos	.L308
+.L306:
+ POPW %ap
+	jmp	.L231
+.L309:
+#			asm(" POPW %ap");	/* restore ap from stack */
+#			break;
+#		case F_XOR | D_STRADDLE:
+#			if (a <= 16)			/* very narrow, 17 bits max */
+	cmpw	0(%fp),&16
+	jg	.L310
+ MOVW &0xffff0000,%r2
+ ORW3 0x28(%fp),0x2c(%fp),%r0
+.L313:
+ ROTW %r4,0(%r8),%r1
+ ANDW2 %r0,%r1
+ XORH2 %r1,2(%r7)
+ ANDW2 %r2,%r1
+ XORW2 %r1,4(%r7)
+ ADDW2 %r6, %r8
+ ADDW2 %r5, %r7
+.L312:
+#			{
+#			asm(" MOVW &0xffff0000,%r2");
+#			asm(" ORW3 0x28(%fp),0x2c(%fp),%r0");	/* compute mask */
+#			do {
+#				asm(" ROTW %r4,0(%r8),%r1");
+#				asm(" ANDW2 %r0,%r1");	/* mask */
+#				asm(" XORH2 %r1,2(%r7)");
+#				asm(" ANDW2 %r2,%r1");
+#				asm(" XORW2 %r1,4(%r7)");
+#				asm(" ADDW2 %r6, %r8");
+#				asm(" ADDW2 %r5, %r7");
+#			   } while (--i > 0);
+	subw2	&1,%r3
+	jpos	.L313
+.L311:
+	jmp	.L314
+.L310:
+ MOVW 0x28(%fp),%r0
+ PUSHW %ap
+ MOVW 0x2c(%fp),%ap
+.L317:
+ ROTW %r4,0(%r8),%r1
+ ANDW3 %r0,%r1,%r2
+ XORW2 %r2,0(%r7)
+ ANDW2 %ap,%r1
+ XORW2 %r1,4(%r7)
+ ADDW2 %r6, %r8
+ ADDW2 %r5, %r7
+.L316:
+#			}
+#			else
+#			{
+#			asm(" MOVW 0x28(%fp),%r0");	/* store mask3 in a reg */
+#			asm(" PUSHW %ap");	/* store ap on stack */
+#			asm(" MOVW 0x2c(%fp),%ap");	/* store mask4 in a reg */
+#			do {
+#				asm(" ROTW %r4,0(%r8),%r1");
+#				asm(" ANDW3 %r0,%r1,%r2");
+#				asm(" XORW2 %r2,0(%r7)");
+#				asm(" ANDW2 %ap,%r1");
+#				asm(" XORW2 %r1,4(%r7)");
+#				asm(" ADDW2 %r6, %r8");
+#				asm(" ADDW2 %r5, %r7");
+#			    } while (--i > 0);
+	subw2	&1,%r3
+	jpos	.L317
+.L315:
+ POPW %ap
+.L314:
+	jmp	.L231
+.L318:
+ MOVW 0x20(%fp),%r0
+ PUSHW %ap
+ MOVW 0x24(%fp),%ap
+#			asm(" POPW %ap");	/* restore ap from stack */
+#			}
+#			break;
+#		case F_XOR | S_STRADDLE | D_STRADDLE:
+#			asm(" MOVW 0x20(%fp),%r0");	/* store mask1 in a reg */
+#			asm(" PUSHW %ap");	/* store ap on stack */
+#			asm(" MOVW 0x24(%fp),%ap");	/* store mask2 in a reg */
+#			if (a > 16){		/* not super narrow */
+	cmpw	0(%fp),&16
+	jle	.L319
+.L322:
+ ANDW3 %r0,0(%r8),%r1
+ ANDW3 %ap,4(%r8),%r2
+ ORW2 %r2,%r1
+ ROTW %r4,%r1,%r1
+ ANDW3 0x28(%fp),%r1,%r2
+ XORW2 %r2,0(%r7)
+ ANDW2 0x2c(%fp),%r1
+ XORW2 %r1,4(%r7)
+ ADDW2 %r6, %r8
+ ADDW2 %r5, %r7
+.L321:
+#			do {
+#				asm(" ANDW3 %r0,0(%r8),%r1");
+#				asm(" ANDW3 %ap,4(%r8),%r2");
+#				asm(" ORW2 %r2,%r1");
+#				asm(" ROTW %r4,%r1,%r1");
+#				asm(" ANDW3 0x28(%fp),%r1,%r2");
+#				asm(" XORW2 %r2,0(%r7)");
+#				asm(" ANDW2 0x2c(%fp),%r1");
+#				asm(" XORW2 %r1,4(%r7)");
+#				asm(" ADDW2 %r6, %r8");
+#				asm(" ADDW2 %r5, %r7");
+#			} while (--i > 0);
+	subw2	&1,%r3
+	jpos	.L322
+.L320:
+	jmp	.L323
+.L319:
+.L326:
+ ANDW3 %r0,0(%r8),%r1
+ ANDW3 %ap,4(%r8),%r2
+ ORW2 %r2,%r1
+ ROTW %r4,%r1,%r1
+ XORH2 %r1,2(%r7)
+ ANDW2 &0xffff0000,%r1
+ XORW2 %r1,4(%r7)
+ ADDW2 %r6, %r8
+ ADDW2 %r5, %r7
+.L325:
+#			}
+#			else
+#			{
+#			do {
+#				asm(" ANDW3 %r0,0(%r8),%r1");
+#				asm(" ANDW3 %ap,4(%r8),%r2");
+#				asm(" ORW2 %r2,%r1");
+#				asm(" ROTW %r4,%r1,%r1");
+#				asm(" XORH2 %r1,2(%r7)");
+#				asm(" ANDW2 &0xffff0000,%r1");
+#				asm(" XORW2 %r1,4(%r7)");
+#				asm(" ADDW2 %r6, %r8");
+#				asm(" ADDW2 %r5, %r7");
+#			} while (--i > 0);
+	subw2	&1,%r3
+	jpos	.L326
+.L324:
+.L323:
+ POPW %ap
+	jmp	.L231
+.L232:
+	cmpw	%r0,&0
+	jl	.L327
+	cmpw	%r0,&15
+	jg	.L327
+	ALSW3	&2,%r0,%r0
+	jmp	*.L328(%r0)
+	.data
+	.align	4
+#SWBEG
+.L328:
+	.word	.L233
+	.word	.L249
+	.word	.L275
+	.word	.L301
+	.word	.L237
+	.word	.L253
+	.word	.L279
+	.word	.L305
+	.word	.L241
+	.word	.L257
+	.word	.L283
+	.word	.L309
+	.word	.L245
+	.word	.L266
+	.word	.L292
+	.word	.L318
+#SWEND
+	.text
+.L327:
+.L231:
+	jmp	.L31
+.L31:
+	.def	.ef;	.val	.;	.scl	101;	.line	909;	.endef
+	.ln	909
+	.set	.F1,64
+	.set	.R1,6
+	ret	&.R1
+	.def	bitblt;	.val	.;	.scl	-1;	.endef
+	.data
+#		}
+#		asm(" POPW %ap");	/* restore ap from stack */
+#		break;
+#	}
+#	return;
+#}

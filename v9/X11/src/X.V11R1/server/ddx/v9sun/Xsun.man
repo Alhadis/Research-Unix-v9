@@ -1,0 +1,194 @@
+.\" $Header: Xsun.man,v 1.1 87/09/14 14:50:44 toddb Exp $
+.TH XSUN 8 "9 Sep 1987" "X Version 11"
+.SH NAME
+Xsun \- Sun server for X Version 11
+.SH SYNOPSIS
+.B Xsun
+[ option ] ...
+.SH DESCRIPTION
+.I Xsun
+is the server for Version 11 of the X window system on Sun hardware.
+It will normally be started by
+.IR xinit (1),
+or perhaps by some script such as:
+.LP
+.nf
+.ta 0.5i 1i 1.5i
+#!/bin/sh
+home=/disk1d/x11
+
+case "$1" in
+"")	X=$home/Bin/X;;
+/*)	X=$1;;
+*)	X=`pwd`/$1;;
+esac
+
+clear
+xinit -- $X -fp $home/Lib/fonts -co $home/Lib/rgb
+kbd_mode -a
+.fi
+.PP
+.SH
+CONFIGURATIONS
+.PP
+.I Xsun
+operates under SunOS versions 3.2,  3.4,  and 4.0,  on Sun/2,  Sun/3
+and Sun/4 architectures.
+It normally auto-configures to use all available displays;  it supports
+the following display types:
+.TP
+\fBbwtwo\fP
+in both 1152*900 and 1600*1280 versions.
+.TP
+\fBcgtwo\fP
+used both as a color and a monochrome display (for X/160C).
+.TP
+\fBcgfour\fP
+used both as a color and a monochrome display (for 3/110 & 3/60).
+.PP
+It does not support the GP,  GP+,  or GP2.  If you have one of these
+installed,  use the
+.B -dev
+argument to select
+.IR /dev/cgtwo0 .
+.PP
+On a 
+.BR cgfour ,
+.I Xsun
+will use both the monochrome and color screens as if they were
+two separate screens side-by-side.  Sliding the mouse off the left and right 
+edges will swap screens.
+.SH "USE WITH SUNWINDOWS OR NeWS"
+.PP
+The server can be run from outside 
+.BR suntools ,
+in which case it configures for all available displays (unless overridden
+by
+.B -dev
+options).
+Otherwise,  it can be run ``on top of'' either
+.B suntools
+or
+.BR NeWS .
+In this case,  it takes over the entire screen it was invoked from.
+.PP
+If you have multiple displays,  you can run
+.B suntools
+on both,  use
+.B adjacentscreens
+to move the mouse between them,
+and then run
+.I Xsun
+on top of one of the desktops.
+.B Adjacentscreens
+will still be in effect,  so you can move between window systems
+by sliding the mouse from one screen to another.
+.SH OPTIONS
+.TP
+\fB-mono\fP
+means use a \fBcgtwo\fP,  if present,  as a monochrome device.  Default is use it as
+a color device.
+Using it as a monochrome device is,  for the present,  mush faster.
+.TP
+\fB-debug\fP
+means that the server is being run from a debugger,
+such as
+.IR dbx (1),
+and that it should
+.I not
+set its standard input,  output and error files into non-blocking mode.
+.TP
+\fB-dev\fP
+takes the following arument as the name of the special file for
+a display device.  If any
+.B -dev
+arguments are supplied,  they are used.
+The server does not auto-configure in this case.
+.PP
+Other options are described under
+.IR X (8).
+.SH ENVIRONMENT
+.TP
+\fBXDEVICE\fP
+If present,  and if no explicit
+.B -dev
+options are given,  specifies the (colon separated) list of display devices
+to use.
+.TP
+\fBWINDOW_PARENT\fP
+If present,  specifies the
+.I /dev/win
+file of the
+.B suntools
+desktop.
+.SH "SEE ALSO"
+.PP
+.IR X (8),
+.IR xinit (1),
+.IR "Godzilla's Guide to Porting the X.11 Sample Server".
+.SH BUGS
+.TP
+1
+If the server crashes,  it may leave the keyboard in a non-useful state.
+The script above uses the
+.I kbd_mode
+command (found in the
+.I server/ddx/sun
+directory) to repair the damage.
+.TP
+2
+The server code is completely untuned,  and has inferior performance.
+In particular,  the color code is very slow (but it is very portable).
+.TP
+3
+The auto-configuration depends on there being appropriate
+special files in the
+.I /dev
+directory for the framebuffers which are to be used.  Spurious
+entries can disturb
+the process.
+For example,  the X/160C in fact has the hardware for a monochrome
+.B bwtwo0
+on the CPU board.  So if your
+.I /dev
+has a special file for
+.IR /dev/bwtwo0 ,
+the server will use it,  even though there is no monitor attached to the
+monochrome framebuffer.
+The server will appear to start,  but not to paint a cursor,  because the
+cursor is on the monochrome frame buffer.  The solution is to remove the
+.I /dev
+entries for any device you don't have a monitor for.
+.TP
+4
+There is a bug which causes the server to crash driving a
+.B cgtwo
+from a Sun/4.
+.TP
+5
+There is a race condition that sometimes happens when running
+``on top of'' NeWS.  The symptom is that parts of NeWS show through,
+and that the keyboard is in a non-useful state.  There is no
+simple work-around.
+.TP
+6
+Autorepeat for the keyboard cannot be turned off.
+.TP
+7
+The bell is not implemented yet.
+.TP
+8
+Use of the pattern (as opposed to the blanking) screensaver
+may cause the server to loop forever.
+.TP
+9
+The cursor colors are correct.  If you are sceptical,  try running
+.IR hacks/cursorcolor/cursorcolor .
+.SH AUTHORS
+.TP
+U. C. Berkeley
+Adam de Boor.
+.TP
+Sun Microsystems
+David Rosenthal,  Stuart Marks,  Robin Schaufler,  Mike Schwartz,
+Frances Ho,  Geoff Lee,  and Mark Opperman.

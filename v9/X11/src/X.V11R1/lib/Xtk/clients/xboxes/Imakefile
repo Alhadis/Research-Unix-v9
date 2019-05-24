@@ -1,0 +1,6 @@
+       INCLUDES = -I$(OLDXRMSRC) -I$(TOP) -I$(TOP)/X11
+           OBJS = xboxes.o
+           SRCS = xboxes.c
+
+SingleProgramTarget(xboxes,$(OBJS),$(XTOOLLIB) $(OLDXRMLIB) $(XLIB),)
+DependTarget()

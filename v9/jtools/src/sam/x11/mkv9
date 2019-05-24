@@ -1,0 +1,28 @@
+LIBS	= ../../sunlib/libj.a -lX11 -lipc
+CC=cc
+CFLAGS=-g -DX11 -I../../sunlib
+NPROC=2
+FSRCS= box.c draw.c frdelete.c frinit.c frinsert.c ptofchar.c select.c str.c util.c
+FOBJS= box.o draw.o frdelete.o frinit.o frinsert.o ptofchar.o select.o str.o util.o
+GSRCS= main.c icons.c menu.c mesg.c rasp.c scroll.c flayer.c
+GOBJS= main.o icons.o menu.o mesg.o rasp.o scroll.o flayer.o
+
+SRCS=$FSRCS $GSRCS
+OBJS=$FOBJS $GOBJS
+HFILES=samterm.h flayer.h frame.h
+
+xsamterm: $OBJS
+	$CC $CFLAGS -o xsamterm $OBJS $LIBS
+	strip -s xsamterm
+
+lint:	$(SRCS)
+	lint -Dlint $SRCS
+flayer.o:	flayer.h frame.h
+$(FOBJS):	frame.h
+$(GOBJS):	samterm.h frame.h flayer.h ../mesg.h
+
+xtermbundle: 
+	bundle $(HFILES) $(SRCS) makefile > xtermbundle
+
+clean:
+	rm -f *.o *.out core xtermbundle xsamterm

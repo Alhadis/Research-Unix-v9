@@ -1,0 +1,44 @@
+Mar 23 14:53:39 tcp active
+Mar 23 14:53:39 /usr/ipc/mgrs/tcpmgr: announced to fs as tcp
+Mar 23 14:53:40 /usr/ipc/mgrs/tcpmgr: announced to network as seymour cray
+Mar 23 14:56:54 callout open(/cs/tcp!capek!tcp.513) from !
+Mar 23 14:56:55 (0) open(capek) from !
+Mar 23 14:58:04 callin open(tcp!14.43.11.192!/cs/tcp.514) from tcp!mh-capek-net/capek!_unknown_
+Mar 23 14:58:04 (0) open(/cs/tcp.514) from tcp!mh-capek-net/capek!_unknown_
+Mar 23 14:58:12 callin open(tcp!14.43.11.192!/cs/tcp.514) from tcp!mh-capek-net/capek!_unknown_
+Mar 23 14:58:12 (0) open(/cs/tcp.514) from tcp!mh-capek-net/capek!_unknown_
+Mar 23 15:03:05 callout open(/cs/tcp!dumuzi!tcp.513) from !
+Mar 23 15:03:07 (2)unassigned destination open(dumuzi) from !
+Mar 23 15:06:31 callout open(/cs/tcp!capek!tcp.514) from !
+Mar 23 15:06:32 (0) open(capek) from !
+Mar 23 15:22:46 callout open(/cs/tcp!asimov!tcp.513) from !
+Mar 23 15:22:46 (0) open(asimov) from !
+Mar 23 15:23:28 callout open(/cs/tcp!capek!tcp.513) from !
+Mar 23 15:23:29 (0) open(capek) from !
+Mar 23 15:24:25 callout open(/cs/tcp!capek!tcp.513) from !
+Mar 23 15:24:25 (0) open(capek) from !
+Mar 23 15:25:59 callout open(/cs/tcp!capek!tcp.513) from !
+Mar 23 15:25:59 (0) open(capek) from !
+Mar 23 15:27:07 callout open(/cs/tcp!capek!tcp.514) from !
+Mar 23 15:27:07 (0) open(capek) from !
+Mar 23 15:33:42 callout open(/cs/tcp!bowell!tcp.513) from !
+Mar 23 15:33:44 (2)unassigned destination open(bowell) from !
+Mar 23 15:33:53 callout open(/cs/tcp!bowell!tcp.513) from !
+Mar 23 15:33:55 (2)unassigned destination open(bowell) from !
+Mar 23 15:34:05 callout open(/cs/tcp!alice!tcp.513) from !
+Mar 23 15:34:07 (2)unassigned destination open(alice) from !
+Mar 23 15:34:22 callout open(/cs/tcp!jones!tcp.513) from !
+Mar 23 15:36:19 callout open(/cs/tcp!temp-dumuzi!tcp.513) from !
+Mar 23 15:36:21 (2)unassigned destination open(temp-dumuzi) from !
+Mar 23 15:36:30 callout open(/cs/tcp!tempo-dumuzi!tcp.513) from !
+Mar 23 16:29:50 tcp active
+Mar 23 16:29:50 /usr/ipc/mgrs/tcpmgr: announced to fs as tcp
+Mar 23 16:29:50 /usr/ipc/mgrs/tcpmgr: announced to network as seymour cray
+Mar 23 16:31:29 callout open(/cs/tcp!capek!tcp.513) from !
+Mar 23 16:31:29 (0) open(capek) from !
+Mar 23 16:32:25 callin open(tcp!192.11.43.14!/cs/tcp.514) from tcp!mh-capek-net/capek!_unknown_
+Mar 23 16:32:26 (0) open(/cs/tcp.514) from tcp!mh-capek-net/capek!_unknown_
+Mar 23 16:41:35 callout open(/cs/tcp!asimov!tcp.514) from !
+Mar 23 16:41:35 (0) open(asimov) from !
+Mar 23 16:42:49 callout open(/cs/tcp!asimov!tcp.514) from !
+Mar 23 16:42:49 (0) open(asimov) from !

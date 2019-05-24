@@ -1,0 +1,200 @@
+.TH XFD 1 "12 June 1987" "X Version 11"
+.SH NAME
+xfd - X window system font displayer
+.SH SYNOPSIS
+.B xfd
+[ =\fIgeometry\fP ] [ \fIhost\fP:\fInumber\fP ] [ options ] [ fontname ]
+.SH DESCRIPTION
+.I Xfd
+creates a window which displays the characters in the named font.  The
+characters are displayed in increasing order from left to right and top to
+bottom.  The first character displayed at the top left will be character
+number 0 unless the -start option has been supplied in which case the
+character with the number given in the -start option will be used.
+.PP
+The characters are displayed in a grid of boxes, each large enough to hold any
+character of the font.
+If the -gray option has been supplied, the characters will be displayed using
+XDrawImageString using the foreground and background colors on a
+gray background.  This permits determining exactly how XDrawImageString will
+draw any given character.  If -gray has not been supplied, the characters will
+simply be drawn using the foreground color on the background color.
+.PP
+All the characters in the font may not fit in the window at once.
+To see additional characters, click the right mouse button on the window.
+This will cause the next window full of characters to be displayed.
+Clicking the left mouse button on the window will cause the previous
+window full of characters to be displayed.
+.I Xfd
+will beep if an attempt is made to go back past the 0th character.
+.PP
+Note that if the font is a 8 bit font, the characters 256-511 (0x100-0x1ff),
+512-767 (0x200-0x2ff), ... 
+will display exactly the same as the characters 0-255 (0x00-0xff).
+.I Xfd
+by default creates a window of size sufficient to display the first 256
+characters using a 16 by 16 grid.  In this case, there is no need to scroll
+forward or backward window fulls in order to see the entire contents of a 8 bit
+font.  Of course, this window may very well not fit on the screen...
+.PP
+Clicking the middle button on a character will cause that character's
+number to be displayed in both decimal and hexidecimal at the bottom of the
+window.  If verbose mode is selected, additional information about that
+particular character will be displayed as well.  The displayed information
+includes the width of the character, its left bearing, right bearing, ascent,
+and its descent.  If verbose mode is selected, typing '<' or '>' into the
+window will display the minimum or maximum values respectively 
+taken on by each of these fields over the entire font.
+.PP
+The font name is interpreted by the X server.
+To obtain a list of all the fonts available, use xlsfonts.
+On a VAX, if the name
+does not begin with ``/'', the X server adds the suffix ``.snf'' to it and
+looks up the font file in the directory \fI/usr/new/lib/X/font/\fP.  If
+the name does begin with ``/'', the X server treats it as an absolute
+pathname of a file containing a font.
+.PP
+If no font name is given on the command line, 
+.I Xfd
+displays the font ``fixed''.
+.PP
+The window stays around until the xfd process is killed
+or one of 'q', 'Q', ' ', or ctrl-c is typed into the
+.I Xfd
+window.
+.SH "OPTIONS"
+.PP
+.TP 8
+.B \fIhost\fP:\fIdisplay\fP
+Normally,
+.I xfd
+gets the host and display number to use from the environment
+variable ``DISPLAY''.  One can, however specify them explicitly.
+The
+.I host
+specifies which machine to create the window on, and
+the
+.I number
+argument specifies the display number.
+For example,
+``orpheus:1'' creates a shell window on display one on the machine
+orpheus.
+.PP
+.TP 8
+.B \-bw \fIborderwidth\fP
+Allows you to specify the width of the window border in pixels.
+.PP
+.TP 8
+.B \-rv
+The foreground and background colors will be switched.  The default colors
+are black on white.
+.PP
+.TP 8
+.B \-fw
+Overrides a previous choice of reverse video, say in a .Xdefaults file.  The
+foreground and background colors will not be switched.
+.PP
+.TP 8
+.B \-fg \fIcolor\fP
+On color displays, determines the foreground color.  (the color of the text)
+.PP
+.TP 8
+.B \-bg \fIcolor\fP
+On color displays, determines the background color.
+.PP
+.TP 8
+.B \-bd \fIcolor\fP
+On color displays, determines the color of the border.
+.PP
+.TP 8
+.B \-bf \fIfontname\fP
+Specifies the font to be used for the messages at the bottom of the window.
+.PP
+.TP 8
+.B \-tl \fItitle\fP
+Specifies that the title of the displayed window should be \fItitle\fP.
+.PP
+.TP 8
+.B \-in \fIiconname\fP
+Specifies that the name of the icon should be \fIiconname\fP.
+.PP
+.TP 8
+.B \-icon \fIfilename\fP
+Specifies that the bitmap in file \fIfilename\fP should be used for the icon.
+.PP
+.TP 8
+.B \-verbose
+Specifies that verbose mode should be used.
+.PP
+.TP 8
+.B \-gray
+Specifies that a gray background should be used.
+.PP
+.TP 8
+.B \-start \fIcharnum\fP
+Specifies that character number \fIcharnum\fP should be the first character
+displayed.
+.PP
+.TP 8
+.B \=\fIgeometry\fP
+.I Xfd
+will also take a standard geometry specification (see X(1)).
+.SH "X DEFAULTS"
+.I Xfd
+uses a number of standard default values.
+.PP
+.TP 8
+.B BorderWidth
+Set the border width of the window.
+.PP
+.TP 8
+.B BorderColor
+Set the border color of the window.
+.PP
+.TP 8
+.B ReverseVideo
+If ``on'', reverse the definition of foreground and background color.
+.PP
+.TP 8
+.B Foreground
+Set the foreground color.
+.PP
+.TP 8
+.B Background
+Set the background color.
+.PP
+.TP 8
+.B Border
+Set the color of the border.
+.PP
+.TP 8
+.B BodyFont
+Set the font to be used in the body of the window.  (I.e., for messages, etc.)
+This is not the font that \fIXfd\fP displays, just the font it uses
+to display information about the font being displayed.
+.PP
+.TP 8
+.B IconName
+Set the name of the icon.
+.PP
+.TP 8
+.B IconBitmap
+Set the file we should look in to get the bitmap for the icon.
+.PP
+.TP 8
+.B Title
+Set the title to be used.
+.SH FILES
+/usr/new/lib/X/font/*.snf
+.SH "SEE ALSO"
+X(1), X(8C), xterm(1), xlsfonts(1)
+.SH ENVIRONMENT
+DISPLAY	-	To find out which display you are using.
+.SH BUGS
+It should display the name of the font somewhere.
+.SH AUTHOR
+Mark Lillibridge, MIT Project Athena
+.br
+Copyright (c) 1987 by Massachusetts Institute of Technology.
+.br
+See X(1) for a complete copyright notice.

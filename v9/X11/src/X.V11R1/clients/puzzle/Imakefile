@@ -1,0 +1,6 @@
+/* $Header: Imakefile,v 1.1 87/09/12 13:53:01 toddb Exp $ */
+LOCAL_LIBRARIES = $(XLIB)
+SRCS = puzzle.c main.c VEGview.c Vvcolor.c pmap.c
+OBJS = puzzle.o main.o VEGview.o Vvcolor.o pmap.o
+
+ComplexProgramTarget(puzzle)

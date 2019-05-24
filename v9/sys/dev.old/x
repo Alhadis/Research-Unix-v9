@@ -1,0 +1,32 @@
+Subject: question
+
+Sorry for not responding sooner; I was away.  And I should have remembered
+the original question.
+
+In practice a (non ANSI) compiler can't be too strict about diagnosing
+mismatch of actual and formal parameters, or imputed actual parameters,
+because of routines like printf.  Nevertheless, the intent of the
+"compiler does not compare" clause was more to warn the programmer
+that consistency was his responsibility than to forbid a compiler
+from detecting inconsistency.
+
+Again pragmatically, I suspect that a compiler should probably be
+somewhat liberal if it does detect a mismatch-- give warnings
+rather than fatal errors, for example.  In particular, you do
+want to be able to compile printf together with routines that
+use it!  In addition, there is lots of code floating around
+that is actually in error, but if compiled straightforwardly
+and blindly will in fact work.  You will need to deal with
+this somehow.
+
+An ANSI compiler is presumably entitled to be more stringent,
+because there are explicit means of indicating that a function's
+arguments are variadic.
+
+In short, you're welcome to check argument consistency, but
+be careful that your compiler doesn't cause more trouble than
+it saves: the purpose is presumably to alert users to problematic
+programs, not to prevent importation of code that will in fact work,
+at least on most machines (including the one you are compiling for).
+
+	Dennis

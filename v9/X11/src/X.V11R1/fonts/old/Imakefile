@@ -1,0 +1,58 @@
+#define IHaveSubdirs
+#define PassCDebugFlags 'CDEBUGFLAGS=$(CDEBUGFLAGS)'
+
+             FC = compiler/fc
+         SUBDIRS= compiler
+        HEADERS = cursorfont.h
+
+all: $(SUBDIRS) fonts
+
+$(SUBDIRS): FRC
+	cd $@; echo building $@ ; make $(MFLAGS) all
+
+InstallMultiple($(HEADERS),$(INCDIR))
+
+/*
+ * Yuk and XXX!  install puts these files in $(LIBDIR)/fonts/snf not
+ * in $(LIBDIR)/fonts!
+ *
+ * InstallMultiple(snf/?*.snf,$(LIBDIR)/fonts)
+ */
+
+install:: snf/?*.snf
+	@case '${MFLAGS}' in *[i]*) set +e;; esac; \
+	cd snf; \
+	for i in *.snf; do \
+		(set -x; $(INSTALL) -c $(INSTALLFLAGS) $$i $(LIBDIR)/fonts); \
+	done
+
+# Gruesome hackery suggested by Bill Sommerfeld.
+# The following rule finds all the BDF files, creates a new makefile to
+# compile the changed ones into SNF files, then runs that.
+
+fonts: snf
+	make snf/Makefile
+	cd snf; make -f Makefile
+
+snf/Makefile: bdf Makefile
+	@echo "Building $@"; \
+	rm -f $@; \
+	echo "# This makefile is created automagically by ../Makefile" > $@; \
+	echo 'FC=../$(FC)' >> $@; \
+	echo 'all: \'	>> $@; \
+	(cd bdf;ls *.bdf) \
+	| sed -e 's/\(.*\).bdf$$/\1.snf \\/' -e '$$s/..$$//' >> $@; \
+	echo >> $@; \
+	(cd bdf; ls *.bdf) \
+	| awk -F. '{printf "%s.snf: ../bdf/%s.bdf $$(FC)\n\t$$(FC) ../bdf/%s.bdf >$$@\n", $$1, $$1, $$1}' >> $@
+
+snf:
+	mkdir snf
+
+DependSubdirs($(SUBDIRS))
+
+clean::
+	(cd bdf; $(RM_CMD))
+	(cd snf; $(RM_CMD) Makefile *.snf)
+
+FRC:

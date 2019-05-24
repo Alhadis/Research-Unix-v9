@@ -1,0 +1,89 @@
+The X Window System, Version 11 Release 1 is now available.  This
+release represents a major redesign and enhancement of X and signals
+it's graduation from the research community into the product engineering
+and development community.  The X Window System version 11 is intended
+to be able to support virtually all known instances of raster display
+hardware and reasonable future hardware, including hardware supporting
+deep frame buffers, multiple colormaps and various levels of hardware
+graphics assist.
+
+Whereas the design and implementation of the first 10 versions of X
+were primarily the work of three individuals, Robert Scheifler of the
+M.I.T.  Laboratory for Computer Science and Jim Gettys of Digital
+Equipment Corporation and Ron Newman of M.I.T., both working at M.I.T.
+Project Athena, X version 11 is the result of the efforts of literally
+dozens of individuals at almost as many locations and organizations.
+At the risk of offending some of the players by exclusion, several
+people deserve special credit and recognition.  First, Phil Karlton
+and Scott McGregor, both of DEC, for their considerable contributions
+to the specification of the version 11 protocol.  Dave Rosenthal of
+Sun Microsystems also contributed to the protocol and provided the
+sample generic color frame buffer ddx code.  Sue Angebranndt, Raymond
+Drewry and Todd Newman of DEC's Western Software Laboratory, with
+Phil, have worked long and hard to produce the sample server
+implementation.  Our very deepest gratitude to Todd Brunhoff who
+convinced his management at Tektronix to spare him for 6 months to be
+at Project Athena.  Todd's system knowledge, his bag of tricks and
+never-fading smile were essential in keeping the beta test alive.  Bob
+Scheifler remains the author, the final arbiter and the final decision
+maker for the X Protocol itself, a job that has consumed significantly
+more time with the expansion of the design community.  Jim Gettys has
+allowed his arm to be twisted to continue to be the principal
+architect, arbiter and implementor of Xlib long after he wanted to
+move on to other tasks.
+
+Many thanks to all the beta test sites who persevered and helped us to
+achieve this milestone.  Our enormous gratitude to Dave Rosenthal,
+Erik Fortune, Raymond Drewry, Dave Gorgen and Al Mento who with us
+spent many late nights during the past week merging sources, testing
+builds and revising documentation.
+
+The full list of contributors who made this release possible is very long.
+In order to avoid filling mail queue, the complete list is in the file
+X11/doc/contributors.  It is recommended reading.
+
+This release is unique and perhaps historic in the computer industry
+in that very nearly all of the code has been contributed by the
+workstation vendors themselves.  This release will run on the Digital
+VS-2, VS-2/RC, VS-2/GPX and VS-2000 under Ultrix 2.0, and 4.3BSD, most
+Sun Microsystems workstations with bw2 and cg2/3/4/5 displays under
+3.2, 3.4 and 4.0, Apollo Computer workstations under SR9.5/6/7, and
+the IBM RT/PC with AED and APA16 under ACIS 4.3 (Not under AIX).  MIT
+does not "support" this distribution; however bugs and fixes and new
+code are gratefully accepted.
+
+To order a distribution, send a CHECK for U.S. $150 to:
+
+	MIT Microcomputer Center
+	MIT 11-209 
+	77 Massachusetts Avenue
+	Cambridge, Massachusetts, 02139
+	(617) 253-6325
+
+Purchase orders will NOT be accepted.  The distribution will come on a
+single 9 track 1600BPI tape written in Unix tar(1) format, along with
+a single copy of printed documentation.  Other distribution media or
+formats are NOT available.  Express mail shipment will be available
+at a surcharge; you should call the number above if you desire this.
+
+Distributions are also available from "zap.mit.edu" (18.72.0.126) (for
+east-coasters) and decwrl.dec.com (26.7.0.16) (for west-coasters) on
+the Internet, via anonymous FTP.  The east-coast distribution will be
+moving soon from 'zap.mit.edu' to 'athena-dist.mit.edu', so if zap is
+unavailable you should try there.
+
+Bug reports should be mailed to xbugs@athena.mit.edu.  It would be
+appreciated if you used the template in doc/bugs/bug-report.
+
+As always, in the spirit under which X was developed and is
+distributed, you are encouraged to write your own tools and share them
+if you think these clients are deficient.
+
+
+Enjoy!
+					15-Sep-87
+					Bob Scheifler
+					Jim Gettys
+					Ralph R. Swick
+					Todd Brunhoff
+					MIT Project Athena

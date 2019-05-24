@@ -1,0 +1,14 @@
+.\" $Header: xedit.man,v 1.2 87/09/14 14:40:13 toddb Exp $
+.TH XEDIT "13 June 1987" "X Version 11"
+.UC 4
+.SH NAME
+xedit \- animate text
+.SH SYNOPSIS
+.B Xedit
+[ -r ]
+.SH DESCRIPTION
+.I Xedit
+displays text.
+.SH BUGS
+There are lots of bugs.  There are lots of lacking features.
+Does not yet implement 3d extensions.

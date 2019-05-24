@@ -1,0 +1,33 @@
+BIN=/usr/lbin
+SRC=/usr/src/cmd/sam
+LIB=/usr/dak/v9compat/libv9_10.a
+
+CFILES=sam.c address.c alloc.c buffer.c cmd.c disc.c error.c file.c gcalloc.c \
+	io.c list.c mesg.c misc.c moveto.c multi.c rasp.c regexp.c string.c \
+	sys.c xec.c unix.c
+FILES=sam.o address.o alloc.o buffer.o cmd.o disc.o error.o file.o gcalloc.o \
+	io.o list.o mesg.o misc.o moveto.o multi.o rasp.o regexp.o string.o \
+	sys.o xec.o unix.o
+HFILES=sam.h errors.h parse.h mesg.h
+CFLAGS=-g -DSUN -DDIST -mc68010
+
+all:	sam
+
+sam:	$(FILES) malloc.o sun.o
+	rm -f sam
+	cc $(CFLAGS) -o sam $(FILES) malloc.o sun.o $(LIB)
+
+sun.o: sam.h errors.h mesg.h
+
+$(FILES) $(OFILES):	sam.h errors.h mesg.h
+address.o cmd.o parse.o xec.o unix.o:	parse.h
+
+install: sam term/samterm
+	cp sam $(BIN)
+	cp term/samterm $(BIN)
+	-cp xterm/xsamterm $(BIN)
+	cp sam.1t /usr/man/man1/sam.1
+	cp Sam.d /usr/lib/defaults
+
+clean:
+	rm -f *.o core *.out

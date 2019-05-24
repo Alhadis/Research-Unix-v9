@@ -1,0 +1,7 @@
+/*	@(#)local.c.old	1.1	86/02/03	SMI	*/
+# include "cpass1.h"
+# ifdef VAX
+#	include "local.vax"
+# else
+# 	include "local.68"
+# endif

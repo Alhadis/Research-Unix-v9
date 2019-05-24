@@ -1,0 +1,19 @@
+exitcmd="kill 1 1"
+if [ x"$1" = x-r ]
+then 	shift
+	exitcmd="/etc/reboot"
+fi
+time=${1-0}
+if [ $time -ne 0 ]
+then	shift
+	echo System shutdown in $time minutes $* | /etc/wall
+	sleep `expr 60 '*' $time`
+fi
+echo System going down  | /etc/wall
+cd /proc
+kill -9 `ls | grep -v '^0*[012]$' | grep -v "^0*$$\$"` > /dev/null 2>&1
+sync
+sync
+/etc/umount -a
+sync
+$exitcmd

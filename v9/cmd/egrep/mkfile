@@ -1,0 +1,22 @@
+CFLAGS=-O
+YFLAGS=-d
+NPROC=2
+
+egrep:	gram.o main.o egrep.o bm.o anal.o
+	$CC $CFLAGS -o $target $prereq
+
+install:	egrep
+	cp egrep /usr/bin/egrep
+	strip /usr/bin/egrep
+	chmod 775 /usr/bin/egrep
+	chown bin,bin /usr/bin/egrep
+
+clean:V:
+	rm -f *.o egrep
+
+y.tab.h:	gram.o
+egrep.o anal.o:	y.tab.h
+anal.o bm.o egrep.o main.o gram.o: hdr.h
+
+pp:
+	smallpr mkfile hdr.h anal.c bm.c egrep.c gram.y main.c

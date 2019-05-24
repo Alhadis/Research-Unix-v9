@@ -1,0 +1,14 @@
+This directory contains everything you need to port the
+X11 server to your hardware.
+
+In ../doc/Server you'll find a description of the DDX layer 
+(ddx.doc.tbl.ms), notes on the beta release (README.server) and 
+a changes document on differences between alpha-update and beta
+(betachg.doc).  There is also a document on strategies
+for porting the server to different types of graphics
+hardware (strat.doc.ms).
+
+
+
+
+

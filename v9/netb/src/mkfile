@@ -1,0 +1,36 @@
+all:V:	setup zarf backup myls
+
+BUILTINS=
+CFLAGS=-g -I/usr/include/sys
+OBJ=file.o input.o main.o output.o perm.o work.o
+$OBJ:	share.h
+SRC=share.h file.c input.c main.c output.c perm.c work.c setup.c
+DIR=readdir.o opendir.o closedir.o
+
+zarf:	$OBJ
+	$CC $CFLAGS $OBJ -o zarf
+
+setup:	setup.o
+	$CC $CFLAGS setup.o -lin -o setup
+
+unmount:	unmount.o funmount.o
+	$CC $CFLAGS unmount.o funmount.o -o unmount
+
+list:	$SRC /usr/sys/sys/netb.c /usr/sys/h/netb.h
+	prcan $newprereq && touch list
+backup:V:	cray shamash
+cray:	$SRC makefile
+	push 3k $newprereq share && touch cray
+shamash:	$SRC makefile
+	/usr/inet/bin/ropy $newprereq shamash:share && touch shamash
+
+myls:	ls.o $DIR
+	$CC $CFLAGS ls.o $DIR -o myls
+$DIR:	ndir.h
+pwd:	pwd.o $DIR
+	$CC $CFLAGS pwd.o $DIR -o pwd
+
+set:V:
+	set
+%.o:	%.c
+	$CC $CFLAGS -c $stem.c

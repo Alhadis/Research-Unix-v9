@@ -1,0 +1,5 @@
+LOCAL_LIBRARIES = $(XLIB)
+           SRCS = xwd.c dsimple.c
+           OBJS = xwd.o dsimple.o
+
+ComplexProgramTarget(xwd)

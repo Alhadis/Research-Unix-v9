@@ -1,0 +1,1 @@
+root            50 23 * * *     /usr/ipc/servers/daily

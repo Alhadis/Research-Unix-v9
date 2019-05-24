@@ -1,0 +1,107 @@
+Mar 23 14:53:40 resetmaps()
+Mar 23 14:53:40 newservice(login)
+Mar 23 14:53:40 newservice(dcon)
+Mar 23 14:53:40 newservice(mesgdcon)
+Mar 23 14:53:40 newservice(exec)
+Mar 23 14:53:40 newservice(mesgexec)
+Mar 23 14:53:40 newservice(uucp)
+Mar 23 14:53:40 newservice(asd)
+Mar 23 14:53:40 newservice(vsmtp)
+Mar 23 14:53:40 newservice(cwire)
+Mar 23 14:53:40 newservice(tcp.23)
+Mar 23 14:53:40 newservice(tcp.64)
+Mar 23 14:53:40 newservice(tcp.513)
+Mar 23 14:53:40 newservice(tcp.514)
+Mar 23 14:53:40 newservice(pupu)
+Mar 23 14:53:40 newmap(.* tcp!mh-capek-net/.* .* &)
+Mar 23 14:53:40 newmap(vsmtp .* .* daemon)
+Mar 23 14:53:40 newmap(.*  .* &)
+Mar 23 14:53:40 newmap(.* dk!mh/astro/.* .* &)
+Mar 23 14:53:40 newmap(.* dk!mh/phone/.* .* &)
+Mar 23 14:53:40 newmap(.* dk!mh/mercury/.* .* &)
+Mar 23 14:53:40 newmap(.* dk!mh/vlsi/araki .* &)
+Mar 23 14:53:40 newmap(.* dk!alc/ram/most .* &)
+Mar 23 14:53:40 newmap(.* tcp!mh-astro-net/.* .* &)
+Mar 23 14:53:40 newmap(.* tcp!mh-golem-net/.* .* &)
+Mar 23 14:53:41 newmap(.* tcp!mh-dk127-net/.* .* &)
+Mar 23 14:53:41 newmap(.* tcp!mh-dk122-net/.* .* &)
+Mar 23 14:53:41 newmap(.* tcp!mh-l1225-net/.* .* &)
+Mar 23 14:53:41 newmap(.* tcp!mh-l1225dk-net/.* .* &)
+Mar 23 14:53:41 newmap(.* tcp!mh-math-net/.* .* &)
+Mar 23 14:53:41 newmap(.* tcp!mh-homer-net/.* smb &)
+Mar 23 14:53:41 announcing pupu
+Mar 23 14:53:41 announcing tcp.514
+Mar 23 14:53:41 announcing tcp.513
+Mar 23 14:53:41 announcing tcp.64
+Mar 23 14:53:41 announcing tcp.23
+Mar 23 14:53:41 announcing cwire
+Mar 23 14:53:41 announcing vsmtp
+Mar 23 14:53:41 announcing asd
+Mar 23 14:53:41 announcing uucp
+Mar 23 14:53:41 announcing mesgexec
+Mar 23 14:53:41 announcing exec
+Mar 23 14:53:41 announcing mesgdcon
+Mar 23 14:53:41 announcing dcon
+Mar 23 14:53:41 announcing login
+Mar 23 14:53:41 started
+Mar 23 14:58:04 call for /cs/tcp.514
+Mar 23 14:58:04 call from tcp!mh-capek-net/capek!_unknown_
+Mar 23 14:58:04 accept tcp.514 from tcp!mh-capek-net/capek _unknown_
+Mar 23 14:58:04 newproc(2155, /dev/tcp00)
+Mar 23 14:58:06 deadproc(2155)
+Mar 23 14:58:12 call for /cs/tcp.514
+Mar 23 14:58:12 call from tcp!mh-capek-net/capek!_unknown_
+Mar 23 14:58:12 accept tcp.514 from tcp!mh-capek-net/capek _unknown_
+Mar 23 14:58:12 newproc(2158, /dev/tcp00)
+Mar 23 14:58:14 deadproc(2158)
+Mar 23 16:29:50 resetmaps()
+Mar 23 16:29:50 newservice(login)
+Mar 23 16:29:50 newservice(dcon)
+Mar 23 16:29:50 newservice(mesgdcon)
+Mar 23 16:29:50 newservice(exec)
+Mar 23 16:29:50 newservice(mesgexec)
+Mar 23 16:29:50 newservice(uucp)
+Mar 23 16:29:50 newservice(asd)
+Mar 23 16:29:50 newservice(vsmtp)
+Mar 23 16:29:50 newservice(cwire)
+Mar 23 16:29:50 newservice(tcp.23)
+Mar 23 16:29:50 newservice(tcp.64)
+Mar 23 16:29:50 newservice(tcp.513)
+Mar 23 16:29:50 newservice(tcp.514)
+Mar 23 16:29:50 newservice(pupu)
+Mar 23 16:29:51 newmap(.* tcp!mh-capek-net/.* .* &)
+Mar 23 16:29:51 newmap(vsmtp .* .* daemon)
+Mar 23 16:29:51 newmap(.*  .* &)
+Mar 23 16:29:51 newmap(.* dk!mh/astro/.* .* &)
+Mar 23 16:29:51 newmap(.* dk!mh/phone/.* .* &)
+Mar 23 16:29:51 newmap(.* dk!mh/mercury/.* .* &)
+Mar 23 16:29:51 newmap(.* dk!mh/vlsi/araki .* &)
+Mar 23 16:29:51 newmap(.* dk!alc/ram/most .* &)
+Mar 23 16:29:51 newmap(.* tcp!mh-astro-net/.* .* &)
+Mar 23 16:29:51 newmap(.* tcp!mh-golem-net/.* .* &)
+Mar 23 16:29:51 newmap(.* tcp!mh-dk127-net/.* .* &)
+Mar 23 16:29:51 newmap(.* tcp!mh-dk122-net/.* .* &)
+Mar 23 16:29:51 newmap(.* tcp!mh-l1225-net/.* .* &)
+Mar 23 16:29:51 newmap(.* tcp!mh-l1225dk-net/.* .* &)
+Mar 23 16:29:51 newmap(.* tcp!mh-math-net/.* .* &)
+Mar 23 16:29:51 newmap(.* tcp!mh-homer-net/.* smb &)
+Mar 23 16:29:51 announcing pupu
+Mar 23 16:29:51 announcing tcp.514
+Mar 23 16:29:51 announcing tcp.513
+Mar 23 16:29:51 announcing tcp.64
+Mar 23 16:29:51 announcing tcp.23
+Mar 23 16:29:51 announcing cwire
+Mar 23 16:29:51 announcing vsmtp
+Mar 23 16:29:51 announcing asd
+Mar 23 16:29:51 announcing uucp
+Mar 23 16:29:51 announcing mesgexec
+Mar 23 16:29:51 announcing exec
+Mar 23 16:29:51 announcing mesgdcon
+Mar 23 16:29:51 announcing dcon
+Mar 23 16:29:51 announcing login
+Mar 23 16:29:51 started
+Mar 23 16:32:25 call for /cs/tcp.514
+Mar 23 16:32:26 call from tcp!mh-capek-net/capek!_unknown_
+Mar 23 16:32:26 accept tcp.514 from tcp!mh-capek-net/capek _unknown_
+Mar 23 16:32:26 newproc(2877, /dev/tcp00)
+Mar 23 16:32:29 deadproc(2877)

@@ -1,0 +1,933 @@
+.TH XMH 1
+.SH NAME
+\fIxmh\fR \- X window interface to the mh Mail Handler
+.SH DESCRIPTION
+\fIXmh\fR is a program that provides a window-oriented front end to the mh
+Mail Handler. It is designed to take advantage of a large graphical
+display and mouse; it will not function on an ordinary terminal at all.
+
+\fIXmh\fR consists of user-interface code only.  To actually do things
+with your mail, it makes calls to the \fImh\fR package.
+
+Please don't be misled by the size of this document.  \fIXmh\fR really is
+easy to use!
+
+.SH INSTALLATION
+The current version of \fIxmh\fR requires that the user is already set up
+to use \fImh\fR, version 6.  To do so, see if there is a file
+called .mh_profile in your home directory.  If you do, check to see if it
+contains a line that starts with ``Current-Folder''.  If it does, then
+you've been using version 4 or earlier of \fImh\fR; to convert to version
+6, you must remove that line.  (Failure to do so causes spurious output to
+stderr, which can hang \fIxmh\fR depending on your setup.)
+
+If you do not already have a .mh_profile, you can create one (and
+everything else you need) by typing ``inc'' to the shell.
+
+For more information, refer to the \fImh\fR documentation.
+
+.SH RUNNING XMH
+Run \fIxmh\fR as you would any other X application (e.g., xterm).  It will
+accept a command-line display (of the form ``displayname:displaynumber'');
+the default display is specified in the environment variable DISPLAY.
+
+The rest of this document will probably be rather hard to follow without
+actually running \fIxmh\fR and seeing the things being described.
+
+.SH BASIC SCREEN LAYOUT
+\fIXmh\fR starts out with a single screen.  There will be 6 or 7 areas on the screen:
+
+.TP 4
+.B \-
+A list of your folders.  (New users of mh will see only ``inbox'' here.)
+.PP
+.TP 4
+.B \-
+A list of the global and folder-oriented commands.
+.PP
+.TP 4
+.B \-
+A list of the messages in one of your folders (initially, this will show the
+messages in ``inbox'').
+.PP
+.TP 4
+.B \-
+A list of the message-oriented commands.
+.PP
+.TP 4
+.B \-
+A view of one of your messages.  (Initially this is blank.)
+.PP
+.TP 4
+.B \-
+A list of commands for the message being viewed.
+.PP
+And, there will possibly be:
+.TP 4
+.B \-
+A list of message-sequences defined for this folder.  This appears just
+below the list of messages in this folder.  (Message-sequences are
+discussed below; if you don't know what they are, then you won't have any.)
+
+.SH XMH AND THE TOOLKIT
+\fIXmh\fR uses a preliminary version of the X Toolkit.  Many of the
+features described below (scrollbars, buttonboxes, etc.) are actually part
+of the Toolkit, and are described here only for completeness.  For more
+information, see the Toolkit documentation.
+
+.SH SCROLLBARS
+Some parts of the screen will have a vertical area on the left containing
+a grey bar.  This area is a \fIscrollbar\fR.  They are used whenever the
+data in a window takes up more space than can be displayed.
+The grey bar indicates what portion of your data is visible. Thus, if the
+entire length of the area is grey, then you are looking at all your data.
+If only the first half is grey, then you are looking at the top half of
+your data.
+
+You can use the mouse in the scrollbar to change what part of the data is
+visible.  If you click with the middle button, then the top of the grey
+area will move to where the mouse pointer is, and the corresponding
+portion of data will be displayed.  If you hold down the middle button,
+you can drag around the grey area.  This makes it easy to get to the top
+of the data: just press with the middle, drag off the top of the
+scrollbar, and release.
+
+If you click with the left button, then the data to the right of the mouse
+pointer will scroll to the top of the window.  If you click with the right
+button, then the data at the top of the window will scroll down to where
+the mouse pointer is.
+
+.SH BUTTONBOXES
+Any area consisting of many words or short phrases, each enclosed in a
+box, is called a \fIbuttonbox\fR.  Each box is actually a button that you
+can press by moving the mouse pointer onto it and pressing any mouse
+button.  If a given buttonbox has more buttons in it than can fit, it will
+be displayed with a scrollbar, so you can always scroll to the button you
+want.
+
+.SH ADJUSTING THE RELATIVE SIZES OF AREAS ON THE SCREEN
+If you're not satisfied with the size of the various areas on the screen,
+they can easily be changed.  Near the right edge of the border between
+each region is a black box, called a \fIknob\fR.  Simply point to that
+knob with the mouse pointer, press a mouse button, drag up or down, and
+release.  Exactly what happens depends on which mouse button you press.
+
+If you drag with the middle button, then only that border will move.  This
+mode is simplest to understand, but is probably the least useful.
+
+If you drag with the left mouse button, then you are adjusting the size of
+the window above.  \fIXmh\fR will attempt to compensate by adjusting some
+window below it, but it will not change the size of buttonboxes below it.
+
+If you drag with the right mouse button, then you are adjusting the size
+of the window below.  \fIXmh\fR will attempt to compensate by adjusting
+some window above it, but it will not change the size of buttonboxes above
+it.
+
+All windows have a mininum and maximum size; you will never be allowed to
+move a border past the point where it would make a window have an invalid
+size.
+
+.SH SELECTED FOLDER
+The selected folder is whichever foldername is hilighted in the top
+buttonbox.  Note that this is not necessarily the same folder that is
+being viewed.  To change the selected folder, just press on the desired
+folder button.
+
+.SH GENERAL COMMANDS AND FOLDER COMMANDS
+The second buttonbox contains commands of a global nature:
+
+.TP 8
+.B Quit XMH
+Exits \fIxmh\fR, after first checking that you won't lose any changes.
+.PP
+.TP 8
+.B Compose Message
+Composes a new message.  A new window will be brought up; for a
+description of it, see COMPOSITION WINDOWS, below.
+.PP
+.TP 8
+.B Open Folder
+Display the data in the selected folder.  Thus, the selected folder also
+becomes the viewed folder.
+.PP
+.TP 8
+.B Open Folder in New Window
+Creates a new screen, and displays the selected folder in that screen.
+Note, however, that you may not display the same folder in more than one
+screen at a time.
+.PP
+.TP 8
+.B Create Folder
+Create a new folder.  You will be prompted for a name for the new folder;
+to enter the name, point the mouse at the blank box provided and type.
+Hit the Confirm button when finished, or hit Abort to cancel this
+operation.
+.PP
+.TP 8
+.B Delete Folder
+Destroy the selected folder.  You will be asked to confirm this action (see
+CONFIRMATION WINDOWS).
+
+.SH HIGHLIGHTED MESSAGES, SELECTED MESSAGES
+.SH AND THE CURRENT MESSAGE
+It is possible to highlight a set of messages in the list of messages for the
+viewed folder.  To highlight a message, just click on it with the left mouse
+button.  To highlight a range of messages, click on the first one with the
+left mouse button and on the last one with the right mouse button.
+
+The selected messages are the same as the highlighted messages, if any.  If no
+messages are highlighted, then the selected messages are considered the same
+as the current message.
+
+The current message is indicated by a '+' next to the message number.  It
+usually corresponds to the message currently being viewed. 
+
+.SH MESSAGE COMMANDS
+The third buttonbox (fourth if you have message-sequences displayed)
+contains commands to deal with messages:
+
+.TP 8
+.B Incorporate New Mail
+Add any new mail received to your inbox folder, and set the current
+message to be the first new message.  (This button appears only if
+``inbox'' is the folder being viewed.)
+.PP
+.TP 8
+.B View Next Message
+View the first selected message.  If no messages are highlighted, view the
+current message.  If current message is already being viewed, view the
+first unmarked message after the current message.
+.PP
+.TP 8
+.B View Previous Message
+View the last selected message.  If no messages are highlighted, view the
+current message.  If current message is already being viewed, view the
+first unmarked message before the current message.
+.PP
+.TP 8
+.B Mark Deleted
+Mark the selected messages for deletion.  If no messages are highlighted, then
+this will automatically display the next unmarked message.
+.PP
+.TP 8
+.B Mark Move
+Mark the selected messages to be moved into the current folder.  (If the
+current folder is the same as the viewed folder, this command will just
+beep.)  If no messages are highlighted, then
+this will automatically display the next unmarked message.
+.PP
+.TP 8
+.B Mark Copy
+Mark the selected messages to be copied into the current folder.  (If the
+current folder is the same as the viewed folder, this command will just
+beep.)
+.PP
+.TP 8
+.B Unmark
+Remove any of the above three marks from the selected messages.
+.PP
+.TP 8
+.B View in New Window
+Create a new window containing only a view of the first selected message.
+.PP
+.TP 8
+.B Reply
+Create a composition window in reply to the first selected message.
+.PP
+.TP 8
+.B Forward
+Create a composition window whose body is initialized to be the contents
+of the selected messages.
+.PP
+.TP 8
+.B Use as Composition
+Create a composition window whose body is initialized to be this message.
+Note that any changes you make in the composition will also be saved in
+this message.  This function is meant to be used with the ``drafts'' folder
+(see COMPOSITION WINDOWS).
+.PP
+.TP 8
+.B Commit Changes
+Execute any deletions, moves, and copies that have been marked in this
+folder.
+.PP
+.TP 8
+.B Print
+Print the selected messages.  \fIXmh\fR prints by by invoking
+the \fIenscript\fR(1) command.
+.PP
+.TP 8
+.B Pack folder
+Renumber the messages in this folder so they start with 1 and increment by
+1.
+.PP
+.TP 8
+.B Sort folder
+Sort the messages in this folder in chronological order.  As a side
+effect, this also packs the folder.
+.PP
+.TP 8
+.B Force Rescan
+Rebuild the list of messages.  This can be used whenever you suspect \fIxmh\fR's
+idea of what messages you have is wrong.  (In particular, this is useful
+if you ever change things using straight mh commands without using \fIxmh\fR.)
+.PP
+.TP 8
+.B Pick Messages
+Define a new message-sequence.  (See MESSAGE-SEQUENCES.)
+.PP
+The following buttons will appear but will be sensitive only if
+the current folder has any message-sequences defined (See MESSAGE-SEQUENCES).
+.TP 8
+.B Open Sequence
+Change the viewed sequence to be the same as the selected sequence.
+.PP
+.TP 8
+.B Add to Sequence
+Add the selected messages to the selected sequence.
+.PP
+.TP 8
+.B Remove from Sequence
+Remove the selected messages from the selected sequence.
+.PP
+.TP 8
+.B Delete Sequence
+Remove the selected sequence entirely.  Note the messages themselves are
+not effected; they simply are no longer grouped together as a message-sequence.
+
+.SH VIEW WINDOWS
+The commands in these windows are the same as the message commands by the
+same name, except instead of affecting the selected messages, they affect
+the viewed message.  In addition there is the ``Edit View'' button, which
+allows you to edit the message being viewed.  While editing, the ``Edit
+View'' button will change to a ``Save View'' button, which should be
+pressed to save your edits.
+
+.SH COMPOSITION WINDOWS
+Aside from the normal text editing functions, there are three command
+buttons associated with composition windows:
+.TP 8
+.B Abort Comp
+Abort this composition window.  If changes have been made, you will be
+asked to confirm losing them.
+.PP
+.TP 8
+.B Send
+Send this composition.  If any errors appear in the message header, you
+will receive a mail message containing this composition and a description
+of the error.
+.PP
+.TP 8
+.B Save
+Save this composition in your drafts folder.  (If you do not have a folder
+named ``drafts'', one will be created.)  Then you can safely close the
+composition.  At some future date, you can continue working on the
+composition by opening your drafts folder, selecting the message, and
+using the ``Use as Composition'' command.
+
+.SH TEXT EDITING COMMANDS
+Whenever you are asked to enter any text, you will be using a standard
+text editing interface.  Various control and meta keystroke combinations
+are bound to a somewhat Emacs-like set of commands.  In addition, the
+mouse buttons may be used to select a portion of text or to move the
+insertion point in the text. Pressing the left mouse button causes the
+insertion point to move to the mouse pointer.  Double-clicking the left
+button selects a word, triple-clicking selects a paragraph, and
+quadruple-clicking selects everything.  Any selection may be extended in
+either direction by using the right mouse button.
+
+In the following, a \fIline\fR refers to one displayed row of characters
+in the window.  A \fIparagraph\fR refers to the text between carriage
+returns.  Text within a paragraph is broken into lines based on the
+current width of the window.
+
+The following keystroke combinations are defined:
+.TP 8
+.B Control-A
+Move to the beginning of the current line.
+.PP
+.TP 8
+.B Control-B, Control-H, Backspace
+Move backward one character.
+.PP
+.TP 8
+.B Control-D
+Delete the next character.
+.PP
+.TP 8
+.B Control-E 
+Move to the end of the current line.
+.PP
+.TP 8
+.B Control-F
+Move forward one character.
+.PP
+.TP 8
+.B Control-J, LineFeed
+Create a new paragraph with the same indentation as the previous one.
+.PP
+.TP 8
+.B Control-K
+Kill the rest of this line.
+.PP
+.TP 8
+.B Control-L
+Repaint this window.
+.PP
+.TP 8
+.B Control-M, Return
+New paragraph.
+.PP
+.TP 8
+.B Control-N
+Move down to the next line.
+.PP
+.TP 8
+.B Control-O
+Break this paragraph into two.
+.PP
+.TP 8
+.B Control-P
+Move up to the previous line.
+.PP
+.TP 8
+.B Control-V
+Move down to the next screenfull of text.
+.PP
+.TP 8
+.B Control-W
+Kill the selected text.
+.PP
+.TP 8
+.B Control-Y
+Insert the last killed text.
+.PP
+.TP 8
+.B Control-Z
+Scroll the text one line up.
+.PP
+.TP 8
+.B Meta-<
+Move to the beginning of the document.
+.PP
+.TP 8
+.B Meta->
+Move to the end of the document.
+.PP
+.TP 8
+.B Meta-[
+Move backward one paragraph.
+.PP
+.TP 8
+.B Meta-]
+Move forward one paragraph.
+.PP
+.TP 8
+.B Meta-B
+Move backward one word.
+.PP
+.TP 8
+.B Meta-D
+Kill the next word.
+.PP
+.TP 8
+.B Meta-F
+Move forward one word.
+.PP
+.TP 8
+.B Meta-H, Meta-Delete
+Kill the previous word.
+.PP
+.TP 8
+.B Meta-I
+Insert a file.  If any text is selected, use the selected text as the
+filename.  Otherwise, a box will appear in which you can type the desired
+filename.
+.PP
+.TP 8
+.B Meta-V
+Move up to the previous screenfull of text.
+.PP
+.TP 8
+.B Meta-Y
+Stuff the last selected text here.  Note that this can be text selected in
+some other text subwindow.  Also, if you select some text in an xterm
+window, it may be inserted in an \fIxmh\fR window with this command.
+.PP
+.TP 8
+.B Meta-Z
+Scroll the text one line down.
+.PP
+.TP 8
+.B Delete
+Delete the previous character.
+.PP
+For more information, see CUSTOMIZING TEXT EDITING.
+
+.SH CONFIRMATION WINDOWS
+Whenever you press a button that may cause you to lose some work or is
+otherwise dangerous, a window will appear asking you to confirm the
+action.  This window will contain an ``Abort'' button and a ``Confirm''
+button.  Pressing the ``Abort'' button cancels the operation, and pressing
+the ``Confirm'' will proceed with the operation.  (A very handy shortcut
+exists: if you press the offending button again, it will be interpreted as
+a ``Confirm''.  If you press any other command button, it will be
+interpreted as an ``Abort''.)
+
+.SH MESSAGE-SEQUENCES
+A mh message sequence is just a set of messages associated with some name.
+They are local to a particular folder; two different folders can have
+sequences with the same name.  In all folders, the sequence ``all'' is
+predefined; it consists of the set of all messages in that folder.  (The
+sequence ``cur'' is also usually defined for every folder; it consists of
+only the current message.  \fIXmh\fR hides ``cur'' from the user, instead
+placing a ``+'' by the current message.  Also, \fIxmh\fR does not support
+the ``unseen'' sequence, so that one is also hidden from the user.)
+
+The message sequences for a folder are displayed as
+buttons containing the names of the sequences (including
+one for ``all'').  The table of contents (aka ``toc'') is at any one time
+displaying one message sequence.  This is called the ``viewed sequence''; if
+it's not ``all'', its name will be displayed in the title bar just after the
+folder name.  Also, at any time one of the sequence buttons will be
+highlighted.  This is called the ``selected sequence''.  Note that the viewed
+sequence and the selected sequence are not necessarily the same.  (This all
+pretty much corresponds to the way the folder buttons work.)
+
+The \fBOpen Sequence\fR, \fBAdd to Sequence\fR, \fBRemove from Sequence\fR,
+and \fBDelete Sequence\fR buttons are active only if the viewed folder
+contains message-sequences.
+.PP
+Note that none of the above actually effect whether a message is in the
+folder.  Remember that a sequence is a set of messages within the folder;
+the above operations just affect what messages are in that set.
+
+To create a new sequence, press the ``Pick'' button.  A new window will
+appear, with lots of places to enter text. Basically, you can describe the
+sequence's initial set of messages based on characteristics of the
+message.  Thus, you can define a sequence to be all the messages that were
+from a particular person, or with a particular subject, and so on.  You
+can also connect things up with boolean operators, so you can select all
+things from ``weissman'' with the subject ``xmh''.
+
+Hopefully, the layout is fairly obvious.  The simplest cases are the
+easiest: just point to the proper field and type.  If you enter in more
+than one field, it will only select messages which match all non-empty
+fields.
+
+The more complicated cases arise when you want things that match one field
+or another one, but not necessarily both.  That's what all the ``or''
+buttons are for.  If you want all things with the subject ``xmh'' or
+``xterm'', just press the ``or'' button next to the ``Subject:'' field.
+Another box will appear where you can enter another subject.
+
+If you want all things either from ``weissman'' or with subject ``xmh'', but
+not necessarily both, select the ``-Or-'' button.  This will essentially
+double the size of the form.  You can then enter ``weissman'' in a from: box
+on the top half, and ``xmh'' in a subject: box on the lower part.
+
+If you ever select the ``Skip'' button, then only those messages that
+\fIdon't\fR match the fields on that row are included.
+
+Finally, in the bottom part of the window will appear several more boxes.
+One is the name of the sequence you're defining.  (It defaults to the name
+of the selected sequence when ``Pick'' was pressed, or to ``temp'' if
+``all'' was the selected sequence.)  Another box defines which sequence to
+look through for potential members of this sequence; it defaults to the
+viewed sequence when ``Pick'' was pressed.
+
+Two more boxes define a date range; only messages within that date range
+will be considered.  These dates must be entered in 822-style format: each
+date is of the form ``dd mmm yy hh:mm:ss zzz'', where dd is a one or two
+digit day of the month, mmm is the three-letter abbreviation for a month,
+and yy is a year.  The remaining fields are optional: hh, mm, and ss
+specify a time of day, and zzz selects a time zone.  Note that if the time
+is left out, it defaults to midnight; thus if you select a range of ``7
+nov 86'' - ``8 nov 86'', you will only get messages from the 7th, as all
+messages on the 8th will have arrived after midnight.
+
+``Date field'' specifies which date field in the header to look at for
+this date range; it probably won't be useful to anyone.  If the sequence
+you're defining already exists, you can optionally merge the old set with
+the new; that's what the ``Yes'' and ``No'' buttons are all about.
+Finally, you can ``OK'' the whole thing, or ``Cancel'' it.
+
+In general, most people will rarely use these features.  However, it's
+nice to occasionally use ``Pick'' to find some messages, look through
+them, and then hit ``Delete Sequence'' to put things back in their original
+state.
+
+.SH CUSTOMIZING XMH
+As with all standard X applications, \fIxmh\fR may be customized through entries
+in your .Xdefaults file.  The following .Xdefaults entries are defined:
+.TP 8
+.B BackGround
+Background color.  Currently, this will effect only buttons.  (Default is
+white.)
+.PP
+.TP 8
+.B ButtonFont
+What font to use for button names.  (Default is ``timrom10''.)
+.PP
+.TP 8
+.B CompButtonLines
+How many rows of buttons to display under a composition.  (Default is 1.)
+.PP
+.TP 8
+.B CompFont
+What font to use when composing a message.  (Default is ``6x13''.)
+.PP
+.TP 8
+.B CompGeometry
+Initial geometry for windows containing compositions.
+.PP
+.TP 8
+.B CompLines
+How many lines of a composition to display.  (Default is 20.)
+.PP
+.TP 8
+.B ConfirmFont
+What font to use for confirmation windows. (Default is ``timrom10b''.)
+.PP
+.TP 8
+.B FolderButtonLines
+How many rows of folder command buttons to display.  (Default is 1.)
+.PP
+.TP 8
+.B FolderLines
+How many rows of foldername buttons to display.  (Default is 1.)
+.PP
+.TP 8
+.B ForeGround
+Foreground color.  Currently, this will effect only title bars and
+buttons.  (Default is black.)
+.PP
+.TP 8
+.B Geometry
+Default geometry to use.  (Default is none.)
+.PP
+.TP 8
+.B HideBoringHeaders
+If ``on'', then \fIxmh\fR will attempt to skip uninteresting header lines
+within messages by scrolling them off.  (Default is ``on''.)
+.PP
+.TP 8
+.B InitialFolder
+Which folder to display on startup.  (Default is ``inbox''.)
+.PP
+.TP 8
+.B InitialIncFile
+The file name of your incoming mail drop.  \fIxmh\fR tries to construct
+a filename for the ``inc -file'' command, but in some installations
+(e.g. those using the Post Office Protocol) no file is appropriate.
+In this case, \fBInitialIncFile\fR should be specified as the empty string.
+.PP
+.TP 8
+.B LabelFont
+What font to use for the title bars. (Default is ``timrom10i''.)
+.PP
+.TP 8
+.B MhPath
+What directory in which to find the mh commands.  If a command isn't found
+here, then the directories in the user's path are searched.  (Default is
+``/usr/local/mh6''.)
+.TP 8
+.B PickGeometry
+Initial geometry for pick windows.
+.PP
+.TP 8
+.B PickEntryFont
+What font to use for user text fields in pick windows.  (Default is
+``timrom10''.)
+.PP
+.TP 8
+.B PickTextFont
+What font to use for static text fields in pick windows.  (Default is
+``timrom10''.)
+.PP
+.TP 8
+.B PrintCommand
+What sh command to execute to print a message.  Note that stdout and stderr
+must be specifically redirected!  (Default is ``enscript >/dev/null
+2>/dev/null'').
+.PP
+.TP 8
+.B TempDir
+Directory for \fIxmh\fR to store temporary directories.  For protection, a user
+might want to change this to a private directory.  (Default is ``/tmp''.)
+.PP
+.TP 8
+.B TerseButtonNames
+If ``on'', then command buttons will be displayed with much shorter names.
+It is highly recommended to use this after gaining familiarity with
+\fIxmh\fR. (Default is ``off''.)
+.PP
+.TP 8
+.B TocButtonLines
+How many rows of message command buttons to display.  (Default is 1.)
+.PP
+.TP 8
+.B TocFont
+What font to use for a folder's table of contents.  (Default is ``6x13''.)
+.PP
+.TP 8
+.B TocGeometry
+Initial geometry for master \fIxmh\fR windows.
+.PP
+.TP 8
+.B TocLines
+How messages to display in a folder's table of contents.  (Default is 10.)
+.PP
+.TP 8
+.B TocWidth
+How many characters to generate for each message in a folder's table of
+contents.  (Default is 300.  Use 80 if you plan to use \fImhe\fR a lot.)
+.PP
+.TP 8
+.B ViewButtonLines
+How many rows of buttons to display under a view of a message.  (Default
+is 1.)
+.PP
+.TP 8
+.B ViewFont
+What font to use for a view of a message.  (Default is ``6x13''.)
+.PP
+.TP 8
+.B ViewGeometry
+Initial geometry for windows showing only a view of a message.
+.PP
+.TP 8
+.B ViewLines
+How many lines of a message to display.  (Default is 20.)
+.PP
+If TocGeometry, ViewGeometry, CompGeometry, or PickGeometry are not
+specified, then the value of Geometry is used instead.  If the resulting
+height is not specified (e.g., "", "=500", "+0-0"), then the default
+height is calculated from the fonts and line counts specified above.  If
+the width is not specified (e.g., "", "=x300", "-0+0), then half of the
+display width is used.  If unspecified, the height of a pick window
+defaults to half the height of the display.
+
+Any of these options may also be specified on the command line by including a
+word that contains the name of the .Xdefault option, an ``='', and the
+desired value.  Thus, to run \fIxmh\fR with terse button names,
+
+% xmh tersebuttonnames=on
+
+.SH CUSTOMIZING TEXT EDITING
+The binding of keys are described in a file called ``.Tkeys''.  \fIXmh\fR first
+looks for a .Tkeys file in the user's root directory.  If not found there,
+it will use the global one stored in /usr/athena/lib/.Tkeys.
+
+Each line of .Tkeys contains a description of a key, a colon, and then the
+function the key may perform.  In more detail, the line consists of:
+
+Any set of ``m'', ``s'', ``l'', ``c'', ``~m'', ``~s'', ``~l'', ``~c''.
+This describes the shift keys (meta, shift, lock, control) that need to be
+used for this key.  The tilde means ``no''. If a shift key is not
+mentioned, then it will work for either position of that key.
+Thus, ``c~m'' means that the control key must be pressed, and the meta key must
+not be pressed; the function will be performed regardless of the status of
+the shift and lock keys.
+
+Next comes the description of the key itself.  This can be either a single
+character, or a three digit number indicating the keycode.  To specify a
+key not in the main alphanumeric pad, you must use a keycode.  Note that
+the single character will describe an unshifted key, even if a shift key
+is usually used to type this key.  Thus, there is no difference between
+using ``+'' and ``='' here, since they are both on the same key.  Note
+that ``\\'' escapes a character here in the usual manner.
+
+This is followed by a ``:'', and any amount of whitespace.  Then comes a
+list of functions for that key.  Each function is either a character in
+single quotes, a string in double quotes, or an unquoted string.  Anything
+in quotes means insert the specified string into the file.  An unquoted
+string names a text subwindow function to be performed when this key is
+pressed.  
+
+Hopefully, an example will make this clearer:
+
+cq:	"abcdef" stuff 'q'
+
+When control-q is entered, the string "abcdef" will be inserted into the
+text, the current selection will then be stuffed, and then the character 'q'
+will be inserted.
+
+The legal functions are:
+.TP 8
+.B backward-character
+Move backward one character.
+.PP
+.TP 8
+.B backward-paragraph
+Move backward one paragraph.
+.PP
+.TP 8
+.B backward-word
+Move backward one word.
+.PP
+.TP 8
+.B beginning-of-file
+Move to the beginning of the text.
+.PP
+.TP 8
+.B beginning-of-line
+Move to the beginning of the current line.
+.PP
+.TP 8
+.B delete-next-character
+Delete the character after the insertion point.
+.PP
+.TP 8
+.B delete-next-word
+Delete the word after the insertion point.
+.PP
+.TP 8
+.B delete-previous-character
+Delete the character before the insertion point.
+.PP
+.TP 8
+.B delete-previous-word
+Delete the word before the insertion point.
+.PP
+.TP 8
+.B delete-selection
+Delete the selection.
+.PP
+.TP 8
+.B end-of-file
+Move to the end of the text.
+.PP
+.TP 8
+.B end-of-line
+Move to the end of the current line.
+.PP
+.TP 8
+.B forward-character
+Move forward one character.
+.PP
+.TP 8
+.B forward-paragraph
+Move forward one paragraph.
+.PP
+.TP 8
+.B forward-word
+Move forward one word.
+.PP
+.TP 8
+.B insert-file
+Insert a file into the text.
+.PP
+.TP 8
+.B kill-previous-word
+Kill the word before the insertion point.
+.PP
+.TP 8
+.B kill-selection
+Kill the selection.
+.PP
+.TP 8
+.B kill-to-end-of-line
+Kill from the insertion point to the end of the line.
+.PP
+.TP 8
+.B kill-to-end-of-paragraph
+Kill from the insertion point to the end of the paragraph.
+.PP
+.TP 8
+.B kill-word
+Kill the word after the insertion point.
+.PP
+.TP 8
+.B newline-and-backup
+Create a new paragraph, leaving the insertion point on the previous one.
+.PP
+.TP 8
+.B newline-and-indent
+Create a new paragraph with the same indentation as the current one.
+.PP
+.TP 8
+.B newline
+Create a new paragraph.
+.PP
+.TP 8
+.B next-line
+Move down one line.
+.PP
+.TP 8
+.B next-page
+Move to the next screenfull of text.
+.PP
+.TP 8
+.B previous-line
+Move up one line.
+.PP
+.TP 8
+.B previous-page
+Move to the previous screenfull of text.
+.PP
+.TP 8
+.B redraw-display
+Repaint the window.
+.PP
+.TP 8
+.B scroll-one-line-down
+Scroll the text down one line.
+.PP
+.TP 8
+.B scroll-one-line-up
+Scroll the text up one line.
+.PP
+.TP 8
+.B select-all
+Select all the text.
+.PP
+.TP 8
+.B select-word
+Select the word the insertion point is in.
+.PP
+.TP 8
+.B stuff
+Insert the text that was last selected in any window.
+.PP
+.TP 8
+.B unkill
+Insert the text that was last killed.  (Note there is no way to get back
+text that was deleted.)
+
+.SH FILES
+~/Mail
+
+~/.mh_profile
+
+~/.Tkeys
+
+/usr/athena/lib/.Tkeys
+
+.SH SEE ALSO
+mh (1) - the mh Mail Handler
+
+.SH AUTHOR
+Terry Weissman (weissman@decwrl.dec.com)
+
+.SH BUGS
+Command-line syntax is silly.
+
+Printing support is minimal.
+
+Keyboard shortcuts for commands would be nice.
+
+Should handle the ``unseen'' message-sequence.
+
+Should determine by itself if the user hasn't used \fImh\fR before, and
+offer to set things up for him or her.
+
+Will bomb if the file /usr/athena/lib/.Tkeys doesn't exist.
+
+There need to be a lot more text functions.  In particular, searching
+would be very nice.
+
+Still a few commands missing (rename folder, remail message).
+
+The user should probably be able to customize the buttonboxes somewhat.

@@ -1,0 +1,16 @@
+# DO NOT DELETE THIS LINE -- make depend depends on it.
+# -DTCPCONN allows TCP connections 
+# -DDUALTCP allows TCP connections with swapped bytes
+# -DUNIXCONN allows Unix domain connections
+# -DDNETCONN allows DECnet connections
+
+SRCS = util.c
+OBJS = util.o 
+DEFINES= -DTCPCONN -DUNIXCONN
+CDEBUGFLAGS = ServerCDebugFlags
+INCLUDES = -I.  -I../../include -I../../../include
+
+NormalLibraryObjectRule()
+NormalLibraryTarget(os,$(OBJS))
+
+DependTarget()

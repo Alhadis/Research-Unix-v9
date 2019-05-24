@@ -1,0 +1,82 @@
+#
+# Makefile for Research V9.
+#
+C2=	/lib/c2
+
+COPTS=	${IDENT} -DKERNEL
+CFLAGS=	-O ${COPTS}
+
+AHEADS=	../h/pcb.m
+
+%OBJS
+
+%CFILES
+
+%LOAD
+
+clean:
+	rm -f eddep *unix* tags *.o locore.i [a-tv-z]*.s errs linterrs
+
+lint:Q: /tmp
+	lint -hbxn -I. -DGENERIC ${COPTS} ../sys/Locore.c ${CFILES} ../dev/swapgeneric.c ioconf.c |
+	    grep -v 'struct/union .* never defined' |
+	    grep -v 'possible pointer alignment problem'
+
+locore.o:Q: assym.s ${AHEADS} ../sys/scb.s ../sys/locore.s ../sys/emulate.s ubglue.s \
+    ../h/mtpr.h ../h/trap.h ../h/psl.h ../h/pte.h ../h/cpu.h ../h/mtpr.h mba.h
+	cat assym.s ../sys/scb.s ../sys/locore.s  ../sys/emulate.s ubglue.s > locore.c
+	cc -E -DLOCORE ${COPTS} locore.c > locore.i
+	echo 'as -o locore.o ${AHEADS} locore.i'
+	as -o locore.o ${AHEADS} locore.i
+	rm locore.i
+
+assym.s: ../h/param.h ../h/pte.h ../h/buf.h ../h/vmparam.h ../h/vmmeter.h \
+    ../h/dir.h ../h/cmap.h ../h/map.h ../h/ubavar.h ../h/proc.h
+	cc ../conf/genassym.c; ./a.out >assym.s; rm -f a.out
+
+../h/param.h: /usr/include/signal.h
+	touch ../h/param.h
+../h/user.h: ../h/pcb.h ../h/dmap.h ../h/vtimes.h ../h/types.h \
+    /usr/include/errno.h 
+	touch ../h/user.h
+../h/vm.h: ../h/vmmac.h ../h/vmmeter.h ../h/vmparam.h ../h/vmsystm.h
+	touch ../h/vm.h
+../sys/sysent.c: ../sys/vmsysent.c
+	touch ../sys/sysent.c
+
+depend:Q:
+	grep '^#include' ${CFILES} | grep -v '<' |
+	      sed 's/:[^"]*"\([^"]*\)".*/: \1/
+	         s/\.c/.o/; s,../[a-z]*/,,' | \
+	awk ' { if ($1 != prev) { print rec; rec = $0; prev = $1; }
+		else { if (length(rec $2) > 78) { print rec; rec = $0; }
+		       else rec = rec " " $2 } } ;
+	      END { print rec } ' > makedep
+	echo '$r makedep
+	/^# DO NOT DELETE THIS LINE/+1,$d
+	$r makedep
+	/^unix:/;/ld/;.g/ -x/s///
+	a
+		strip -g unix
+	.
+	w' >eddep
+	cp mkfile mkfile.bak
+	ed - mkfile < eddep
+	rm eddep makedep
+
+ioconf.o: ioconf.c ../h/param.h ../h/pte.h ../h/buf.h ../h/map.h \
+    ../h/mbavar.h ../h/vm.h ../h/ubavar.h
+	${CC} -I. -c -S ${COPTS} ioconf.c
+	${C2} ioconf.s | sed -f ../sys/asm.sed | ${AS} -o ioconf.o
+	rm -f ioconf.s
+
+param.c: ../sys/param.c
+	cp ../sys/param.c .
+
+param.o: param.c mkfile
+	${CC} -c ${CFLAGS} ${PARAM} param.c
+
+%RULES
+
+# DO NOT DELETE THIS LINE -- mk depend uses it
+

@@ -1,0 +1,14 @@
+CC	=	newcc
+CFLAGS=
+PATCH=
+OFILES	=	alloc..o dcl..o dcl2..o dcl3..o del..o error..o expand..o expr..o expr2..o \
+		lalex..o lex..o main..o norm..o norm2..o print..o repr..o \
+		simpl..o size..o table..o typ..o typ2..o y.tab..o dummy.o
+cfront:	$(OFILES)
+	$(CC)	-o cfront $(OFILES)
+
+.c..o:
+	$(CC) $(CFLAGS) $<
+
+y.tab..o:	y.tab..c
+	$(CC) -DGRAM -c y.tab..c 

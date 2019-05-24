@@ -1,0 +1,96 @@
+#
+# Makefile for Research V9.
+#
+C2=	/lib/c2
+CC=	cc -m68020
+AS=	as -m68020
+LD=	ld
+NPROC=	2
+
+COPTS=	${IDENT} -DKERNEL
+CFLAGS=	-O ${COPTS} -fsingle
+
+FOBJS=Faddd.o Fadds.o Fdtos.o Ffloat.o Fflts.o Fmuls.o Fstod.o fp_globals.o
+
+%OBJS
+
+%CFILES
+
+%SFILES
+
+%LOAD
+
+clean:
+	rm -f eddep *unix* tags *.o locore.i [a-tv-z]*.s errs linterrs
+
+lint:Q: /tmp
+	lint -hbxn -I. -DGENERIC ${COPTS} ../sys/Locore.c ${CFILES} ../dev/swapgeneric.c ioconf.c |
+	    grep -v 'struct/union .* never defined' |
+	    grep -v 'possible pointer alignment problem'
+
+${FOBJS}: /lib/libc.a
+	ar x /lib/libc.a ${FOBJS}
+
+stab.o: ../sys/stab.c
+	cc -I. ${COPTS} -g -c ../sys/stab.c
+
+assym.s: ../h/param.h ../h/buf.h ../h/vmmeter.h ../h/vmparam.h \
+	../h/user.h ../h/cmap.h ../h/map.h ../h/proc.h \
+	../h/msgbuf.h ../machine/pte.h ../machine/reg.h \
+	../machine/psl.h ../machine/mmu.h ../machine/cpu.h \
+	../machine/zscom.h ../machine/scb.h ../conf/genassym.c \
+	../h/dir.h
+	cc -I. ${COPTS} ../conf/genassym.c; ./a.out >assym.s; \
+	rm -f a.out
+
+../h/param.h: ../machine/param.h ../h/signal.h ../h/types.h
+	touch ../h/param.h
+../h/user.h: ../machine/pcb.h ../machine/reg.h ../h/dmap.h ../h/vtimes.h \
+	../h/types.h ../h/errno.h 
+	touch ../h/user.h
+../h/vm.h: ../h/vmmac.h ../h/vmmeter.h ../h/vmparam.h ../h/vmsystm.h
+	touch ../h/vm.h
+../h/vmparam.h: ../machine/vmparam.h
+	touch ../h/vmparam.h
+../h/proc.h: ../h/lnode.h
+	touch ../h/proc.h
+../machine/cpu.h: ../machine/sunromvec.h
+	touch ../machine/cpu.h
+../sys/sysent.c: ../sys/vmsysent.c
+	touch ../sys/sysent.c
+
+depend:Q:
+	grep '^#include' ${CFILES} ${SFILES} | grep -v '<' |
+	      sed 's/:[^"]*"\([^"]*\)".*/: \1/
+	         s/\.c/.o/; s,../[a-z]*/,,' | \
+	awk ' { if ($1 != prev) { print rec; rec = $0; prev = $1; }
+		else { if (length(rec $2) > 78) { print rec; rec = $0; }
+		       else rec = rec " " $2 } } ;
+	      END { print rec } ' > makedep
+	echo '$r makedep
+	/^# DO NOT DELETE THIS LINE/+1,$d
+	$r makedep
+	w' >eddep
+	cp mkfile mkfile.bak
+	ed - mkfile < eddep
+	rm eddep makedep
+
+ioconf.o: ioconf.c ../h/param.h ../machine/pte.h ../h/buf.h ../h/map.h \
+    ../h/vm.h ../machine/mbvar.h
+	${CC} -I. -c ${CFLAGS} ioconf.c
+
+ubglue.o: ubglue.s
+	/lib/cpp -E -I. -DLOCORE ${IDENT} -DKERNEL ubglue.s >ubglue.i
+	${AS} -o ubglue.o ubglue.i
+	rm -f ubglue.i
+
+param.c: ../sys/param.c
+	cp ../sys/param.c .
+
+param.o: param.c mkfile
+	${CC} -c ${CFLAGS} ${PARAM} param.c
+
+%RULES
+
+# DO NOT DELETE THIS LINE -- mk depend uses it
+

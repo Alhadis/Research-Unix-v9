@@ -1,0 +1,61 @@
+.\" $Header: Xqdss.man,v 1.2 87/09/14 16:16:59 rws Exp $
+.TH XQDSS 8 "12 September 1987" "X Version 11"
+.SH NAME
+Xqdss - X window system VAXStation II/GPX
+.SH DESCRIPTION
+.PP
+The QDSS hardware in the VAXStation II/GPX supports 8 plane or 4 plane
+displays.
+.PP
+.SH OPTIONS
+.br
+\fB-bp\fP \fIpixel-value\fP	set default black-pixel color
+.br
+\fB-wp\fP \fIpixel-value\fP	set default white-pixel color
+.sp
+The server also takes all of the standard server options (See X(8)
+for a complete list.)
+.PP
+.SH NOTE
+You need to make sure your kernel is configured with DMA_BUFSIZ
+set to 10 in sys/data/qd_data.c, or things won't work right.
+.PP
+.SH BUGS
+.PP
+Currently only numeric arguments from #000000 to #ffffff are
+accepted for default BlackPixel and WhitePixel, and no screen 
+number is accepted.
+.PP
+The GPX hardware contains a polygon edge address generation engine
+which does not conform to the polygon edge
+model specified in the X11 protocol document.
+The effect is that GPX polygon edges extend on average
+one-half pixel farther out than they ought.
+.PP
+Zero-width dashed lines could be made faster by using the qdss hardware.
+.PP
+Text output uses hardare capabilities only for solid fill and 8-bit
+character encodings and so other fill styles and encodings are slow.
+.PP
+Clipping to a bitmap is implemented by converting the bitmap
+to a list of rectangles, which is slow for complex bitmaps.
+.PP
+Known to dump core on some GetImage requests.
+.SH "SEE ALSO"
+.PP
+.IR X (8)
+.IR X (1)
+.IR `Xlib - C Language X Interface'
+.IR `ddX - Device Dependent X Interface'
+.SH AUTHORS
+.PP
+Donald Mullis and Matt Pappas, Digital Equipment Corporation.
+.PP
+Thanks to Ram Rao, Vasudev Bhandarkar and Mary Larsen of UEG for their 4-plane
+code and numerous bug fixes.
+.PP
+.br
+Copyright (c) 1984, 1985, 1986 by Massachusetts Institute of Technology.
+Copyright (c) 1986, 1987 by Digital Equipment Corporation
+.br
+See X(1) for a complete Copyright notice.

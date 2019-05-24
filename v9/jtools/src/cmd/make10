@@ -1,0 +1,17 @@
+CFLAGS=	-I../sunlib -mc68010 -DSUNTOOLS -DBSD -g 
+LIBS=	../sunlib/lib10j.a -lsunwindow -lpixrect
+PROGS=	life sysmon icon
+
+all: $(PROGS)
+
+icon: icon.o
+	cc -o icon icon.o $(LIBS)
+
+life: life.o
+	cc -o life life.o $(LIBS)
+
+sysmon: sysmon.o
+	cc -o sysmon sysmon.o $(LIBS)
+
+clean:
+	rm -f $(PROGS) *.o

@@ -1,0 +1,35 @@
+SRCS =	\
+	sunInit.c \
+	sunBW2.c \
+	sunCursor.c \
+	sunIo.c \
+	sunKbd.c \
+	sunMouse.c \
+	sunGC.c \
+	sunKeyMap.c
+
+OFILES = sunInit.o
+
+OBJS = \
+	sunBW2.o \
+	sunCursor.o \
+	sunIo.o \
+	sunKbd.o \
+	sunMouse.o \
+	sunGC.o \
+	sunKeyMap.o
+
+CDEBUGFLAGS = ServerCDebugFlags
+   INCLUDES = -I.  -I../../include -I../mfb -I../../dix -I../../../include
+     LFLAGS = -buxz
+
+NormalLibraryObjectRule()
+
+all:: $(OFILES)
+
+NormalLibraryTarget(v9sun,$(OBJS))
+DependTarget()
+InstallManPage(Xsun,$(MANDIR))
+
+lint: ${CFILES} ${LIBCFILES}
+	$(LINT) $(LFLAGS) -Clibv9sun $(INCLUDES) $(SRCS) >lint.out 2>&1

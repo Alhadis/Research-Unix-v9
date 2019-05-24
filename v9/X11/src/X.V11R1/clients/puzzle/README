@@ -1,0 +1,19 @@
+1/23/87
+
+This is a little X game I've been playing with for a few weeks in an 
+attempt to get a feel for how to use X.   Have fun.
+If you play with the -s option, you can get some nice looking animation
+of the pieces sliding.  On my system,
+
+  puzzle -s50 
+
+works pretty well.  using an S value of 1 or not specifying the option
+will cause the pieces to move instantly to their new location.
+
+A parameter with an '=' will be interpreted as a geometry;
+A parameter with a ':' will be interpreted as the display to use.
+A numeric parameter of n will generate a puzzle of size nxn; not just
+  the 4x4 puzzle we all know and love!
+
+-Don Bennett-
+ hplabs!bennett

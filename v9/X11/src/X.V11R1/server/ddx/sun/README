@@ -1,0 +1,126 @@
+
+	Sun X11 drivers -  10 September 1987
+
+A joint production of:
+
+	Adam de Boor		University of California,  Berkeley
+
+	David Rosenthal
+	Stuart Marks
+	Robin Schaufler
+	Mike Schwartz
+	Frances Ho
+	Geoff Lee
+	Mark Opperman		Sun Microsystems
+
+Special thanks to:
+
+	MIT's Statistics Center,  for generously allowing us to monopolize
+	their Suns while we integrated the Sun code into the releases.
+
+This version of the Sun X.11 drivers uses ../mi,  ../mfb and ../cfb to support
+the following configurations:
+
+	Sun/2		bw2	cg2/3/5
+	Sun/3		bw2	cg2/3/4/5
+	Sun/4		bw2
+
+The following configurations are NOT supported:
+
+	Sun/1		bw1	cg1	(requires separate port)
+	Sun/2			gp	(use /dev/cgtwo0)
+	Sun/3			gp	(use /dev/cgtwo0)
+	Sun/4			cg2	(we're working on it)
+
+The drivers are completely untuned, and have inferior performance.  The code
+is lint-free.  It installs and runs on these configurations under SunOS 3.2,
+3.4, and 4.0.  However, we must stress that it is completely unsupported, and
+if you have problems installing or using it you are on your own.
+
+Things to check before building:
+
+1)	server/include/site.h - replace the font and rgb paths.
+
+2)	Make sure the fonts/Makefile uses the pad flag on the font
+	compiler to pad the glyphs to 4-byte boundaries.
+
+3)	If you want the non-portable zoids extension, add -DZOIDS to CFLAGS.
+	The non-portable zoids have worse performance than portable zoids
+	but prove that the extension mechanism works for output.
+
+Then build the system by:
+
+1)	Make the dependency generator:
+
+	cd makedepend ; make ; cd ..
+
+2)	Update the dependencies by:
+
+	find . -name Makefile -exec chmod u+w {} \;
+	make depend
+	find . -name Makefile -exec chmod u-w {} \;
+
+3)	Go for it.  In the top-level directory, type
+
+	    make
+
+	This takes about forty minutes on a 4/260, and somewhat longer
+	on other Suns.
+
+3)	Exit suntools or whatever other window system you use.
+
+4)	On the console, or from an rlogin connection,  start the server:
+
+	    clients/xinit/xinit
+	or
+	    clients/xinit/xinit -- -dev /dev/??? [see below]
+
+	If it's from the console,  you probably want to redirect the
+	output thus:
+
+	    clients/xinit/xinit >& /tmp/x11.out
+
+5)	xinit should start up an xterm window that acts as a console.  When
+	this xterm terminates, the xinit will kill the server.  You can also
+	start up client programs from a terminal or rlogin, but you must
+	first set the DISPLAY environment variable:
+
+	    setenv DISPLAY unix:0
+	    clients/xterm/xterm &
+
+
+6)	In general,  Xsun auto-configures to use all the available
+	framebuffers.  In some circumstances,  you may need to use a
+	-dev argument on the command line to prevent this:
+
+	3/110LC, 3/110C, 3/60C 
+
+	If you want to use color, use "xinit -- -dev /dev/cgfour0".
+	If you want to use monochrome, use "xinit -- -dev /dev/bwtwo0".
+		
+	GP, GP+, GP2
+
+	If you have one of these GP's installed, use 
+
+	    xinit -- -dev /dev/cgtwo0
+
+7)	To shut the server down,  it  it with a Hangup or Terminate signal.
+
+8)	Xsun coexists with the SunWindows environment.  If you run Xsun
+	from a shell window under suntools, then Xsun will overlay that
+	desktop.  If you have two desktops, then 'adjacentscreens' will still
+	be in effect.  You may want to redirect the output of the server to a
+	window that is visible on another desktop.
+
+9)	If X crashes, it will leave the keyboard in a funny state.  There is a
+	program called "kbd_mode" that will reset the mode of the keyboard.
+	"kbd_mode -a" is the appropriate setting for the bare console, and
+	"kbd_mode -e" is the appropriate setting for running with SunWindows.
+	You may have to issue this command from a terminal or from an rlogin
+	connection.  If you run from the bare console, you can give the
+	command
+
+	xinit ; kbd_mode -a
+
+	so that the keyboard mode will ALWAYS be set properly when the server
+	terminates.  The kbd_mode program is in the server/ddx/sun directory.

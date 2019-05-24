@@ -1,0 +1,102 @@
+#!/bin/sh
+case $1 in
+pt)
+	cd /dev/pt
+	i=0
+	while expr $i "<" 10 > /dev/null
+	do
+		/etc/mknod pt0$i c 18 $i
+		/etc/chown root,other pt0$i
+		chmod 666 pt0$i
+		i=`expr $i + 1`
+	done
+	while expr $i "<" 64 > /dev/null
+	do
+		/etc/mknod pt$i c 18 $i
+		/etc/chown root,other pt$i
+		chmod 666 pt$i
+		i=`expr $i + 1`
+	done
+;;
+inet)
+	cd /dev
+	i=0
+	while expr $i "<" 10 > /dev/null
+	do
+		/etc/mknod tcp0$i c 43 $i
+		/etc/chown root,other tcp0$i
+		chmod 644 tcp0$i
+		i=`expr $i + 1`
+	done
+	while expr $i "<" 32 > /dev/null
+	do
+		/etc/mknod tcp$i c 43 $i
+		/etc/chown root,other tcp$i
+		chmod 644 tcp$i
+		i=`expr $i + 1`
+	done
+	i=0
+	while expr $i "<" 10 > /dev/null
+	do
+		/etc/mknod udp0$i c 50 $i
+		/etc/chown root,bin udp0$i
+		chmod 666 udp0$i
+		i=`expr $i + 1`
+	done
+	while expr $i "<" 16 > /dev/null
+	do
+		/etc/mknod udp$i c 50 $i
+		/etc/chown root,bin udp$i
+		chmod 644 udp$i
+		i=`expr $i + 1`
+	done
+	/etc/mknod ip0 c 42 0
+	/etc/mknod ip6 c 42 6
+	/etc/mknod ip16 c 42 16
+	/etc/mknod ip17 c 42 17
+	/etc/mknod iptcp c 42 6
+	/etc/mknod ipudp c 42 17
+	/etc/chown root,other ip0 ip6 ip16 ip17 iptcp ipudp
+	chmod 644 ip0 ip6 ip16 ip17 iptcp ipudp
+;;
+cmc)
+	cd /dev
+	i=0
+	while expr $i "<=" 8 > /dev/null
+	do
+		/etc/mknod cmc0$i c 6 $i
+		/etc/chown root,sys cmc0$i
+		chmod 664 cmc0$i
+		i=`expr $i + 1`
+	done
+;;
+le)
+	cd /dev
+	i=0
+	while expr $i "<=" 8 > /dev/null
+	do
+		/etc/mknod le0$i c 26 $i
+		/etc/chown root,sys le0$i
+		chmod 664 le0$i
+		i=`expr $i + 1`
+	done
+;;
+ie)
+	cd /dev
+	i=0
+	while expr $i "<=" 8 > /dev/null
+	do
+		/etc/mknod ie0$i c 27 $i
+		/etc/chown root,sys ie0$i
+		chmod 664 ie0$i
+		i=`expr $i + 1`
+	done
+;;
+st)
+	cd /dev
+	/etc/mknod rst8 c 16 8
+	/etc/mknod nrst8 c 16 12
+	/etc/chown root,sys rst8 nrst8
+	chmod 666 rst8 nrst8
+;;
+esac

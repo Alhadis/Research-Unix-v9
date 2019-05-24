@@ -1,0 +1,14 @@
+CFLAGS = -g -DX11 -DBLIT -I../../sunlib
+HFILES = host.h pacman.h style.h
+LIBS	= ../../sunlib/libj.a -lX11 -lipc
+CFILES =blt.c board.c blitfonts.c fruit.c host.c main.c monsters.c pacman.c prf.c sched.c sounds.c
+OFILES =blt.o board.o blitfonts.o fruit.o host.o main.o monsters.o pacman.o prf.o sched.o sounds.o
+
+pacman:	$(OFILES)
+	$(CC) $(CFLAGS) -o pacman $(OFILES) $(LIBS)
+
+shrink:
+	-rm -f *.o
+
+clean:	shrink
+	-rm -f pacman errs core a.out

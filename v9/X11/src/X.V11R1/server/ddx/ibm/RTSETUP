@@ -1,0 +1,49 @@
+#!/bin/sh
+INIT=${1-no}
+TOP=../../..
+(cd $TOP/util/imake;make)
+(cd $TOP/util/patch;make Makefile;make)
+(cd $TOP/util/makedepend;make Makefile;make)
+(cd $TOP/util/makedepend; make depend;make)
+if [ x$INIT = xinit ] ; then
+   chmod +w $TOP/lib/Xtk/Imakefile
+   $TOP/util/patch/patch $TOP/lib/Xtk/Imakefile << END
+*** /tmp/Imakefile	Mon Sep 14 11:40:03 1987
+--- ../lib/Xtk/Imakefile	Mon Sep 14 11:48:39 1987
+***************
+*** 2,7 ****
+--- 2,8 ----
+  #define PassCDebugFlags 'CDEBUGFLAGS=$(CDEBUGFLAGS)'
+  
+      CDEBUGFLAGS = -g
++     CC = pcc
+  
+          SUBDIRS = clients
+  
+END
+   chmod +w $TOP/server/ddx/mi/miregion.c
+   $TOP/util/patch/patch $TOP/server/ddx/mi/miregion.c << END
+*** /tmp/miregion.c	Mon Sep 14 11:18:09 1987
+--- ddx/mi/miregion.c	Mon Sep 14 10:47:34 1987
+***************
+*** 289,295 ****
+  	    {
+  		do
+  		{
+! 		    *pPrevBox++ = *pCurBox++;
+  		} while (pCurBox != pRegEnd);
+  	    }
+  	    
+--- 289,297 ----
+  	    {
+  		do
+  		{
+! 		    *pPrevBox = *pCurBox;
+! 		    pPrevBox++;
+! 		    pCurBox++;
+  		} while (pCurBox != pRegEnd);
+  	    }
+  	    
+END
+fi
+(cd $TOP;make Makefiles;make depend)

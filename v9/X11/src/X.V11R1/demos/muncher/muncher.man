@@ -1,0 +1,11 @@
+.TH MUNCHER "13 June 1987" "X Version 11"
+.UC 4
+.SH NAME
+muncher \- draw interesting patterns
+.SH SYNOPSIS
+.B Muncher
+.SH DESCRIPTION
+.I Muncher
+draws some interesting patterns on a window.
+.SH BUGS
+There are no known bugs.  There are lots of lacking features.

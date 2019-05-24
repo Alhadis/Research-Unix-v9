@@ -1,0 +1,284 @@
+       INCLUDES = -I. -I$(TOP) -I$(INCLUDESRC)
+        DEFINES = -DUNIXCONN
+   INSTALLFLAGS = -m 0644
+           SRCS = *.c
+        HEADERS = Xlib.h Xutil.h
+
+OBJS =\
+	Context.o \
+	XAllCells.o \
+	XAllPlanes.o \
+	XAllowEv.o \
+	XAutoRep.o \
+	XBackgnd.o \
+	XBdrWidth.o \
+	XBell.o \
+	XBorder.o \
+	XChAccCon.o \
+	XChClMode.o \
+	XChActPGb.o \
+	XChCmap.o \
+	XChGC.o \
+	XChKeyCon.o \
+	XChPntCon.o \
+	XChProp.o \
+	XChSaveSet.o \
+	XChWAttrs.o \
+	XChWindow.o \
+	XChkIfEv.o \
+	XChkMaskEv.o \
+	XChkWinEv.o \
+	XChkTypEv.o \
+	XChkTypWEv.o \
+	XCirWin.o \
+	XCirWinDn.o \
+	XCirWinUp.o \
+	XClDisplay.o \
+	XClear.o \
+	XClearArea.o \
+	XConfWind.o \
+	XConnDis.o \
+	XConvSel.o \
+	XCopyArea.o \
+	XCopyCmap.o \
+	XCopyGC.o \
+	XCopyPlane.o \
+	XCrBFData.o \
+	XCrCmap.o \
+	XCrCursor.o \
+	XCrGC.o \
+	XCrGlCur.o \
+	XCrPixmap.o \
+	XCrWindow.o \
+	XCursor.o \
+	XDefCursor.o \
+	XDelProp.o \
+	XDestSubs.o \
+	XDestWind.o \
+	XDisName.o \
+	XDrArc.o \
+	XDrArcs.o \
+	XDrLine.o \
+	XDrLines.o \
+	XDrPoint.o \
+	XDrPoints.o \
+	XDrRect.o \
+	XDrRects.o \
+	XDrSegs.o \
+	XErrDes.o \
+	XErrHndlr.o \
+	XEvToWire.o \
+	XFetchName.o \
+	XFillArc.o \
+	XFillArcs.o \
+	XFillPoly.o \
+	XFillRect.o \
+	XFillRects.o \
+	XFlush.o \
+	XFont.o \
+	XFontNames.o \
+	XFontInfo.o \
+	XFreeCmap.o \
+	XFreeCols.o \
+	XFreeCurs.o \
+	XFreeEData.o \
+	XFreeGC.o \
+	XFreePix.o \
+	XFSSaver.o \
+	XGCMisc.o \
+	XGeom.o \
+	XGetAtomNm.o \
+	XGetColor.o \
+	XGetDflt.o \
+	XGetFPath.o \
+	XGetFProp.o \
+	XGetGeom.o \
+	XGetHColor.o \
+	XGetHints.o \
+	XGetIFocus.o \
+	XGetImage.o \
+	XGetKCnt.o \
+	XGetMoEv.o \
+	XGetPCnt.o \
+	XGetPntMap.o \
+	XGetProp.o \
+	XGetSOwner.o \
+	XGetSSaver.o \
+	XGetStCmap.o \
+	XGetWAttrs.o \
+	XGrButton.o \
+	XGrKey.o \
+	XGrKeybd.o \
+	XGrPointer.o \
+	XGrServer.o \
+	XHost.o \
+	XIfEvent.o \
+	XImUtil.o \
+	XImText.o \
+	XImText16.o \
+	XInitExt.o \
+	XInsCmap.o \
+	XIntAtom.o \
+	XKeyBind.o \
+	XKillCl.o \
+	XLiHosts.o \
+	XLiICmaps.o \
+	XLiProps.o \
+	XListExt.o \
+	XLoadFont.o \
+	XLookupCol.o \
+	XLowerWin.o \
+	XMacros.o \
+	XMapRaised.o \
+	XMapSubs.o \
+	XMapWindow.o \
+	XMaskEvent.o \
+	XModMap.o \
+	XMoveWin.o \
+	XNextEvent.o \
+	XOpenDis.o \
+	XParseCol.o \
+	XParseGeom.o \
+	XPeekEvent.o \
+	XPeekIfEv.o \
+	XPending.o \
+	XPmapBgnd.o \
+	XPmapBord.o \
+	XPolyReg.o \
+	XPolyTxt.o \
+	XPolyTxt16.o \
+	XPutBEvent.o \
+	XPutImage.o \
+	XQuBest.o \
+	XQuColor.o \
+	XQuColors.o \
+	XQuCurShp.o \
+	XQuExt.o \
+	XQuKeybd.o \
+	XQuPntr.o \
+	XQuStipShp.o \
+	XQuTextE16.o \
+	XQuTextExt.o \
+	XQuTileShp.o \
+	XQuTree.o \
+	XRaiseWin.o \
+	XRdBitF.o \
+	XRecolorC.o \
+	XReconfWin.o \
+	XRegion.o \
+	XRepWindow.o \
+	XRestackWs.o \
+	XRotProp.o \
+	XSelInput.o \
+	XSendEvent.o \
+	XSetBack.o \
+	XSetCRects.o \
+	XSetClMask.o \
+	XSetClOrig.o \
+	XSetDashes.o \
+	XSetFPath.o \
+	XSetFont.o \
+	XSetFore.o \
+	XSetFunc.o \
+	XSetHints.o \
+	XSetIFocus.o \
+	XSetLStyle.o \
+	XSetPMask.o \
+	XSetPntMap.o \
+	XSetSOwner.o \
+	XSetSSaver.o \
+	XSetState.o \
+	XSetStip.o \
+	XSetStCmap.o \
+	XSetTile.o \
+	XSetTSOrig.o\
+	XStBytes.o \
+	XStColor.o \
+	XStColors.o \
+	XStNColor.o \
+	XStName.o \
+	XStrKeysym.o \
+	XSync.o \
+	XSynchro.o \
+	XText.o \
+	XText16.o \
+	XTextExt.o \
+	XTextExt16.o \
+	XTrCoords.o \
+	XUndefCurs.o \
+	XUngrabBut.o \
+	XUngrabKbd.o \
+	XUngrabKey.o \
+	XUngrabPtr.o \
+	XUngrabSvr.o \
+	XUninsCmap.o \
+	XUnldFont.o \
+	XUnmapSubs.o \
+	XUnmapWin.o \
+	XVisUtil.o \
+	XWarpPtr.o \
+	XWinEvent.o \
+	XWindow.o \
+	XWrBitF.o \
+	XlibInt.o \
+	evtomask.o
+
+#if DebugLibX && ProfileLibX
+DebuggedAndProfiledLibraryObjectRule()
+#else
+# if DebugLibX
+DebuggedLibraryObjectRule()
+# else
+#  if ProfileLibX
+ProfiledLibraryObjectRule()
+#  else
+NormalLibraryObjectRule()
+#  endif
+# endif
+#endif
+
+NormalLibraryTarget(X,$(OBJS))
+AliasedLibraryTarget(X,X11)
+LintLibraryTarget(X,*.c)
+InstallLibrary(X,$(USRLIBDIR))
+InstallLibraryAlias(X,X11,$(USRLIBDIR))
+InstallLintLibrary(X,$(USRLIBDIR))
+InstallMultiple($(HEADERS),$(INCDIR))
+InstallNonExec(XErrorDB,$(LIBDIR))
+
+
+#if ProfileLibX
+ProfiledLibraryTarget(X,$(OBJS))
+AliasedLibraryTarget(X_p,X11_p)
+InstallLibrary(X_p,$(USRLIBDIR))
+InstallLibraryAlias(X_p,X11_p,$(USRLIBDIR))
+#endif
+
+#if DebugLibX
+DebuggedLibraryTarget(X,$(OBJS))
+AliasedLibraryTarget(X_d,X11_d)
+#endif
+
+depend:: ks_names.h
+
+DependTarget()
+
+ks_names.h: $(INCLUDESRC)/keysymdef.h
+	@echo "generating $@"; \
+	awk 'BEGIN { \
+		printf("/*\n * This is a machine generated file."); \
+		printf(" * Do not put under source control.\n */\n"); \
+	} \
+	/^#define/ { \
+		len = length($$2)-3; \
+		printf("{ \"%s\", %s },\n", substr($$2,4,len), $$3); \
+	}' < $? > $@
+
+clean::
+	rm -f ks_names.h
+
+# structure alignment errors can safely be ignored.
+# complaints about qevent can be ignored too.
+
+lint:
+	$(LINT) -hubz ${INCLUDES} *.c > lint.log

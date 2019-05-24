@@ -1,0 +1,28 @@
+The connection server is made up of a number of intertwined programs.
+These programs are roughly divided into three groups:
+1) Managers (/usr/ipc/mgrs/*) -- These are non-terminating programs started
+   by /etc/rc.  One group consists of dialers that listen for and place calls on 
+   particular networks (dkmgr, tcpmgr, tpcmgr, udpmgr).  The next group are
+   programs used to configure the different networks (dkhup, kdiload, ipconfig,
+   dkipconfig, routed).  Finally is the service manager (svcmgr) that offers
+   the standard user services such as login and program execution.
+2) Commands (/usr/ipc/bin/*) -- These programs are run by users to perform
+   network functions such as remote login and remote executions.
+3) Servers (/usr/ipc/servers/*) -- These are programs started by `svcmgr'
+   when called by a command on some other system (telnetd, Rpush, Rpull).
+These programs have been shipped to all of our systems.
+
+Connection service programs communicate using streams.  They rendezvous by
+mounting onto files in the directory /cs.  A /cs has been shipped to all our
+systems.  It is protected to be writable only by root and bin.  This ensures
+that unprivileged users may not usurp rendezvous points.  A number of user
+accessable moutn points (tcp.1024-tcp.1124) exist for use by telnet and ftp.
+
+Configuration files are needed by `svcmgr' to know what services to
+offer and for whom to offer them.  These are the files /usr/ipc/lib/auth,
+/usr/ipc/lib/auth.local, /usr/ipc/lib/serv, and /usr/ipc/lib/serv.local.
+/usr/ipc/lib/auth and /usr/ipc/lib/serv are shipped from bowell and contain
+the base set of services and authentications.  The *.local files should NEVER
+be shipped.  They take precedence over the base set and are used to configure
+system peculiarities.
+

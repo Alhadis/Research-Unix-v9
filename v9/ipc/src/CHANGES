@@ -1,0 +1,30 @@
+Modifications to files for compilation
+
+libipc/ipccreat.c - line 69. CHanged assignment from =-1 to = -1
+	because of bug in C compiler
+
+libipc/ipcpath.c - line 4, changed =*cp++ to = *cp++.
+
+libipc/tcp.c - line 46, changed assignment of =-1 to = -1
+
+libin/in_ntoa.c - line 16, changed printing out network address to it
+	uses shifts instead of character pointers so it will be machine
+	independent (work on both vax and 68000)
+
+internet/netstat.c - line 36. Added test if argc > 1 before testing
+	argv[ai][0] since NULL dereferences not allowed.
+
+internet/ipconfig.c - line 14.  #if deffed declaration for htons for vax only.
+
+mgrs/tcpmgr/main.c - line 35, added space between =&av[ai][1] tp = &...
+
+bin/con.c - line 15, chaned assignment of =-1 to = -1
+	line 64, changed assignment of =&argv[1][1] to = &...
+
+bin/rcp.c - line 266. In sprintf changed %D to %d as per manual.
+
+mgrs/srvcmgr/action.c - line 99. Added check to insure arg is not NULL
+	before calling strdup.  If it is null, just assign NULL to ap->arg.
+
+mgrs/srvcmgr/exec_act.c - line 145-5 added.  Tests if rp->term is NULL. If
+	it is, it doesn't add TERM to the evnironment.

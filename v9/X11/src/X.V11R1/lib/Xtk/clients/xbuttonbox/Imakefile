@@ -1,0 +1,6 @@
+       INCLUDES = -I$(OLDXRMSRC) -I$(TOP) -I$(TOP)/X11
+           OBJS = xbuttonbox.o
+           SRCS = xbuttonbox.c
+
+SingleProgramTarget(xbuttonbox,$(OBJS),$(XTOOLLIB) $(OLDXRMLIB) $(XLIB),)
+DependTarget()

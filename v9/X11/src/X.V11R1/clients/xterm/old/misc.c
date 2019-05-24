@@ -1,0 +1,872 @@
+/*
+ *	$Source: /orpheus/u1/X11/clients/xterm/RCS/misc.c,v $
+ *	$Header: misc.c,v 1.29 87/09/10 18:09:03 swick Exp $
+ */
+
+
+#include <X11/copyright.h>
+
+/*
+ * Copyright 1987 by Digital Equipment Corporation, Maynard, Massachusetts.
+ *
+ *                         All Rights Reserved
+ *
+ * Permission to use, copy, modify, and distribute this software and its
+ * documentation for any purpose and without fee is hereby granted,
+ * provided that the above copyright notice appear in all copies and that
+ * both that copyright notice and this permission notice appear in
+ * supporting documentation, and that the name of Digital Equipment
+ * Corporation not be used in advertising or publicity pertaining to
+ * distribution of the software without specific, written prior permission.
+ *
+ *
+ * DIGITAL DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING
+ * ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO EVENT SHALL
+ * DIGITAL BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR
+ * ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS,
+ * WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION,
+ * ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS
+ * SOFTWARE.
+ */
+
+#include <stdio.h>
+#include <setjmp.h>
+#include <signal.h>
+#include <ctype.h>
+#include <pwd.h>
+#include <strings.h>
+#include <sys/time.h>
+#include <sys/file.h>
+#include <X11/Xlib.h>
+#include <X11/Xutil.h>
+#include <X11/Xatom.h>
+#include <X11/Xtlib.h>
+#include "ptyx.h"
+#include "data.h"
+#include "error.h"
+#include <X11/cursorfont.h>
+#include "gray.ic"
+#include "hilite.ic"
+#include "wait.ic"
+#include "waitmask.ic"
+
+extern char *malloc();
+extern char *mktemp();
+extern void exit();
+extern void perror();
+extern void abort();
+
+#ifndef lint
+static char rcs_id[] = "$Header: misc.c,v 1.29 87/09/10 18:09:03 swick Exp $";
+#endif	lint
+
+xevents()
+{
+	XEvent event;
+	register TScreen *screen = &term.screen;
+	XtEventReturnCode returnCode;
+
+	if(screen->scroll_amt)
+		FlushScroll(screen);
+	XPending (screen->display);
+	do {
+		if (waitingForTrackInfo)
+			return;
+		XNextEvent (screen->display, &event);
+		returnCode = XtDispatchEvent(&event);
+		switch (returnCode) {
+			case XteventHandled :
+				break;
+			case XteventNotHandled :
+/* |||
+fprintf(stderr, "Event %d not handled for window %d (subwindow %d)\n",
+ (int)event.type, (int)event.window, (int)event.subwindow);
+*/
+				break;
+			case XteventNoHandler :
+/* |||
+fprintf(stderr, "Event %d no entry for window %d (subwindow %d)\n",
+ (int)event.type, (int)event.window, (int)event.subwindow);
+*/
+				break;
+		}
+	} while (QLength(screen->display) > 0);
+}
+
+/*ARGSUSED*/
+XtEventReturnCode EventDoNothing(event, eventdata)
+XEvent *event;
+caddr_t eventdata;
+{
+	return (XteventHandled);
+}
+
+/*ARGSUSED*/
+XtEventReturnCode HandleKeyPressed(event, eventdata)
+XEvent *event;
+caddr_t eventdata;
+{
+	Input (&term.keyboard, &term.screen, (XKeyPressedEvent *)event);
+	return (XteventHandled);
+}
+/*ARGSUSED*/
+XtEventReturnCode HandleEnterWindow(event, eventdata)
+register XEnterWindowEvent *event;
+caddr_t eventdata;
+{
+	register TScreen *screen = &term.screen;
+
+	if (((event->detail) != NotifyInferior)
+	 && event->mode == NotifyNormal
+	 && event->focus) {
+#ifdef DEBUG
+		if(debug)
+			fprintf(stderr, "EnterWindow %s\n", window ==
+			 VWindow(screen) ? "VT" : "Tek");
+#endif DEBUG
+		selectwindow(screen, INWINDOW);
+	}
+	return (XteventHandled);
+}
+
+/*ARGSUSED*/
+XtEventReturnCode HandleLeaveWindow(event, eventdata)
+register XEnterWindowEvent *event;
+caddr_t eventdata;
+{
+	register TScreen *screen = &term.screen;
+
+	if (((event->detail) != NotifyInferior)
+	 && event->mode == NotifyNormal
+	 && event->focus) {
+#ifdef DEBUG
+		if(debug)
+			fprintf(stderr, "LeaveWindow %s\n", window ==
+			 VWindow(screen) ? "VT" : "Tek");
+#endif DEBUG
+		unselectwindow(screen, INWINDOW);
+	}
+	return (XteventHandled);
+}
+
+
+/*ARGSUSED*/
+XtEventReturnCode HandleFocusChange(event, eventdata)
+register XFocusChangeEvent *event;
+caddr_t eventdata;
+{
+        register TScreen *screen = &term.screen;
+
+        if(event->type == FocusIn)
+                selectwindow(screen, FOCUS);
+        else
+                unselectwindow(screen, FOCUS);
+        return (XteventHandled);
+}
+
+
+
+selectwindow(screen, flag)
+register TScreen *screen;
+register int flag;
+{
+	if(screen->TekEmu) {
+		TekSelect();
+		if(!Ttoggled)
+			TCursorToggle(TOGGLE);
+		if(screen->cellsused) {
+			screen->colorcells[2].pixel =
+			 screen->Tcursorcolor;
+			XStoreColor(screen->display, 
+			 DefaultColormap(screen->display,
+				DefaultScreen(screen->display)),
+			 &screen->colorcells[2]);
+		}
+		screen->select |= flag;
+		if(!Ttoggled)
+			TCursorToggle(TOGGLE);
+		return;
+	} else {
+		VTSelect();
+		if(screen->cursor_state &&
+		   (screen->cursor_col != screen->cur_col ||
+		    screen->cursor_row != screen->cur_row))
+		    HideCursor();
+		screen->select |= flag;
+		if(screen->cursor_state)
+			ShowCursor();
+		return;
+	}
+}
+
+unselectwindow(screen, flag)
+register TScreen *screen;
+register int flag;
+{
+	register int i;
+
+	screen->select &= ~flag;
+	if(!(screen->select)) {
+		if(screen->TekEmu) {
+			TekUnselect();
+			if(!Ttoggled)
+				TCursorToggle(TOGGLE);
+			if(screen->cellsused) {
+				i = (term.flags & REVERSE_VIDEO) == 0;
+				screen->colorcells[i].pixel =
+				 screen->Tcursorcolor;
+				XStoreColor(screen->display, 
+			         DefaultColormap(screen->display,
+					       DefaultScreen(screen->display)),
+				 &screen->colorcells[i]);
+			}
+			if(!Ttoggled)
+				TCursorToggle(TOGGLE);
+		} else {
+			VTUnselect();
+			if(screen->cursor_state &&
+			 (screen->cursor_col != screen->cur_col ||
+			 screen->cursor_row != screen->cur_row))
+				HideCursor();
+			if(screen->cursor_state)
+				ShowCursor();
+		}
+	}
+}
+
+reselectwindow(screen)
+register TScreen *screen;
+{
+	Window root, win;
+	int rootx, rooty, x, y;
+	unsigned int mask;
+
+	if(XQueryPointer(
+	    screen->display, 
+	    DefaultRootWindow(screen->display), 
+	    &root, &win,
+	    &rootx, &rooty,
+	    &x, &y,
+	    &mask)) {
+		if(win && (win == VWindow(screen) || win == TWindow(screen)))
+			selectwindow(screen, INWINDOW);
+		else	unselectwindow(screen, INWINDOW);
+	}
+}
+
+Pixmap Make_tile(width, height, bits, foreground, background, depth)
+	unsigned int width, height, depth;
+	Pixel foreground, background;
+	char *bits;
+{
+	register GC gc;
+	register Pixmap pix;
+	register TScreen *screen = &term.screen;
+	XGCValues gcVals;
+	XImage tileimage;
+	GC XtGetGC();
+
+        pix = (Pixmap)XCreatePixmap(screen->display, 
+	  DefaultRootWindow(screen->display), width, height, depth);
+	gcVals.foreground = foreground;
+	gcVals.background = background;
+	gc = XCreateGC(screen->display, (Drawable) pix, 
+	  GCForeground+GCBackground, &gcVals);
+	tileimage.height = height;
+	tileimage.width = width;
+	tileimage.xoffset = 0;
+	tileimage.format = XYBitmap;
+	tileimage.data = bits;
+	tileimage.byte_order = LSBFirst;
+	tileimage.bitmap_unit = 8;
+	tileimage.bitmap_bit_order = LSBFirst;
+	tileimage.bitmap_pad = 8;
+	tileimage.bytes_per_line = (width+7)>>3;
+	tileimage.depth = 1;
+        XPutImage(screen->display, pix, gc, &tileimage, 0, 0, 0, 0, width, height);
+        /* done with gc */
+	return(pix);
+}
+
+
+Pixmap make_gray(fg, bg, depth)
+Pixel fg, bg;
+{
+	return(Make_tile(gray_width, gray_height, gray_bits, fg, bg, depth));
+}
+
+/* ARGSUSED */
+Cursor make_tcross(fg, bg)
+Pixel fg, bg;
+{
+	register TScreen *screen = &term.screen;
+	Cursor c;
+	
+	c = XCreateFontCursor(screen->display, XC_tcross);
+/*
+	XRecolorCursor(screen->display, c, PixelToColor(fg), PixelToColor(bg));
+*/
+	return(c);
+}
+
+/* ARGSUSED */
+Cursor make_xterm(fg, bg)
+unsigned long fg, bg;
+{
+	register TScreen *screen = &term.screen;
+	Cursor c;
+	
+	c = XCreateFontCursor(screen->display, XC_xterm);
+/*
+	XRecolorCursor(screen->display, c, PixelToColor(fg), PixelToColor(bg));
+*/
+	return(c);
+}
+
+static XColor foreground = { 0L, 65535, 65535, 65535 };
+static XColor background = { 0L,    0,     0,     0 };
+
+Cursor make_wait(fg, bg)
+Pixel fg, bg;
+{
+	register TScreen *screen = &term.screen;
+	Pixmap source, mask;
+
+	source = Make_tile(wait_width, wait_height, wait_bits, fg, bg, 1);
+	mask = Make_tile(waitmask_width, waitmask_height, waitmask_bits, 
+	 fg, bg, 1);
+/*
+	return(XCreatePixmapCursor(screen->display, source, mask, PixelToColor(fg),
+	 PixelToColor(bg), wait_x_hot, wait_y_hot));
+*/
+	return(XCreatePixmapCursor(screen->display, source, mask, 
+	 &foreground, &background, wait_x_hot, wait_y_hot));
+}
+
+/* ARGSUSED */
+Cursor make_arrow(fg, bg)
+unsigned long fg, bg;
+
+{
+	register TScreen *screen = &term.screen;
+	Cursor c;
+	
+	c = XCreateFontCursor(screen->display, XC_left_ptr);
+/*
+	XRecolorCursor(screen->display, c, PixelToColor(fg), PixelToColor(bg));
+*/
+	return(c);
+}
+
+char *uniquesuffix(name)
+char *name;
+{
+	register int *np, *fp, i;
+	register Window *cp;
+	register int temp, j, k, exact, *number;
+	char *wname;
+	Window *children, parent, root;
+	unsigned int nchildren;
+	static char *suffix, sufbuf[10];
+	TScreen *screen = &term.screen;
+	char *malloc();
+
+	if(suffix)
+		return(suffix);
+	suffix = sufbuf;
+	if(!XQueryTree(
+	    screen->display, 
+	    DefaultRootWindow(screen->display), 
+	    &root, &parent,
+	    &children, &nchildren) ||
+	 nchildren < 1 || (number = (int *)malloc((unsigned)nchildren * sizeof(int)))
+	 == NULL)
+		return(suffix);
+	exact = FALSE;
+	i = strlen(name);
+	for(np = number, cp = children, j = nchildren ; j > 0 ; cp++, j--) {
+		if(!XFetchName(screen->display, *cp, &wname) || wname == NULL)
+			continue;
+		if(strncmp(name, wname, i) == 0) {
+			if(wname[i] == 0 || XStrCmp(&wname[i], " (Tek)") == 0)
+				exact = TRUE;
+			else if(strncmp(&wname[i], " #", 2) == 0)
+				*np++ = atoi(&wname[i + 2]);
+		}
+		free(wname);
+	}
+	free((char *)children);
+	if(exact) {
+		if(np <= number)
+			strcpy(suffix, " #2");
+		else {
+			exact = np - number;
+			np = number;
+			/* shell sort */
+			for(i = exact / 2 ; i > 0 ; i /= 2)
+				for(k = i ; k < exact ; k++)
+					for(j = k - i ; j >= 0 &&
+					 np[j] > np[j + i] ; j -= i) {
+						temp = np[j];
+						np[j] = np[j + i];
+						np[j + i] = temp;
+					}
+			/* make numbers unique */
+			for(fp = np + 1, i = exact - 1 ; i > 0 ; fp++, i--)
+				if(*fp != *np)
+					*++np = *fp;
+			/* find least unique number */
+			for(i = 2, fp = number ; fp <= np ; fp++) {
+				if(i < *fp)
+					break;
+				if(i == *fp)
+					i++;
+			}
+			sprintf(suffix, " #%d", i);
+		}
+	}
+	free((char *)number);
+	return(suffix);
+}
+
+Bell()
+{
+	extern Terminal term;
+	register TScreen *screen = &term.screen;
+	register Pixel xorPixel = screen->foreground ^ screen->background;
+	XGCValues gcval;
+	GC visualGC;
+
+	if(screen->visualbell) {
+		gcval.function = GXxor;
+		gcval.foreground = xorPixel;
+		visualGC = XtGetGC(screen->display, (XContext)NULL, 
+		 DefaultRootWindow(screen->display),
+		 GCFunction+GCForeground, &gcval);
+		if(screen->TekEmu) {
+			XFillRectangle(
+			    screen->display,
+			    TWindow(screen), 
+			    visualGC,
+			    0, 0,
+			    (unsigned) TFullWidth(screen),
+			    (unsigned) TFullHeight(screen));
+			XFlush(screen->display);
+			XFillRectangle(
+			    screen->display,
+			    TWindow(screen), 
+			    visualGC,
+			    0, 0,
+			    (unsigned) TFullWidth(screen),
+			    (unsigned) TFullHeight(screen));
+		} else {
+			XFillRectangle(
+			    screen->display,
+			    VWindow(screen), 
+			    visualGC,
+			    0, 0,
+			    (unsigned) FullWidth(screen),
+			    (unsigned) FullHeight(screen));
+			XFlush(screen->display);
+			XFillRectangle(
+			    screen->display,
+			    VWindow(screen), 
+			    visualGC,
+			    0, 0,
+			    (unsigned) FullWidth(screen),
+			    (unsigned) FullHeight(screen));
+		}
+	} else
+		XBell(screen->display, 0);
+}
+
+Redraw()
+{
+	extern Terminal term;
+	register TScreen *screen = &term.screen;
+	XExposeEvent event;
+
+	event.type = Expose;
+	event.display = screen->display;
+	event.x = 0;
+	event.y = 0;
+	event.width = DisplayWidth(
+	  screen->display, DefaultScreen(screen->display));
+	event.height =DisplayHeight(
+	  screen->display, DefaultScreen(screen->display));
+	event.count = 0; 
+	
+	if(VWindow(screen)) {
+		extern XtEventReturnCode VTExpose();
+
+	        event.window = VWindow(screen);
+		(void) VTExpose(&event, (caddr_t)NULL);
+		if(screen->scrollbar) {
+			RedrawScrollBar(screen->scrollWindow);
+		}
+	}
+	if(TWindow(screen) && screen->Tshow) {
+	        event.window = TWindow(screen);
+		TekExpose(&event);
+	}
+}
+
+SyncUnmap(win, mask)
+register Window win;
+register long int mask;
+{
+	XEvent ev;
+	register XEvent *rep = &ev;
+	register TScreen *screen = &term.screen;
+
+	do { /* ignore events through unmap */
+		XWindowEvent(screen->display, win, mask, rep);
+	} while(rep->type != UnmapNotify);
+}
+
+StartLog(screen)
+register TScreen *screen;
+{
+	register char *cp;
+	register int i;
+	static char *log_default;
+	char *malloc(), *rindex();
+	extern logpipe();
+
+	if(screen->logging || (screen->inhibit & I_LOG))
+		return;
+	if(screen->logfile == NULL || *screen->logfile == 0) {
+		if(screen->logfile)
+			free(screen->logfile);
+		if(log_default == NULL)
+			mktemp(log_default = log_def_name);
+		if((screen->logfile = malloc((unsigned)strlen(log_default) + 1)) == NULL)
+			return;
+		strcpy(screen->logfile, log_default);
+	}
+	if(*screen->logfile == '|') {	/* exec command */
+		int p[2];
+		static char *shell;
+
+		if(pipe(p) < 0 || (i = fork()) < 0)
+			return;
+		if(i == 0) {	/* child */
+			close(p[1]);
+			dup2(p[0], 0);
+			close(p[0]);
+			dup2(fileno(stderr), 1);
+			dup2(fileno(stderr), 2);
+			close(fileno(stderr));
+			fileno(stderr) = 2;
+			close(screen->display->fd);
+			close(screen->respond);
+			if(!shell) {
+				register struct passwd *pw;
+				char *getenv(), *malloc();
+				struct passwd *getpwuid();
+
+				if(((cp = getenv("SHELL")) == NULL || *cp == 0)
+				 && ((pw = getpwuid(screen->uid)) == NULL ||
+				 *(cp = pw->pw_shell) == 0) ||
+				 (shell = malloc((unsigned) strlen(cp) + 1)) == NULL)
+					shell = "/bin/sh";
+				else
+					strcpy(shell, cp);
+			}
+			signal(SIGHUP, SIG_DFL);
+			signal(SIGCHLD, SIG_DFL);
+			setgid(screen->gid);
+			setuid(screen->uid);
+			execl(shell, shell, "-c", &screen->logfile[1], 0);
+			fprintf(stderr, "%s: Can't exec `%s'\n", xterm_name,
+			 &screen->logfile[1]);
+			exit(ERROR_LOGEXEC);
+		}
+		close(p[0]);
+		screen->logfd = p[1];
+		signal(SIGPIPE, logpipe);
+	} else {
+		if(access(screen->logfile, F_OK) == 0) {
+			if(access(screen->logfile, W_OK) < 0)
+				return;
+		} else if(cp = rindex(screen->logfile, '/')) {
+			*cp = 0;
+			i = access(screen->logfile, W_OK);
+			*cp = '/';
+			if(i < 0)
+				return;
+		} else if(access(".", W_OK) < 0)
+			return;
+		if((screen->logfd = open(screen->logfile, O_WRONLY | O_APPEND |
+		 O_CREAT, 0644)) < 0)
+			return;
+		chown(screen->logfile, screen->uid, screen->gid);
+
+	}
+	screen->logstart = screen->TekEmu ? Tbptr : bptr;
+	screen->logging = TRUE;
+}
+
+CloseLog(screen)
+register TScreen *screen;
+{
+	if(!screen->logging || (screen->inhibit & I_LOG))
+		return;
+	FlushLog(screen);
+	close(screen->logfd);
+	screen->logging = FALSE;
+}
+
+FlushLog(screen)
+register TScreen *screen;
+{
+	register char *cp;
+	register int i;
+
+	cp = screen->TekEmu ? Tbptr : bptr;
+	if((i = cp - screen->logstart) > 0)
+		write(screen->logfd, screen->logstart, i);
+	screen->logstart = screen->TekEmu ? Tbuffer : buffer;
+}
+
+logpipe()
+{
+	register TScreen *screen = &term.screen;
+
+	if(screen->logging)
+		CloseLog(screen);
+}
+
+
+do_osc(func)
+int (*func)();
+{
+	register TScreen *screen = &term.screen;
+	register int mode, c;
+	register char *cp;
+	char buf[512];
+	extern char *malloc();
+
+	mode = 0;
+	while(isdigit(c = (*func)()))
+		mode = 10 * mode + (c - '0');
+	cp = buf;
+	while(isprint(c = (*func)()))
+		*cp++ = c;
+	*cp = 0;
+	switch(mode) {
+	 case 0:	/* new icon name and title*/
+		Changename(buf);
+		Changetitle(buf);
+		break;
+
+	 case 1:	/* new icon name only */
+		Changename(buf);
+		break;
+
+	 case 2:	/* new title only */
+		Changetitle(buf);
+		break;
+
+
+	 case 46:	/* new log file */
+		if((cp = malloc((unsigned)strlen(buf) + 1)) == NULL)
+			break;
+		strcpy(cp, buf);
+		if(screen->logfile)
+			free(screen->logfile);
+		screen->logfile = cp;
+		break;
+	}
+}
+
+Changename(name)
+register char *name;
+{
+	register TScreen *screen = &term.screen;
+
+	free(screen->iconname);
+	if((screen->iconname = 
+	 malloc((unsigned)(screen->iconnamelen = strlen(name)) + 1)) == NULL)
+		Error(ERROR_CNMALLOC1);
+	strcpy(screen->iconname, name);
+	if(screen->fullVwin.window) {
+		XChangeProperty(
+		    screen->display,
+		    VWindow(screen), 
+		    XA_WM_ICON_NAME, XA_STRING,
+		    8, PropModeReplace,
+		    (unsigned char *)name, screen->iconnamelen);
+	}
+	if(screen->fullTwin.window) {
+		free(screen->Ticonname);
+		if((screen->Ticonname = malloc((unsigned)(screen->Ticonnamelen =
+		 screen->iconnamelen + 6) + 1)) == NULL)
+			Error(ERROR_CNMALLOC2);
+		strcpy(screen->Ticonname, name);
+		strcat(screen->Ticonname, " (Tek)");
+		XChangeProperty(
+		    screen->display,
+		    VWindow(screen), 
+		    XA_WM_ICON_NAME, XA_STRING, 8, PropModeReplace,
+		    (unsigned char *)screen->Ticonname, screen->Ticonnamelen);
+	}
+}
+
+Changetitle(name)
+register char *name;
+{
+	register TScreen *screen = &term.screen;
+
+	free(screen->titlename);
+	if((screen->titlename = 
+	 malloc((unsigned)(screen->titlenamelen = strlen(name)) + 1)) == NULL)
+		Error(ERROR_CNMALLOC1);
+	strcpy(screen->titlename, name);
+	if(screen->fullVwin.window) {
+		XStoreName(screen->display, VWindow(screen), name);
+	}
+	if(screen->fullTwin.window) {
+		free(screen->Ttitlename);
+		if((screen->Ttitlename = malloc((unsigned)(screen->Ttitlenamelen =
+		 screen->titlenamelen + 6) + 1)) == NULL)
+			Error(ERROR_CNMALLOC2);
+		strcpy(screen->Ttitlename, name);
+		strcat(screen->Ttitlename, " (Tek)");
+		XStoreName(screen->display, TWindow(screen), screen->Ttitlename);
+	}
+}
+
+#ifndef DEBUG
+/* ARGSUSED */
+#endif
+Panic(s, a)
+char	*s;
+int a;
+{
+#ifdef DEBUG
+	if(debug) {
+		fprintf(stderr, "%s: PANIC!	", xterm_name);
+		fprintf(stderr, s, a);
+		fputs("\r\n", stderr);
+		fflush(stderr);
+	}
+#endif DEBUG
+}
+
+SysError (i)
+int i;
+{
+	fprintf (stderr, "%s: Error %d, errno %d:\n", xterm_name, i, errno);
+	perror ("");
+	Cleanup(i);
+}
+
+Error (i)
+int i;
+{
+	fprintf (stderr, "%s: Error %d\n", xterm_name, i);
+	Cleanup(i);
+}
+
+/*
+ * cleanup by sending SIGHUP to client processes
+ */
+Cleanup (code)
+int code;
+{
+#ifdef notdef
+	extern Terminal term;
+	register TScreen *screen;
+
+	screen = &term.screen;
+	if (screen->pid > 1)
+		killpg(getpgrp(screen->pid), SIGHUP);
+#endif
+	Exit (code);
+}
+
+/*
+ * sets the value of var to be arg in the Unix 4.2 BSD environment env.
+ * Var should end with '=' (bindings are of the form "var=value").
+ * This procedure assumes the memory for the first level of environ
+ * was allocated using calloc, with enough extra room at the end so not
+ * to have to do a realloc().
+ */
+Setenv (var, value)
+register char *var, *value;
+{
+	extern char **environ;
+	register int index = 0;
+	register int len = strlen(var);
+
+	while (environ [index] != NULL) {
+	    if (strncmp (environ [index], var, len) == 0) {
+		/* found it */
+		environ[index] = (char *)malloc ((unsigned)len + strlen (value) + 1);
+		strcpy (environ [index], var);
+		strcat (environ [index], value);
+		return;
+	    }
+	    index ++;
+	}
+
+#ifdef DEBUG
+	if (debug) fputs ("expanding env\n", stderr);
+#endif DEBUG
+
+	environ [index] = (char *) malloc ((unsigned)len + strlen (value) + 1);
+	(void) strcpy (environ [index], var);
+	strcat (environ [index], value);
+	environ [++index] = NULL;
+}
+
+/*
+ * returns a pointer to the first occurrence of s2 in s1,
+ * or NULL if there are none.
+ */
+char *strindex (s1, s2)
+register char	*s1, *s2;
+{
+	register char	*s3;
+	char		*index();
+
+	while ((s3=index(s1, *s2)) != NULL) {
+		if (strncmp(s3, s2, strlen(s2)) == 0)
+			return (s3);
+		s1 = ++s3;
+	}
+	return (NULL);
+}
+
+/*ARGSUSED*/
+xerror(d, ev)
+Display *d;
+register XErrorEvent *ev;
+{
+        char buffer[BUFSIZ];
+	XGetErrorText(d, ev->error_code, buffer, BUFSIZ);
+	fprintf(stderr, "%s: %s\n", xterm_name, buffer);
+	fprintf(stderr, "Request code %d, minor code %d, serial #%ld, resource id %ld\n",
+	 ev->request_code, ev->minor_code, ev->serial, (long)ev->resourceid);
+    	_cleanup();
+    	abort();
+/*	Exit(ERROR_XERROR); */
+}
+
+/*ARGSUSED*/
+xioerror(d)
+Display *d;
+{
+	perror(xterm_name);
+	Exit(ERROR_XIOERROR);
+}
+
+XStrCmp(s1, s2)
+char *s1, *s2;
+{
+  if (s1 && s2) return(strcmp(s1, s2));
+  if (s1 && *s1) return(1);
+  if (s2 && *s2) return(-1);
+  return(0);
+}

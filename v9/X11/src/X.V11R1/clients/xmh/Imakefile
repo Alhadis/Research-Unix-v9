@@ -1,0 +1,14 @@
+       INCLUDES = -I$(OLDXRMSRC) -I$(OLDTOOLKITSRC) -I$(TOP) -I$(INCLUDESRC)
+LOCAL_LIBRARIES = $(OLDXTOOLLIB) $(OLDXRMLIB) $(XLIB)
+        DEFINES = -DX11 -DLIBDIR=\"${LIBDIR}\" -DNOGRABFOCUS
+           SRCS = EDiskSrc.c alloc.c bbox.c button.c command.c compfuncs.c \
+                  folder.c icon.c init.c main.c mlist.c msg.c pick.c popup.c \
+                  screen.c toc.c tocfuncs.c tocutil.c tsource.c util.c \
+                  version.c viewfuncs.c
+           OBJS = EDiskSrc.o alloc.o bbox.o button.o command.o compfuncs.o \
+                  folder.o icon.o init.o main.o mlist.o msg.o pick.o popup.o \
+                  screen.o toc.o tocfuncs.o tocutil.o tsource.o util.o \
+                  version.o viewfuncs.o
+
+ComplexProgramTarget(xmh)
+InstallNonExec(xmh.Xdefaults,$(LIBDIR))

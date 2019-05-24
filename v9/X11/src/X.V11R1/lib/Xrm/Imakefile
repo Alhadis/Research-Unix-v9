@@ -1,0 +1,58 @@
+       INCLUDES = -I. -I$(TOP) -I$(INCLUDESRC) -I$(XLIBSRC)
+        DEFINES = -DUNIXCONN
+   INSTALLFLAGS = -m 0644
+        HEADERS = Xresource.h
+
+SRCS = \
+	Conversion.c \
+	ParseCmd.c \
+	Quarks.c \
+	Xrm.c \
+	XrmConvert.c \
+	XErrDes.c \
+	XGetDflt.c
+OBJS = \
+	Conversion.o \
+	ParseCmd.o \
+	Quarks.o \
+	Xrm.o \
+	XrmConvert.o \
+	XErrDes.o \
+	XGetDflt.o
+
+#if DebugLibXrm && ProfileLibXrm
+DebuggedAndProfiledLibraryObjectRule()
+#else
+# if DebugLibXrm
+DebuggedLibraryObjectRule()
+# else
+#  if ProfileLibXrm
+ProfiledLibraryObjectRule()
+#  else
+NormalLibraryObjectRule()
+#  endif
+# endif
+#endif
+
+NormalLibraryTarget(Xrm,$(OBJS))
+LintLibraryTarget(Xrm,$(SRCS))
+InstallLibrary(Xrm,$(USRLIBDIR))
+InstallLintLibrary(Xrm,$(USRLIBDIR))
+InstallMultiple($(HEADERS),$(INCDIR))
+
+#if ProfileLibXrm
+ProfiledLibraryTarget(Xrm,$(OBJS))
+InstallLibrary(Xrm_p,$(USRLIBDIR))
+#endif
+
+#if DebugLibXrm
+DebuggedLibraryTarget(Xrm,$(OBJS))
+#endif
+
+DependTarget()
+
+# structure alignment errors can safely be ignored.
+# complaints about qevent can be ignored too.
+
+lint:
+	$(LINT) -hubz ${INCLUDES} $(SRCS) > lint.log

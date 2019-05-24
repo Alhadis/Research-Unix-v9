@@ -1,0 +1,21 @@
+To make sam:
+	make sam
+
+To make the terminal half of sam:
+  for x11:
+	(cd x11; make -f makex11)
+
+  for suntools:
+	(cd x11; make -f makestools)
+
+Sam will search $PATH for xsamterm.  To test a version, just copy
+the xsamterm from the x11 directory to the current directory and
+type sam.  This works for both x11 and suntools.
+
+Note that you might want to make a symbolic link to sam
+in /usr/jerq/bin; then you can use 'sam -r host' to execute
+sam remotely.
+
+Ignore all the warnings about enumeration type clashes
+during the making of sam.  Sam was developed under a
+compiler that does enums properly.

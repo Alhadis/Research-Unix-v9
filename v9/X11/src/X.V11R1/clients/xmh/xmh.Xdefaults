@@ -1,0 +1,48 @@
+# Entries in xmh's default database
+Font: fixed
+InitialIncFile:
+titlebar.reverseVideo: on
+titlebar.Font: variable
+folderButtons.close.label:	Close
+folderButtons.compose.label:	Compose
+folderButtons.open.label:	Open
+folderButtons.openInNew.label:	Open in New
+folderButtons.create.label:	Create
+folderButtons.delete.label:	Delete
+tocButtons.inc.label:		Inc
+tocButtons.next.label:		View Next
+tocButtons.prev.label:		Prev
+tocButtons.delete.label:	Delete
+tocButtons.move.label:		Move
+tocButtons.copy.label:		Copy
+tocButtons.unmark.label:	Unmark
+tocButtons.viewNew.label:	View New
+tocButtons.reply.label:		Reply
+tocButtons.forward.label:	Forward
+tocButtons.useAsComp.label:	Use as Comp
+tocButtons.commit.label:	Commit
+tocButtons.openSeq.label:	Open Seq
+tocButtons.addToSeq.label:	Add to Seq
+tocButtons.removeFromSeq.label:	Remove from Seq
+tocButtons.pick.label:		Pick
+tocButtons.deleteSeq.label:	Delete Seq
+tocButtons.print.label:		Print
+tocButtons.pack.label:		Pack
+tocButtons.sort.label:		Sort
+tocButtons.rescan.label:	Rescan
+viewButtons.close.label:	Close
+viewButtons.reply.label:	Reply
+viewButtons.forward.label:	Forward
+viewButtons.useAsComp.label:	Use as Comp
+viewButtons.edit.label:		Edit
+viewButtons.save.label:		Save
+viewButtons.print.label:	Print
+compButtons.close.label:	Close
+compButtons.reset.label:	Reset
+compButtons.compose.label:	Compose
+compButtons.save.label:		Save
+compButtons.send.label:		Send
+confirm.yes.label:		Yes
+confirm.no.label:		No
+prompt.goAhead.label:		Go Ahead
+prompt.cancel.label:		Cancel

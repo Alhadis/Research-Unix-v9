@@ -1,0 +1,5 @@
+OBJS = imake.o
+SRCS = imake.c
+
+SingleProgramTarget(imake,$(OBJS),,)
+DependTarget()

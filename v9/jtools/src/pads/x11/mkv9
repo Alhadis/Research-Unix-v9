@@ -1,0 +1,15 @@
+NPROC	= 2
+JDIR	= ../../sunlib
+LIBS	= $JDIR/libj.a -lX11 -lipc
+CFLAGS = -g -I.. -I$JDIR -DX11
+OFILES= paint.o buttons.o lib.o pad.o lineops.o cursor.o\
+	master.o host.o protocol.o cache.o scripthit.o
+
+pads: $OFILES
+	$CC $CFLAGS -o pads $OFILES $LIBS
+	strip -s pads
+
+$OFILES: univ.h ../pads.pri
+
+clean:
+	rm -f *junk* core jim.recover

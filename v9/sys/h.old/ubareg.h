@@ -1,0 +1,249 @@
+/*
+ * VAX UNIBUS adapter registers
+ */
+#ifndef LOCORE
+/*
+ * UBA hardware registers
+ */
+struct uba_regs
+{
+	int	uba_cnfgr;		/* configuration register */
+	int	uba_cr;			/* control register */
+	int	uba_sr;			/* status register */
+	int	uba_dcr;		/* diagnostic control register */
+	int	uba_fmer;		/* failed map entry register */
+	int	uba_fubar;		/* failed UNIBUS address register */
+	int	pad1[2];
+	int	uba_brsvr[4];
+	int	uba_brrvr[4];		/* receive vector registers */
+	int	uba_dpr[16];		/* buffered data path register */
+	int	pad2[480];
+	struct	pte uba_map[496];	/* unibus map register */
+	int	pad3[16];		/* no maps for device address space */
+};
+
+/*
+ * MicroVAX-II local registers
+ */
+struct qb_regs
+{
+	u_short	qb_bdr;			/* boot and diag register	*/
+	u_short qb_pad1;
+	u_long	qb_mser;		/* memory system error register	*/
+	u_long	qb_caer;		/* cpu error address		*/
+	u_long	qb_daer;		/* dma error address		*/
+	u_long	qb_pad2[7676];
+	union {
+		struct {
+		int qb_pad[512];
+		struct pte qb_map[8192];/* q-bus map registers		*/
+		} qba; 
+		struct uba_regs uba;
+	} qb_uba;
+	u_long	qb_pad3[40960];
+			/* time of year clock base address 200b 8000 */
+	u_short	qb_toysecs;		/* seconds			*/
+	u_short	qb_toysecs_alarm;	/* not used			*/
+	u_short	qb_toymins;		/* minutes			*/
+	u_short	qb_toymins_alarm;	/* not used			*/
+	u_short	qb_toyhours;		/* hours			*/
+	u_short	qb_toyhours_alarm;	/* not used			*/
+	u_short	qb_toyday_week;		/* not used			*/
+	u_short	qb_toyday;		/* day of month			*/
+	u_short	qb_toymonth;		/* month			*/
+	u_short	qb_toyyear;		/* year				*/
+	u_short	qb_toycsra;		/* csr				*/
+	u_short	qb_toycsrb;		/* csr				*/
+	u_short	qb_toycsrc;		/* csr				*/
+	u_short	qb_toycsrd;		/* csr				*/
+	u_short	qb_cpmbx;		/* console program mailbox	*/
+	u_short qb_toyram[49];		/* toy ram			*/
+};
+#endif
+
+#ifdef MVAX
+/* qb_mser */
+#define	QBM_CD		0x300		/* memory error code	*/
+#define QBM_NXM		0x80		/* nonexistant memory	*/
+#define QBM_LPE		0x40		/* local memory parity	*/
+#define QBM_QPE		0x20		/* q-bus parity error	*/
+#define QBM_DMAQPE	0x10		/* dma q-bus parity	*/
+#define QBM_LEB		0x8		/* lost error bit	*/
+#define QBM_WRW		0x2		/* write wrong parity	*/
+#define QBM_PENB	0x1		/* parity enable	*/
+#define QBM_EMASK	0xf8		/* mask to isolate cause*/
+
+/* toy csr */
+#define QBT_UIP		0x80		/* update in progress	*/
+#define QBT_SETA	0x20		/* set up divider	*/
+#define	QBT_SETUP	0x80		/* stop			*/
+#define QBT_SETB	0x6		/* binary and 24 hour	*/
+
+/*
+ * Flags,boot options for MicroVAX-II console program
+ */
+#define RB_RESTART	0x21	/* Restart, english	*/
+#define RB_REBOOT	0x22	/* Reboot, english	*/
+#define RB_HALTMD	0x23	/* Halt, english	*/
+
+#endif MVAX
+
+#if VAX780
+/* uba_cnfgr */
+#define	UBACNFGR_UBINIT	0x00040000	/* unibus init asserted */
+#define	UBACNFGR_UBPDN	0x00020000	/* unibus power down */
+#define	UBACNFGR_UBIC	0x00010000	/* unibus init complete */
+
+/* uba_cr */
+#define	UBACR_MRD16	0x40000000	/* map reg disable bit 4 */
+#define	UBACR_MRD8	0x20000000	/* map reg disable bit 3 */
+#define	UBACR_MRD4	0x10000000	/* map reg disable bit 2 */
+#define	UBACR_MRD2	0x08000000	/* map reg disable bit 1 */
+#define	UBACR_MRD1	0x04000000	/* map reg disable bit 0 */
+#define	UBACR_IFS	0x00000040	/* interrupt field switch */
+#define	UBACR_BRIE	0x00000020	/* BR interrupt enable */
+#define	UBACR_USEFIE	0x00000010	/* UNIBUS to SBI error field IE */
+#define	UBACR_SUEFIE	0x00000008	/* SBI to UNIBUS error field IE */
+#define	UBACR_CNFIE	0x00000004	/* configuration IE */
+#define	UBACR_UPF	0x00000002	/* UNIBUS power fail */
+#define	UBACR_ADINIT	0x00000001	/* adapter init */
+
+/* uba_sr */
+#define	UBASR_BR7FULL	0x08000000	/* BR7 receive vector reg full */
+#define	UBASR_BR6FULL	0x04000000	/* BR6 receive vector reg full */
+#define	UBASR_BR5FULL	0x02000000	/* BR5 receive vector reg full */
+#define	UBASR_BR4FULL	0x01000000	/* BR4 receive vector reg full */
+#define	UBASR_RDTO	0x00000400	/* UNIBUS to SBI read data timeout */
+#define	UBASR_RDS	0x00000200	/* read data substitute */
+#define	UBASR_CRD	0x00000100	/* corrected read data */
+#define	UBASR_CXTER	0x00000080	/* command transmit error */
+#define	UBASR_CXTMO	0x00000040	/* command transmit timeout */
+#define	UBASR_DPPE	0x00000020	/* data path parity error */
+#define	UBASR_IVMR	0x00000010	/* invalid map register */
+#define	UBASR_MRPF	0x00000008	/* map register parity failure */
+#define	UBASR_LEB	0x00000004	/* lost error */
+#define	UBASR_UBSTO	0x00000002	/* UNIBUS select timeout */
+#define	UBASR_UBSSYNTO	0x00000001	/* UNIBUS slave sync timeout */
+
+#define	UBASR_BITS \
+"\20\13RDTO\12RDS\11CRD\10CXTER\7CXTMO\6DPPE\5IVMR\4MRPF\3LEB\2UBSTO\1UBSSYNTO"
+
+/* uba_brrvr[] */
+#define	UBABRRVR_AIRI	0x80000000	/* adapter interrupt request */
+#define	UBABRRVR_DIV	0x0000ffff	/* device interrupt vector field */
+#endif VAX780
+ 
+/* uba_dpr */
+#if VAX780
+#define	UBADPR_BNE	0x80000000	/* buffer not empty - purge */
+#define	UBADPR_BTE	0x40000000	/* buffer transfer error */
+#define	UBADPR_DPF	0x20000000	/* DP function (RO) */
+#define	UBADPR_BS	0x007f0000	/* buffer state field */
+#define	UBADPR_BUBA	0x0000ffff	/* buffered UNIBUS address */
+#define	UBA_PURGE780(uba, bdp) \
+    ((uba)->uba_dpr[bdp] |= UBADPR_BNE)
+#endif VAX780
+#if VAX750
+#define	UBADPR_ERROR	0x80000000	/* error occurred */
+#define	UBADPR_NXM	0x40000000	/* nxm from memory */
+#define	UBADPR_UCE	0x20000000	/* uncorrectable error */
+#define	UBADPR_PURGE	0x00000001	/* purge bdp */
+#define	UBA_PURGE750(uba, bdp) \
+    ((uba)->uba_dpr[bdp] |= (UBADPR_PURGE|UBADPR_NXM|UBADPR_UCE))
+#endif VAX750
+ 
+/*
+ * Macros for fast buffered data path purging in time-critical routines.
+ *
+ * Too bad C pre-processor doesn't have the power of LISP in macro
+ * expansion...
+ */
+#if defined(VAX780) && defined(VAX750)
+#define	UBAPURGE(uba, bdp) { \
+	switch (cpu) { \
+	case VAX_780: UBA_PURGE780((uba), (bdp)); break; \
+	case VAX_750: UBA_PURGE750((uba), (bdp)); break; \
+	} \
+}
+#endif
+#if defined(VAX780) && !defined(VAX750)
+#define	UBAPURGE(uba, bdp) { \
+	if (cpu==VAX_780) { \
+		UBA_PURGE780((uba), (bdp)); \
+	} \
+}
+#endif
+#if !defined(VAX780) && defined(VAX750)
+#define	UBAPURGE(uba, bdp) { \
+	if (cpu==VAX_750) { \
+		UBA_PURGE750((uba), (bdp)); break; \
+	} \
+}
+#endif
+#if !defined(VAX780) && !defined(VAX750)
+#define	IF_UBAPURGE(uba, bdp)
+#endif
+
+/* uba_mr[] */
+#define	UBAMR_MRV	0x80000000	/* map register valid */
+#define	UBAMR_BO	0x02000000	/* byte offset bit */
+#define	UBAMR_DPDB	0x01e00000	/* data path designator field */
+#define	UBAMR_SBIPFN	0x000fffff	/* SBI page address field */
+
+#define	UBAMR_DPSHIFT	21		/* shift to data path designator */
+
+/*
+ * Number of UNIBUS map registers.  We can't use the last 8k of UNIBUS
+ * address space for i/o transfers since it is used by the devices,
+ * hence have slightly less than 256K of UNIBUS address space.
+ * There are 8192 Q-BUS map registers. We use only NUBMREG because the
+ * device drivers are based on 18-bit unibus addresses.
+ */
+#define	NUBMREG	496
+
+/* All systems now have an 8k csr space. If this changes, put into percpu */
+#define DEVSPACESIZE 8192
+
+/*
+ * Number of unibus buffered data paths and possible uba's per cpu type.
+ */
+#define	NBDP780	15
+#define	NBDP750	3
+#define	NBDP7ZZ	0
+#define NBDPMVAX 0
+#define	MAXNBDP	15
+
+#define	NUBA780	4
+#define	NUBA750	1
+#define	NUBA7ZZ	1
+#define NUBAMVAX 1
+#if VAX780
+#define	MAXNUBA	4
+#else
+#define	MAXNUBA	1
+#endif
+
+/*
+ * Formulas for locations of the last 8k of UNIBUS memory
+ * for each possible uba.
+ */
+#if VAX7ZZ
+#define	UMEM7ZZ		((u_short *)(0xffe000))
+#endif
+#if VAX750
+#define	UMEM750(i)	((u_short *)(0xffe000-(i)*0x40000))
+#endif
+#if VAX780
+#define	UMEM780(i)	((u_short *)(0x2013e000+(i)*0x40000))
+#endif
+#define	UMEMSIZE	512 * MAXNNEXUS
+	
+#if MVAX
+/* MicroVAX-II adapters have noncontiguous memory and device csr space 
+ *	QMEMMVAX is the adapter memory space
+ *	QIOMVAX is the adapter i/o space
+ */
+#define QMEMMVAX	((char *)(0x30000000))
+#define QMEMSIZE	(512*8192)	/* 4 meg plus space for the csr's */
+#define QIOMVAX		((u_short *)(0x20000000))
+#endif

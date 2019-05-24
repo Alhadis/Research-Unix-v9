@@ -1,0 +1,9 @@
+CFLAGS	= -I../sunlib -g -DBSD -DX11
+LIBS	= ../sunlib/libj.a -lX11
+OFILES	= buttons.o cip.o commands.o draw.o dump.o edit.o icons.o menus.o near.o pic.o \
+	  readPic.o space.o things.o track.o transform.o
+
+cip: $(OFILES)
+	cc -o cip $(OFILES) $(LIBS)
+
+$(OFILES): cip.h

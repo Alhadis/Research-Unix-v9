@@ -1,0 +1,263 @@
+
+
+    These notes are intended to help you get the X11 server running on your
+Apollo system.  They also contain some hints to help you with the other
+components of the X11 software.  We assume you are familiar with the structure
+of the X system; ideally you have experience with Version 10 of X, or prior beta
+versions of X11.
+
+SYSTEM REQUIREMENTS
+-------------------
+
+    Hardware requirements:  An Apollo node with keyboard 2 or 3, including a
+mouse.
+
+    Software considerations:
+
+    If you are running SR9.5.1, you may have trouble with the following software
+components.  However, X11 beta sites have succeeded in making a working Apollo
+server at SR9.5.1.
+        --  The C compiler, compiling some of the Apollo driver code.
+        --  The C preprocessor (/usr/lib/cpp), if you use the imake utility
+            program (this is not required).
+        --  /lib/streams, in using local TCP/IP connections.
+
+    If you are running SR9.6, you may have trouble with the following software
+components.
+        --  The C preprocessor (/usr/lib/cpp), if you use the imake utility
+            program (this is not required).
+        --  /lib/streams, in using local TCP/IP connections.
+
+    If you are running SR9.7, you may have trouble with the following software
+components.
+        --  The C preprocessor (/usr/lib/cpp), if you use the imake utility
+            program (this is not required).
+
+    If you are having problems with any of the above, you can obtain a patch
+tape from Apollo with better versions.  Ask for the October 1987 or later patch
+tape from your local sales office.
+
+    This implementation of the server is the typical "dumb monochrome" port.
+It will run on any Apollo display, color or monochrome, but it will only do
+1-bit black-and-white graphics.
+
+
+GETTING ORIENTED
+----------------
+
+    Top level directories are:
+
+        clients         client program sources
+        demos           demo client program sources
+        doc             documentation
+        extensions      code for portable extensions
+        fonts           sources and compiler sources for server fonts
+        hacks           client programs classified as hacks
+        include         include files needed by both client and server code
+        lib             code for various client-side libraries
+        server          code for sample server
+        util            utility programs for building and maintaining X11
+
+You should be familiar especially with the documents in 'doc/Server'.  Also, two
+entries in 'util' should be noted:  'imake' is a tool to create a consistent set
+of makefiles from common templates; and 'makedepend' is a tool to construct or
+reconstruct make file dependency lists.
+
+
+HOW TO BUILD IT
+---------------
+
+    First, make the 'imake' tool in the 'util/imake' directory.
+
+    Next, make the 'makedepend' tool in the 'util/makedepend' directory.
+You will have to change its Makefile if you do not have CPP source.
+
+Doing makes
+-----------
+
+    First, at the top level do a 'make Makefiles'; this runs 'imake' on
+everything.  This step is actually optional, as the delivered Makefiles
+are already adequate.  You will have to decide whether you are interested
+in the benefits of re-creating all your makefiles from a given template
+or not.
+
+    Before running make on any part of the X11 code, do a 'make depend'.
+This will update the dependencies part of the file to not spuriously
+refer to some header files non-existent on DOMAIN/IX, and to refer to all
+header files actually depended on.
+
+    When everything is finally built, you will have to find a home in your
+file system for the executables and other runtime files.  We suggest
+not using '/usr/new' if you have X Version 10, to avoid confusion over
+what version of X a program is for.  Version 10 and Version 11 are
+completely incompatible.  The default homes for fonts and the RGB database
+for X11 will be in '/usr/lib/X11'.
+
+    The code falls into two categories, client side and server side.  The
+top level directories 'lib' and 'clients' are client side code.  They should
+be made in that order.  In parallel with this, you can make the server side
+code, in the directories 'fonts' and 'server'.  More details on server side
+building follow; client side notes follow them.
+
+Making the server
+-----------------
+
+    There are Apollo-specific entries in 'server/include/servermd.h' which
+specify bit order, byte order, and pad boundaries for characters in fonts.
+The latter of these is set to 2 (i.e. character glyphs start on word
+boundaries), but it can be changed to 1 or 4.  1 makes font files smaller
+but prevents them from working on non-68020 systems, since the server will
+get odd address errors.  4 makes them bigger; it may improve text drawing
+performance somewhat.  The font compiler and the server/ddx/mfb code must be
+compiled with the same version of this header file!
+
+    To make the fonts that the server will use, you must compile them from
+their source forms.  First, make the font compiler in 'fonts/compiler'.  After
+building the font compiler, run it on each of the font sources in 'fonts/bdf',
+redirecting its output to the 'fonts/snf' directory.  All this is actually
+controlled by 'fonts/Makefile'.
+
+    The Apollo server itself uses code from the following directories:
+
+    server/os/4.2bsd
+    server/dix
+    server/ddx/mi
+    server/ddx/mfb
+    server/ddx/apollo
+
+    Only these directories need to be built.  (They depend on the include
+files in 'include' and 'server/include', of course.)
+
+    In 'server/include/site.h' are definitions for pathnames for fonts and
+the color database.  You may wish to decide where these things will live
+now, so you can edit this file if necessary.  If you decide differently
+later, you will need to re-edit this file and remake the server, or always
+supply server command line options to override the defaults.
+
+    You may want to do the following for the benefit of the OS code:
+
+      /com/crl /usr/include/machine/machparam.h /usr/include/machine/param.h
+
+    Now you can go to the 'server' directory and type 'make Xapollo'.
+
+
+Making the client side code
+---------------------------
+
+    The Xlib code, the basic subroutine library interface to the protocol for
+clients written in C, resides in 'lib/X'.
+
+    Xlib requires nothing special; you can just make it.  This takes a long
+time, especially if you let it compile everything twice in order to make both
+debuggable and non-debuggable versions.  You may want to change the Imakefile
+or Makefile to make only one flavor of object file.
+
+    Some routines to assist porting from X10 are in 'lib/oldX'; you may wish
+to make this library as well.  Some code in 'demos' uses it.  Also,
+'lib/oldXMenu' has a version of the X10 XMenu library which you may want.
+
+    Two versions of the X toolkit, layered on Xlib, are in 'lib/Xtk' and
+'lib/oldXtk'.  To our current knowledge, 'lib/oldXtk' is the one that will be
+used by any clients requiring the toolkit.
+
+    In the 'lib/oldXtk' directory, there is a change.  'Load.c' cannot be made
+to work on Apollos, since it relies on '/dev/kmem'; it's best to just remove
+references to 'Load.[co]' from the Imakefile or Makefile.
+
+    The toolkit code may or may not refer to /usr/include/string.h instead of
+/usr/include/strings.h, which is what it really wants.  If you don't have
+the former, you may wish to make a link of that name to the latter, or make
+a version of the former which #include's the latter, or something.
+
+    Now the toolkit can be made.
+
+    Finally, you can make the client programs.  Note that 'xload' wants to use
+the routines from 'lib/oldXtk/Load.c', which is not available on Apollos as
+explained above, so an Apollo version of 'xload' isn't useful.
+
+
+HOW TO INSTALL IT
+-----------------
+
+    Copy the compiled font files in 'fonts/snf' to wherever you said they would
+live in 'server/include/site.h'.  The server is in 'server/Xapollo'; it will now
+run.  Client programs are in their respective subdirectories of 'clients',
+'demos' or 'hacks'.  Put these executables wherever is convenient.
+
+
+HOW TO RUN IT
+-------------
+
+    You must have TCP/IP installed and running.
+
+    The server borrows the entire display.  Therefore, there are three
+approaches to debugging and running it.  One is to get a dumb terminal and run
+a shell to invoke the server from it.  Another is to /com/crp or rlogin to the
+node that will run the server from a different node, preferably right next to
+it.  The last is to make shell scripts that will run the server, sleep for long
+enough to let it initialize itself, and then run some clients.  This last
+approach requires the least hardware, but requires working more-or-less blind,
+until you have a working server and xterm running.
+
+    As regards the keyboard, the following comment in 'server/ddx/apollo/
+apollo_io.c' tells the story.
+
+/*
+ *  We assume Apollo keyboard number 2 (with mouse, without numeric keypad or lighted
+ *  CapsLock key).  (Keyboard number 1 is unsupported, since it can't have a mouse.  Keyboard
+ *  number 3 is a superset of keyboard number 2.  It has the ability to generate raw key up/down
+ *  transitions; this should be supported but isn't.  Keyboard number 2 cannot generate raw key
+ *  up/downs.)
+ *
+ *  Only the white keys, the four basic arrow keys and F1-F8 are implemented now.
+ *  Up transitions for the white keys are faked.
+ *  Positions of the real control and shift keys are inferred from the raw input character;
+ *      their transitions are faked if necessary.
+ *  "Mouse" Control, Shift and Meta keys are as for Apollo V10 driver:
+ *      Control:  KBD_$LD    Boxed up-arrow     Lower left corner of left-hand keypad
+ *      Shift:    KBD_$LF    Boxed down-arrow   Lower right corner of left-hand keypad
+ *      Meta:     KBD_$R1    "POP"              Lower right corner of main keyboard
+ *
+ *  You can bail out of the server by hitting the ABORT/EXIT key (KBD_$R5S/KBD_$R5).  Unshifted,
+ *  it will exit the server in an orderly fashion.  If this doesn't work (i.e. server is wedged),
+ *  the shifted version is the system quit character.
+ */
+
+    When running a client program, the environment variable DISPLAY should be
+set, although some clients allow the display to be specified on the command line
+as well.  In the case of the C shell, you should say:
+
+    setenv DISPLAY <host-name-of-server-node>:0
+
+    Since the selection of fonts is probably not identical to what it was for
+V10, you might want to check any ~/.Xdefaults or ~/.uwmrc files left over from
+V10 to be sure you are not trying to use non-existent fonts.
+
+    In order to establish a connection from a remote client, the name of the
+host running the client program must exist as an entry in the server's file
+'/etc/X0.hosts'; this is the list of "trusted" hosts.  This pathname is
+constructed in 'server/os/4.2bsd/access.c', routine ResetHosts.  The 'xhost'
+client program will also add a host to the list of trusted hosts, until the
+server resets itself.
+
+    If you have the unofficial UDS support code (the uds type manager), a client
+can use it to establish a connection to the local server via use of the display
+named "unix:0".
+
+
+LIMITATIONS
+-----------
+
+    As mentioned above, this is a monochrome-only port using the portable MFB
+code, therefore performance is not as good as it is for the Apollo X Version 10
+implementation.  Also, the keyboard support for keyboard 3 could allow more
+natural use of control and shift, and it could add more Apollo keys to the
+keymap.
+
+
+FIXED BUGS SINCE BETA
+---------------------
+
+    This version of the Apollo server has a working software cursor (to the
+best of our knowledge).
+

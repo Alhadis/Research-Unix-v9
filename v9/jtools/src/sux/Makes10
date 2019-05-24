@@ -1,0 +1,8 @@
+CFLAGS=	-I../sunlib -mc68010 -DSUNTOOLS -DBSD -g 
+LIBS=	../sunlib/lib10j.a -lsunwindow -lpixrect
+OFILES	= window.o deltext.o frameop.o instext.o newframe.o \
+	  ptofchar.o select.o string.o sux.o
+
+sux: $(OFILES)
+	cc -o sux $(CFLAGS) $(OFILES) $(LIBS)
+

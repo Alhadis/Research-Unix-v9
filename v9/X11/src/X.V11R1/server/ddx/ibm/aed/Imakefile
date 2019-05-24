@@ -1,0 +1,57 @@
+SRCS = 		aedgetsp.c \
+		aedcursor.c \
+		aedscrinit.c \
+		aedfillsp.c \
+		aedgc.c \
+		aedsetsp.c \
+		aedutils.c \
+		aedio.c \
+		aedpntwin.c \
+		aedinit.c \
+		aedline.c \
+		aedimggblt.c \
+		aedcparea.c \
+		aedpixmap.c \
+		mfbutils.c \
+		aedfillrct.c \
+		aedpntarea.c \
+		aeddebug.c \
+		aeddline.c \
+		aedpolyseg.c \
+		aedpushpxl.c \
+		aedwindow.c
+
+OBJS = 		aedgetsp.o \
+		aedcursor.o \
+		aedscrinit.o \
+		aedfillsp.o \
+		aedgc.o \
+		aedsetsp.o \
+		aedutils.o \
+		aedio.o \
+		aedpntwin.o \
+		aedinit.o \
+		aedline.o \
+		aedimggblt.o \
+		aedcopyarea.o \
+		aedpixmap.o \
+		mfbutils.o \
+		aedfillrct.o \
+		aedpntarea.o \
+		aeddebug.o \
+		aeddashline.o \
+		aedpolyseg.o \
+		aedpushpxl.o \
+		aedwindow.o
+
+CDEBUGFLAGS =  ServerCDebugFlags
+INCLUDES = -I. -I../rt -I../../mfb -I../../../include -I../../../../include
+
+NormalLibraryObjectRule()
+NormalLibraryTarget(aed,$(OBJS))
+InstallManPage(Xaed,$(MANDIR))
+
+DependTarget()
+
+lint:
+	lint -Clibmi -DLINT $(INCLUDES) $(SRCS) > lint.out

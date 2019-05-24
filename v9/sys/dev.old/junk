@@ -1,0 +1,12 @@
+sed 's/meprobe/omprobe/g
+s/meattach/omattach/g
+s/meopen/omopen/g
+s/meclose/omclose/g
+s/meread/omread/g
+s/mewrite/omwrite/g
+s/merdwr/omrdwr/g
+s/mestrategy/omstrategy/g
+s/meabort/omabort/g
+s/mestart/omstart/g
+s/meioctl/omioctl/g
+s/meintr/omintr/g' om.c+1 >junq

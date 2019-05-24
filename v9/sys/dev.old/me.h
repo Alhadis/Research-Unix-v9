@@ -1,0 +1,1 @@
+#define	NME	2

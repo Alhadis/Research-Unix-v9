@@ -1,0 +1,71 @@
+.TH BLITBLT 1
+.CT 1 comm_other
+.SH NAME
+blitblt \- print hard copy of screen image
+.SH SYNOPSIS
+.B blitblt
+[
+.B -p
+.I command
+]
+.SH DESCRIPTION
+.I Blitblt
+copies part or all of a 
+.IR suntools (1)
+or
+.IR X (1)
+screen into a file
+or down a pipe to a printer daemon.
+The program is menu-driven off button 3 as follows:
+.nr xx \w'\f5sweep rectangle\f1'u+2n/1n
+.TP \n(xx
+.B choose window
+A bull's eye cursor appears.
+Clicking button 3 with the cursor inside a window
+selects it for subsequent manipulation.
+.TP
+.B window interior
+As above, but the border surrounding the window is not included.
+.TP
+.B reverse video
+The video is inverted in the selected window or rectangle.
+.TP
+.B sweep rectangle
+A rectangle cursor appears.  The rectangle swept out on button 3
+becomes the selected area.
+.TP
+.B whole screen
+The entire screen, including border areas is selected.
+.TP
+.B write file
+The portion of the screen previously selected and prepared is written
+into a file or pipe. The filename is typed in answer to a prompt appearing
+at the bottom of the
+.I blitblt
+layer.
+Hitting return selects the (default) name in parentheses.
+If the first character typed is a 
+.L |
+(pipe symbol), the remainder of
+the line is taken as a shell command which will read the bitmap
+on its standard input.
+.TP
+.BI | " command"
+The selected portion of the screen is sent to the
+.I command
+specified by the
+.B -p
+option (default
+.IR bcan .)
+.TP
+.B exit
+Must be confirmed by clicking button 3 in response to the skull cursor.
+.SH SEE ALSO
+.IR bcan (1), 
+.IR bitfile (5), 
+.SH BUGS
+If a pipe request fails, the
+.I blitblt
+layer becomes unusable.
+.I Blitblt
+only works on monochrome displays.

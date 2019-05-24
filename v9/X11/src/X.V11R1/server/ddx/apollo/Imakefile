@@ -1,0 +1,11 @@
+SRCS = init.c apollo_io.c gpr_tmgr.c apolloGC.c
+OBJS = init.o apollo_io.o gpr_tmgr.o apolloGC.o
+CDEBUGFLAGS = ServerCDebugFlags
+INCLUDES = -I.  -I../../include -I../mfb -I../../../include
+
+NormalLibraryObjectRule()
+
+all: $(OBJS)
+
+DependTarget()
+InstallManPage(Xapollo,$(MANDIR))

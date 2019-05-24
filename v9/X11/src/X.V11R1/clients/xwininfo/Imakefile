@@ -1,0 +1,5 @@
+LOCAL_LIBRARIES = $(XLIB)
+           SRCS = xwininfo.c dsimple.c
+           OBJS = xwininfo.o dsimple.o
+
+ComplexProgramTarget(xwininfo)

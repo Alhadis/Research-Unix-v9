@@ -1,0 +1,8 @@
+main()
+{
+	register int i;
+
+	for (i = 0; i < 10; i++) {
+		printf("%d\n", i);
+	} while (i < 15);
+}

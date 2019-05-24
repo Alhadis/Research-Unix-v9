@@ -1,0 +1,14 @@
+SRCS = init.c qvss_io.c
+OBJS = init.o qvss_io.o
+CDEBUGFLAGS = ServerCDebugFlags
+INCLUDES = -I.  -I../../include -I../mfb -I../../../include
+
+NormalLibraryObjectRule()
+
+all: $(OBJS)
+
+DependTarget()
+InstallManPage(Xqvss,$(MANDIR))
+
+lint:
+	lint -u $(INCLUDES) $(SRCS)

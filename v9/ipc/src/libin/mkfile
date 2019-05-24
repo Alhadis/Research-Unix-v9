@@ -1,0 +1,32 @@
+INCS=-I. -I../h
+CFLAGS=-O $INCS
+L=libin.a
+OBJS=$L(tcp_lib.o) $L(udp_lib.o) $L(in_service.o) $L(in_address.o)\
+	$L(in_host.o) $L(in_subrs.o) $L(in_ntoa.o)
+COBJS=tcp_lib.O udp_lib.O\
+	in_service.O in_address.O in_host.O in_subrs.O in_ntoa.O
+NPROC=2
+
+all:V: cyntax $L
+
+$L: $OBJS
+	names=`membername $prereq`
+	ar rv $L $names
+	ranlib $L
+
+$L(%.o): %.o
+
+#$OBJS: cyntax
+
+cyntax: $COBJS
+	cyntax $COBJS && touch cyntax
+
+%.O: %.c
+	cyntax -DLINT $INCS $stem.c
+
+install: $L
+	cp $L /usr/lib
+	(cd /; ranlib /usr/lib/$L)
+
+clean:
+	rm *.[oOa] cyntax

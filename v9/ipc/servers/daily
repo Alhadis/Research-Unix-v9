@@ -1,0 +1,17 @@
+#!/bin/sh -p
+# DX=`date | awk '{print $1}'`
+D1=old
+for i in svc dk tcp tpc
+do	if [ -r /usr/ipc/log/$i ]
+	then
+		cp /usr/ipc/log/$i /usr/ipc/log/$i.$D1
+		> /usr/ipc/log/$i
+		chmod 664 /usr/ipc/log/$i
+	fi
+done
+if [ -r /usr/spool/mail/mail.log ]
+then
+	cp /usr/spool/mail/mail.log /usr/spool/mail/mail.log.$D1
+	> /usr/spool/mail/mail.log
+	chmod 666 /usr/spool/mail/mail.log
+fi

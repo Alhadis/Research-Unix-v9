@@ -1,0 +1,17 @@
+     INCLUDES = -I$(TOP) -I$(SERVERSRC)/include
+INSTALL_FLAGS = -c -m 0644
+         OBJS = rgb.o
+         SRCS = rgb.c
+
+all:: rgb rgb.pag rgb.dir
+
+SingleProgramTarget(rgb,$(OBJS),,-ldbm)
+InstallMultiple(rgb.pag rgb.dir rgb.txt,$(LIBDIR))
+
+rgb.pag rgb.dir: rgb rgb.txt
+	./rgb rgb < rgb.txt
+
+clean::
+	rm -f rgb.pag rgb.dir
+
+DependTarget()

@@ -1,0 +1,15 @@
+CC=cc
+CFLAGS=-g -I../sunlib -DX11 -DBSD
+HOSTCC=cc
+LIBS= ../sunlib/libj.a -lX11
+
+all: blitblt
+
+BBTERM=blitblt.o flash.o sendbitmap.o reshape.o button.o \
+       buttons.o kbdstring.o mice.o
+
+blitblt:  $(BBTERM)
+	$(CC) $(CFLAGS) -o $@ $(BBTERM) $(LIBS)
+
+clean:
+	rm -f $(BBTERM) blitblt

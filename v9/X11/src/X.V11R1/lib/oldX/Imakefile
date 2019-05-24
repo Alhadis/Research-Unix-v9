@@ -1,0 +1,51 @@
+       INCLUDES = -I$(TOP) -I$(INCLUDESRC) -I$(XLIBSRC)
+        DEFINES = -DUNIXCONN
+   INSTALLFLAGS = -m 0644
+           SRCS = *.c
+        HEADERS = X10.h
+
+OBJS =\
+	XDraw.o \
+	XCrAssoc.o \
+	XDelAssoc.o \
+	XDestAssoc.o \
+	XLookAssoc.o \
+	XMakeAssoc.o
+
+#if DebugOldLibX && ProfileOldLibX
+DebuggedAndProfiledLibraryObjectRule()
+#else
+# if DebugOldLibX
+DebuggedLibraryObjectRule()
+# else
+#  if ProfileOldLibX
+ProfiledLibraryObjectRule()
+#  else
+NormalLibraryObjectRule()
+#  endif
+# endif
+#endif
+
+NormalLibraryTarget(oldX,$(OBJS))
+LintLibraryTarget(oldX,*.c)
+InstallLibrary(oldX,$(USRLIBDIR))
+InstallLintLibrary(oldX,$(USRLIBDIR))
+InstallMultiple($(HEADERS),$(INCDIR))
+
+
+#if ProfileOldLibX
+ProfiledLibraryTarget(oldX,$(V10LIST))
+InstallLibrary(oldX_p,$(USRLIBDIR))
+#endif
+
+#if DebugOldLibX
+DebuggedLibraryTarget(oldX,$(V10LIST))
+#endif
+
+DependTarget()
+
+# structure alignment errors can safely be ignored.
+# complaints about qevent can be ignored too.
+
+lint:
+	$(LINT) -hubz ${INCLUDES} *.c > lint.log

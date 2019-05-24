@@ -1,0 +1,13 @@
+#!/bin/sh
+if [ $# != 1 ]
+then
+	echo Usage: go machine
+	exit 1
+fi
+case $1 in
+	capek) setup capek /usr/netb/zarf /n/capek t 1;;
+	isun) setup isun /usr/netb/zarf /n/isun t 2;;
+	labsun) setup labsun /usr/netb/zarf /n/labsun t 3;;
+	visiona) setup visiona /usr/netb/zarf /n/visiona t 4;;
+	*) echo Unknown machine
+esac

@@ -1,0 +1,20 @@
+bm-convert.doc
+Last revised by Ron Newman, September 14, 1987
+
+"bm-convert" reads an X10-format bitmap file on the standard input
+and writes out the equivalent X11-format bitmap file on the standard
+output.  It takes no command-line options of any kind, and does its
+work without using an X server.
+
+An X10-format bitmap file contains an array of 16-bit hex constants
+declared as "static short foo_bits[]", where "foo" is usually replaced by
+a name derived from the name of the file.  In X11 format, the declaration
+is "static char foo_bits[]" and the hex constants are 8 bits wide.  In
+addition, the X10 format pads each scanline to a 16-bit boundary,
+while X11 format pads only to an 8-bit boundary.
+
+For more information, look at the man page for the "bitmap" program,
+and the descriptions of XReadBitmapFile, XCreateBitmapFromData, and
+XPutImage in the Xlib manual.
+
+

@@ -1,0 +1,7 @@
+#define IHaveSubdirs
+#define PassCDebugFlags 'CDEBUGFLAGS=$(CDEBUGFLAGS)'
+
+SUBDIRS = ico muncher plaid wm
+
+MakeSubdirs($(SUBDIRS))
+DependSubdirs($(SUBDIRS))

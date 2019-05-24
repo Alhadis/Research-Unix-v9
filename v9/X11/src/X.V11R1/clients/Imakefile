@@ -1,0 +1,10 @@
+#define IHaveSubdirs
+#define PassCDebugFlags 'CDEBUGFLAGS=$(CDEBUGFLAGS)'
+
+SUBDIRS = bitmap gnuplot puzzle uwm xcalc \
+	xclock xedit xfd xhost xinit xload xlsfonts xmh xmodmap \
+	xpr xprop xrdb xrefresh xset xsetroot \
+	xterm xwd xwininfo xwud
+
+MakeSubdirs($(SUBDIRS))
+DependSubdirs($(SUBDIRS))

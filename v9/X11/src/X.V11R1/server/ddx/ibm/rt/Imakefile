@@ -1,0 +1,26 @@
+SRCS =		rtinit.c\
+		rtcolor.c \
+		rtcursor.c \
+		rtmouse.c \
+		rtkeyboard.c \
+		rtio.c \
+		rtutils.c 
+
+OBJS =		rtinit.o\
+		rtcolor.o\
+		rtcursor.o \
+		rtmouse.o \
+		rtkeyboard.o \
+		rtio.o \
+		rtutils.o 
+
+CDEBUGFLAGS = ServerCDebugFlags
+INCLUDES = -I. -I../../../include -I../../../../include -I../../mfb
+
+NormalLibraryObjectRule()
+NormalLibraryTarget(rt,$(OBJS))
+
+DependTarget()
+
+lint:
+	lint -Clibmi -DLINT $(INCLUDES) $(SRCS) > lint.out

@@ -1,0 +1,55 @@
+#define IHaveSubdirs
+#define PassCDebugFlags
+
+#
+# Preserve this order: include comes first, clients and demos come last.
+#
+     DIRSTOMAKE = \
+		$(INCLUDESRC) \
+		$(LIBSRC) \
+		$(SERVERSRC) \
+		$(FONTSRC) \
+		$(EXTENSIONSRC) \
+		$(CLIENTSRC) \
+		$(DEMOSRC)
+        SUBDIRS = \
+		$(DIRSTOMAKE) \
+		$(UTILSRC) \
+		$(XMANSRC)
+    LINTLIBDIRS = \
+		$(EXTENSIONSRC) \
+		$(LIBSRC)
+
+MakeSubdirs($(DIRSTOMAKE) $(RGBSRC) $(XMANSRC))
+NamedMakeSubdirs(hacks,$(HACKSRC))
+MakeLintLibSubdirs($(LINTLIBDIRS))
+
+#
+# before doing the depend, be sure that makedepend exists.
+#
+depend:: $(DEPEND)
+
+$(DEPEND):
+	@echo "making $(DEPENDSRC)"; \
+	cd $(DEPENDSRC); $(MAKE)
+
+DependSubdirs($(SUBDIRS))
+
+install::
+	-mkdir $(USRLIBDIR)
+	-mkdir $(BINDIR)
+	-mkdir $(LIBDIR)
+	-mkdir $(INCDIR)
+	-mkdir $(FONTDIR)
+	-mkdir $(MANDIR)
+	ln -s $(INCDIR) $(FUTUREINCDIR)
+
+#
+# before making the makefiles, be sure that imake exists.
+#
+Makefiles:: $(IMAKE)
+
+$(IMAKE):
+	@echo "making $(IMAKESRC)"; \
+	cd $(IMAKESRC); $(MAKE)
+

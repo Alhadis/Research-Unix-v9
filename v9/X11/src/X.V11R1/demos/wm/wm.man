@@ -1,0 +1,150 @@
+.TH WM 1 "13 June 1987" "X Version 11"
+.UC 4
+.SH NAME
+wm \- a simple real-estate-driven window manager
+.SH SYNOPSIS
+.B wm
+.SH DESCRIPTION
+.I Wm 
+is a very primitive overlapping window manager for 
+.I X11.  
+It was developed to help with the debugging of the
+.I X11
+server and thus we do not advocate the user interface presented here as
+a desired one.
+.PP
+.I Wm
+decorates each mapped appliction window with a
+banner.  The banner consists of four fields.  Left-to-right, they are:
+.in 6
+.PP
+.I Circulate button - 
+A command button which causes the window to change its position in the stacking
+order.
+.PP
+.I Title region
+- An area in which an applications name or other 
+specified information is displayed.  It is also used by the user to move the
+window.
+.PP
+.I Iconize button 
+- A command button which causes the window to be replaced by an icon.
+.PP
+.I Resize button 
+- A command button which allows the user to change the size of the window.
+.in -6
+.PP
+.I Wm
+supports the following user actions:
+.PP
+Raising or lowering a window in the stack of windows
+.br
+.in 6
+Locating the mouse cursor in the Circulate box of a partially obscured window
+and clicking with any mouse button will raise this window to the top of the
+stack of windows so that it is no longer obscured.  Locating a mouse cursor in the
+Circulate box of a window which is currently on top of the window stack will
+send the window to the bottom of the stack.
+.in -6
+.PP
+Iconizing a window
+.br
+.in 6
+Locating the mouse cursor in the Iconize box and clicking any mouse button
+will cause the window to be unmapped, and the associated icon to become
+mapped.  The icon will appear at its last location, or, if this window has
+never been iconized, under the cursor.  However, if the client program
+initially set an icon position in the WM_HINTS property,
+then that icon position will be used instead as the initial icon position.
+To position an icon
+while iconizing the window, locate the cursor in the Iconize box and press
+down any mouse button.  A rubber-band outline of the icon will appear under the
+cursor.  While holding down the mouse button, drag the cursor to the desired
+location for the icon.  The outline will follow the cursor on the screen.
+When the outline moves to the desired location for the icon, release the
+mouse button.  The client window will be unmapped, and its icon will appear
+at the desired location. 
+To cancel this operation while
+the mouse button is down, click another mouse button.
+.in -6
+.PP
+Deiconizing an icon
+.br
+.in 6
+Locating the mouse cursor in an icon and clicking any mouse button will cause
+the icon to be unmapped, and the associated window to become mapped.  
+To cancel this operation while
+the mouse button is down, click another mouse button.
+.in -6
+.PP
+Moving a window on the screen
+.br
+.in 6
+Locating mouse cursor in the area of the title region and pressing any mouse
+button causes a "rubber-band" outline of the window to appear.
+As the user moves ("drags") the cursor (while holding down the mouse button),
+the outline moves accordingly.  When the button is released, the
+window is repainted in the last location of the rubber-band outline.
+If the user presses another mouse button
+during the drag, the operation is cancelled, the rubber-band outline
+disappears, and the window is not moved.  Note that a portion of the title
+region is constrained to remain on the screen.
+.in -6
+.PP
+Resizing a window.
+.br
+.in 6
+Locating the mouse cursor in the resize box and pressing any mouse button
+initiates the spring-loaded resize mode.  Then as soon a the cursor
+touches a border (while the mouse button is down),
+that border becomes a rubber-band line which follows the
+cursor until the button is released. If the cursor then touches an adjacent
+border, that border also becomes a rubber-band line, and the window can be
+resized in two dimensions at once. If the cursor touches a border after
+having touched the opposite border, the first border touched reverts to its
+original location, and the other one becomes a rubber-band line which follows
+the cursor.  If the user presses another mouse button
+during the drag, the operation is cancelled, the rubber-band outline
+disappears, and the window does not change size.  Note that the mouse cursor
+has to touch a border to initiate th resize action.  As in the move operation,
+a protion of the title region is constrained to remain on the screen.
+.in -6
+.PP
+Moving an icon on the screen
+.br
+.in 6
+To move an icon, press the Shift key and hold it, then position the mouse cursor
+in the icon, press any mouse button, and proceed dragging an outline of the
+icon around by moving the mouse cursor (with the mouse button down).  When the
+outline moves to the desired position, release the mouse button and the Shift key.
+To cancel, click another mouse button during the drag; the icon will not move.
+.in -6
+.SH NOTES FOR CLIENT PROGRAMS
+.I Wm
+uses the WM_ICON_NAME, WM_NAME, and WM_HINTS properties.  It keeps
+the name in the Title region updated as the WM_NAME property changes.  It
+keeps the name in the icon updated as the WM_ICON_NAME property changes;
+if a client does not set the WM_ICON_NAME property,
+.I wm
+will use the WM_NAME property for the icon name.
+.I Wm
+allows only text icons, and sets the icon sizes to accommodate the icon name.
+The maximum name length for both the icon name and the Title region name
+is 100 characters.
+.PP
+Of the WMHints, 
+.I wm
+ignores all but icon_x and icon_y, which it uses for initial icon placement.
+These need to be set by the client before its window is mapped, because
+.I wm
+reads them only once, when it first encounters the window.
+.SH ERRORS
+If you try to run 
+.I wm 
+while you are already running a window manager,
+.I wm
+will let you know.
+.SH AUTHOR
+Hania Gajewska, DEC WSL
+.SH BUGS
+There are no known bugs.  There are lots of lacking features.

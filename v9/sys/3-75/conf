@@ -1,0 +1,48 @@
+#
+# capek
+#
+machine		"sun3"
+cpu		"SUN3_160"
+options		"sun3"
+options		"MANYPROC"
+ident		daksun
+timezone	5 dst
+maxusers	8
+
+config	sd	unix
+
+# connections for machine type 1 (SUN3_160)
+controller	virtual 1 at nexus ?
+controller	obmem 1 at nexus ?
+controller	obio 1 at nexus ?
+controller	vme16d16 1 at nexus ?
+controller	vme24d16 1 at nexus ?
+controller	vme32d16 1 at nexus ?
+controller	vme16d32 1 at nexus ?
+controller	vme24d32 1 at nexus ?
+controller	vme32d32 1 at nexus ?
+
+controller	si0 at vme24d16 ? csr 0x200000 priority 2 vector siintr 0x40
+disk		sd0 at si0 drive 0 flags 0
+disk		sd1 at si0 drive 8 flags 0
+tape		st0 at si0 drive 32 flags 1
+controller	sc0 at vme24d16 ? csr 0x200000 priority 2 vector scintr 0x40
+disk		sd0 at sc0 drive 0 flags 0
+disk		sd1 at sc0 drive 8 flags 0
+tape		st0 at sc0 drive 32 flags 1
+device		zs0 at obio ? csr 0x20000 flags 3 priority 3
+device		zs1 at obio ? csr 0x00000 flags 0x103 priority 3
+device		ie0 at obio ? csr 0xc0000 priority 3
+device		bwtwo0 at obmem 1 csr 0xff000000 priority 4
+
+pseudo-device	sp
+pseudo-device	tty	64
+pseudo-device	mesg	64
+pseudo-device	ntty	8
+pseudo-device	uarp	1
+pseudo-device	inet	1
+pseudo-device	tcp	32
+pseudo-device	udp	16
+pseudo-device	kbd	1
+pseudo-device	netb
+pseudo-device	connld

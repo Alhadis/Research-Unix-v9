@@ -1,0 +1,48 @@
+standard block-device 4	sw	sw	strategy
+block-device 7		sd	sd	open strategy dump
+
+standard device 3	mem	mm	read write mmap
+: int mem_no = 3;	/* major device number of memory special file */
+standard device 7	sw	sw	read write
+stream-device 12	zs	zs	info
+device 16		st	sct	open close read write ioctl
+device 17		sd	sd	read write ioctl
+stream-device 18	sp	sp	info
+stream-device 26	le	les	info
+stream-device 27	ie	ies	info
+device 28		bwtwo	bwtwo	open close ioctl mmap
+device 40		std
+: int stdio_no = 40;	/* major device number of stdio special file */
+stream-device 42	inet	ipd	info
+stream-device 43	tcp	tcpd	info
+stream-device 50	udp	udpd	info
+
+standard file-system 0	fs	fs	nami mount stat put get ioctl free updat trunc open read write
+standard file-system 2	pr	pr	put get free updat read write trunc stat nami mount ioctl
+standard file-system 3	ms	ms	updat get read write ioctl stat mount open
+file-system 4	netb	nb	put get free updat read write trunc stat nami mount
+standard file-system 5	er	er	get read write trunc stat nami
+: int erfstyp = 5;
+standard file-system 6	pip	pip	get mount stat
+: int pipefstyp = 6;
+
+standard line-discipline 0	tty	tty	info
+standard line-discipline 4	msg	msg	info
+line-discipline 6		ntty	ntty	info
+standard line-discipline 9	rmsg	rmsg	info
+line-discipline 10		inet	ip	info
+line-discipline 11		tcp	tcp	info
+line-discipline 13		arp	arp	info
+line-discipline 14		udp	udp	info
+line-discipline 18		connld	connld	info
+line-discipline 20		kbd	kbd	info
+: /*
+:  * Swapdev is a fake device implemented
+:  * in sw.c used only internally to get to swstrategy.
+:  * It cannot be provided to the users, because the
+:  * swstrategy routine munches the b_dev and b_blkno entries
+:  * before calling the appropriate driver.  This would horribly
+:  * confuse, e.g. the hashing routines. Instead, /dev/drum is
+:  * provided as a character (raw) device.
+:  */
+: dev_t	swapdev = makedev(4, 0);

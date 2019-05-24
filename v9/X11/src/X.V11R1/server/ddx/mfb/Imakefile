@@ -1,0 +1,112 @@
+SRCS =	 mfbgc.c mfbwindow.c mfbfont.c \
+	 mfbfillrct.c mfbpntwin.c maskbits.c mfbpixmap.c \
+	 mfbimage.c mfbline.c mfbbres.c mfbhrzvert.c \
+	 mfbpushpxl.c \
+         mfbfillsp.c mfbsetsp.c mfbscrinit.c mfbscrclse.c mfbclip.c \
+         mfbbitblt.c mfbgetsp.c mfbpolypnt.c \
+	 mfbplygblt.c mfbimggblt.c mfbcmap.c \
+	 mfbpntarea.c mfbtile.c \
+         mfbtegblt.c mfbmisc.c
+
+OBJS =   mfbgc.o mfbwindow.o mfbfont.o \
+	 mfbfillrct.o mfbpntwin.o maskbits.o mfbpixmap.o \
+	 mfbimage.o mfbline.o mfbbres.o mfbhrzvert.o \
+	 mfbpushpxl.o \
+	 mfbfillsp.o mfbsetsp.o mfbscrinit.o mfbscrclse.o mfbclip.o \
+         mfbbitblt.o mfbgetsp.o mfbpolypnt.o \
+	 mfbpgbwht.o mfbpgbblak.o mfbpgbinv.o \
+	 mfbigbwht.o mfbigbblak.o mfbcmap.o \
+	 mfbpawhite.o mfbpablack.o mfbpainv.o mfbtile.o \
+         mfbtewhite.o mfbteblack.o mfbmisc.o
+
+CDEBUGFLAGS = ServerCDebugFlags
+INCLUDES = -I. -I../../include -I../../../include
+
+NormalLibraryObjectRule()
+NormalLibraryTarget(mfb,$(OBJS))
+
+DependTarget()
+
+mfbpntarea.o mfbimggblt.o mfbplygblt.o mfbtegblt.o:
+	rm -f $@; touch $@
+
+mfbpgbwht.o: mfbplygblt.c mfbplygblt.o
+	rm -f $@ mfbpgbwht.c
+	cp mfbplygblt.c mfbpgbwht.c
+	${CC} -DMFBPOLYGLYPHBLT=mfbPolyGlyphBltWhite \
+	   -DOPEQ=\|=  $(CFLAGS) -c mfbpgbwht.c
+	rm -f mfbpgbwht.c
+
+mfbpgbblak.o: mfbplygblt.c mfbplygblt.o
+	rm -f $@ mfbpgbblak.c
+	cp mfbplygblt.c mfbpgbblak.c
+	${CC} -DMFBPOLYGLYPHBLT=mfbPolyGlyphBltBlack \
+	   -DOPEQ=\&=~ $(CFLAGS) -c mfbpgbblak.c
+	rm -f mfbpgbblak.c
+
+mfbpgbinv.o: mfbplygblt.c mfbplygblt.o
+	rm -f $@ mfbpgbinv.c
+	cp mfbplygblt.c mfbpgbinv.c
+	${CC} -DMFBPOLYGLYPHBLT=mfbPolyGlyphBltInvert \
+	   -DOPEQ=\^=  $(CFLAGS) -c mfbpgbinv.c
+	rm -f mfbpgbinv.c
+
+mfbigbwht.o: mfbimggblt.c mfbimggblt.o
+	rm -f $@ mfbigbwht.c
+	cp mfbimggblt.c mfbigbwht.c
+	${CC} -DMFBIMAGEGLYPHBLT=mfbImageGlyphBltWhite \
+	   -DOPEQ=\|=  $(CFLAGS) -c mfbigbwht.c
+	rm -f mfbigbwht.c
+
+mfbigbblak.o: mfbimggblt.c mfbimggblt.o
+	rm -f $@ mfbigbblak.c
+	cp mfbimggblt.c mfbigbblak.c
+	${CC} -DMFBIMAGEGLYPHBLT=mfbImageGlyphBltBlack \
+	   -DOPEQ=\&=~ $(CFLAGS) -c mfbigbblak.c
+	rm -f mfbigbblak.c
+
+mfbpawhite.o: mfbpntarea.c mfbpntarea.o
+	rm -f $@ mfbpawhite.c
+	cp mfbpntarea.c mfbpawhite.c
+	${CC} -DMFBSOLIDFILLAREA=mfbSolidWhiteArea \
+	   -DMFBSTIPPLEFILLAREA=mfbStippleWhiteArea \
+	   -DOPEQ=\|=  -DEQWHOLEWORD=\=~0 \
+	   $(CFLAGS) -c mfbpawhite.c
+	rm -f mfbpawhite.c
+
+mfbpablack.o: mfbpntarea.c mfbpntarea.o
+	rm -f $@ mfbpablack.c
+	cp mfbpntarea.c mfbpablack.c
+	${CC} -DMFBSOLIDFILLAREA=mfbSolidBlackArea \
+	   -DMFBSTIPPLEFILLAREA=mfbStippleBlackArea \
+	   -DOPEQ=\&=~ -DEQWHOLEWORD=\=0 \
+	   $(CFLAGS) -c mfbpablack.c
+	rm -f mfbpablack.c
+
+mfbpainv.o: mfbpntarea.c mfbpntarea.o
+	rm -f $@ mfbpainv.c
+	cp mfbpntarea.c mfbpainv.c
+	${CC} -DMFBSOLIDFILLAREA=mfbSolidInvertArea \
+	   -DMFBSTIPPLEFILLAREA=mfbStippleInvertArea \
+	   -DOPEQ=\^=  -DEQWHOLEWORD=\^=~0 \
+	   $(CFLAGS) -c mfbpainv.c
+	rm -f mfbpainv.c
+
+mfbtewhite.o: mfbtegblt.c mfbtegblt.o
+	@rm -f $@ mfbtewhite.c
+	cp mfbtegblt.c mfbtewhite.c
+	${CC} -DMFBTEGLYPHBLT=mfbTEGlyphBltWhite \
+	   -DOP= -DCLIPTETEXT=mfbImageGlyphBltWhite $(CFLAGS) -c mfbtewhite.c
+	rm -f mfbtewhite.c
+
+mfbteblack.o: mfbtegblt.c mfbtegblt.o
+	@rm -f $@ mfbteblack.c
+	cp mfbtegblt.c mfbteblack.c
+	${CC} -DMFBTEGLYPHBLT=mfbTEGlyphBltBlack \
+	   -DOP=~ -DCLIPTETEXT=mfbImageGlyphBltBlack $(CFLAGS) -c mfbteblack.c
+	rm -f mfbteblack.c
+
+lint:
+	lint -Clibmfb $(INCLUDES) -DMFBPOLYGLYPHBLT=mfbPolyGlyphBltWhite \
+	   -DMFBIMAGEGLYPHBLT=mfbImageGlyphBltWhite -DEQWHOLEWORD=\=~0 \\
+	   -DOPEQ=\|= $(SRCS)  > lint.out

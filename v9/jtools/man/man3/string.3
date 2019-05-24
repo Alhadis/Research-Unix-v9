@@ -1,0 +1,82 @@
+.TH STRING 9
+.CT 2 comm_term
+.SH NAME
+string, defont, strwidth, getfont \- text and font operations
+.SH SYNOPSIS
+.B #include <jerq.h>
+.PP
+.B Point string(ft, s, b, p, f)
+.B "Font *ft; char *s; Bitmap *b; Point p; Code f;
+.PP
+.B extern Font defont;
+.PP
+.B "int strwidth(ft, s) Font *ft; char *s;
+.PP
+.B "int fontheight(ft) Font *ft;
+.PP
+.B "int fontwidtht(ft) Font *ft;
+.PP
+.B "int fontnchars(ft) Font *ft;
+.PP
+.B "Font getfont(file) char *file;
+.SH DESCRIPTION
+.I String
+draws the null-terminated string
+.I s
+using characters from font
+.I ft
+in Bitmap
+.I b
+at Point
+.IR p ,
+with Code
+.IR f .
+The return value is the location of the first character
+.I after
+.IR s ;
+passed to another call to
+.IR string ,
+the two strings will be concatenated.
+The characters are drawn such that the
+.B origin
+point of the bounding rectangle of a maximum height character
+lies at
+.IR p .
+Therefore, a character drawn on the screen at (0,0)
+will occupy the upper-leftmost character position on the screen.
+.I String
+draws characters as they are in the font.
+No special action is taken for control characters such as tabs or newlines.
+.PP
+The global
+.I defont
+is the name of the standard font (not a pointer to it).
+.PP
+.I Strwidth
+returns the width in pixels
+of the null-terminated string
+.IR s ,
+interpreted in the Font
+.IR *ft .
+.PP
+.I Fontheight
+returns the height of a character in the Font
+.IR *ft .
+.PP
+.I Fontwidth
+returns the width of a character in the Font
+.IR *ft .
+.PP
+.I Fontnchars
+returns the number of characters in the Font
+.IR *ft .
+.PP
+.I Getfont
+opens and returns the font named by
+.IR file .
+Appropriate font names can be found with
+.B xlsfonts
+in X11, and by listing the directory
+.B /usr/lib/fonts/fixedwidthfonts
+for
+.BR suntools .

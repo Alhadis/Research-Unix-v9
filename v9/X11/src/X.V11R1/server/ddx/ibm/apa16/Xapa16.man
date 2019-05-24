@@ -1,0 +1,28 @@
+.\" $Header: Xapa16.man,v 1.3 87/09/14 17:36:39 rws Exp $
+.TH XAPA16 8 "10 September 1987" "X Version 11"
+.SH NAME
+Xapa16 - X window system IBM APA16
+.SH DESCRIPTION
+.PP
+This server supports the APA16 and APA19 monitor
+on the IBM PC/RT.
+.PP
+-pckeys can be used to swap Ctrl and Caps Lock for touch typists.
+.PP
+You can set the environment variable APA16_IGN_HDWR to stop using
+the apa16 hardware and just use the vanilla mfb code.
+.SH "BUGS"
+This is only known to work on 4.3 systems.
+.SH "SEE ALSO"
+.PP
+.IR X (8)
+.IR X (1)
+.IR `Xlib - C Language X Interface'
+.IR `ddX - Device Dependent X Interface'
+.SH AUTHORS
+.PP
+Erik Fortune
+.br
+Copyright (c) 1984, 1985, 1986 by Massachusetts Institute of Technology.
+.br
+See X(1) for a complete Copyright notice.

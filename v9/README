@@ -1,0 +1,252 @@
+Ninth Edition Unix System for Sun3
+Copyright (C) AT&T 1989. All Rights Reserved
+
+This directory contains the source for the Ninth Edition(v9) system
+that was ported to the Sun.  The source was derived from a snapshot of the
+VAX v9 system, sometime around the beginning of 1987.  It has
+not been updated to incorporate changes that have been made
+to the v9 system since then.
+
+In addition to the source, the binaries for a a Sun 3/75 or
+3/50 with a SCSI disk drive are included.  A system may be built
+very quickly by booting the Sun diskless from a Sun server, building
+the v9 file system on the raw device, and then rebooting from the
+v9 system on the disk drive.
+
+An overview of the directories is given below:
+
+	X11 - contains the X11 release 1 code that runs under v9
+	on the Sun.  It does some things unconventionally.  For example
+	the keyboard and mouse line disciplines are part of the X11
+	server, instead of the operating system.  The server just
+	reads the serial ports directly, with no operating system
+	intervention.
+
+	cmd - source for all the commands.
+
+	include - v9 include files for the Sun
+
+	ipc - interprocess communications source, including dialers
+	and source for ipc libraries.
+
+	jerq - 5620 software, only a small subset is included and
+	was ever tested.  Once X windows was working, this directory
+	was essentially discarded.
+
+	jtools - copy of 5620 tools that were ported to run under X11.
+	This includes things like Rob Pike's editor sam, Tom Cargill's pi,
+	mux style terminal windows and a bunch of other goodies.  The
+	5620 emulator library and associated tools can also be compiled
+	to run on a Sun under SunOS (under either X11 or Sunview).
+
+	libc - C library source
+	libtermlib - terminal cursor control library
+
+	netb - network file system code for mounting filesystems
+	of remote machines.  Unlike NFS, it mounts the whole machine
+	and maps users between systems.  Netb contains the server code
+	while the netb driver in the kernel provides the client code.
+	The server code will run on either a v9 or BSD machine.
+
+	sys - the v9 kernel code.  Directories that end in .old
+	contain the original VAX v9 code the files were derived from.
+	These were kept around to make it possible to diff them from
+	and upgrades made to the VAX v9 system.  The directory
+	sys/construct contains the working binaries that can be
+	used to construct without all the normal bootstrapping problems.
+
+Notes: 1)all the source and makefiles(mkfiles), except for a few
+	in the sys/construct directory, assume they are being
+	compiled on a running v9 system.  If you are going to X-compile
+	them under SunOS, some tweaking of the makefiles and compiler front
+	end may be necessary.
+
+	2)the compiler used by the v9 system generates symbol table
+	entries in the format of the v9 VAX compiler (rather than the
+	SUN format). When the v9 system was ported, it was simpler to
+	change the compiler than to backwards engineer a parser for
+	Suns yuckky symbol table (i.e. for use with pi).  Since then,
+	I have written a Sun format symbol table parser so pi can be
+	used under SunOS.  If I were going to do it over, I would not
+	modify the compiler.
+
+	3)the v9 tar is slightly different than the BSD tar. It handles
+	and stores symbolic links differently.  Many of the binaries in
+	sys/construct/test are in v9 format tar files.  If you want to
+	unpack them on a Sun under SunOS, there is a copy of the v9 tar
+	that runs under SunOS release 4.0 in sys/construct/host/v9tar.c.
+	By default, the v9 tar follows symbolic links when making tar files.
+	Use the L option to put the symbolic link in the tar file instead of
+	what the link points to.
+
+BOOTSTRAPPING:
+Assuming your goal is to get a system running as soon as possible,
+the following is a short cookbook that should generate a standalone
+v9 system with minimal effort (provided you have a 3/50 or 3/75 with
+a SCSI disk drive):
+
+     1) Install this source on a Sun server running SunOS
+	If you are reading this, you already did that.
+     2) Format and label the SCSI disk you will install the system on using
+	the tools provided by Sun (diag, format). On SunOS release 4.0 you
+	can do it with format while the system is running Unix. Previous
+	releases required running diag in a stand-alone mode.  Write down
+	the number of 512-byte blocks in the partitions you wish to make file
+	systems on.  I usually put the root file system on partition a and the
+	usr file system on parition g.  If the drive has already been
+	paritioned you can discover the number of block with the SunOS
+	dkinfo command.
+     3) Boot up the system you want to install the v9 system on, under SunOS
+	from the server.  Make sure the disk driver is in the SunOS kernel.  
+     4) Build SunOS versions of the v9 tools to construct file systems on
+	disks (fsck, mkfs) with the following commands:
+		cd sys/construct/host
+		make fsck mkfs
+		mv fsck mkfs ..
+		cd ..
+	The goal is to use these commands to install a complete v9 system
+	on the clean disk, using SunOS to do the installation.
+     5) Edit the disk building proto files in sys/construct.  These proto
+	files, used by mkfs, construct a new file system and initialize it
+	with a list of files, directories, etc.  Four proto files are
+	already in the directory.  Files of the form proto0a.* are for
+	building the root file system and files of the form proto0g.* are
+	for the user file system.  The two that are there have the right
+	numbers for a CDC 155M Wren III drive and a CDC 300M Wren IV
+	(suffixes .cdc and .w4 respectively).  In the proto0a file,
+	only two lines need to be edited: the second line and the next
+	to last line.  The second line contains the number of 8K blocks
+	in the file system, followed by the number of inodes in the file
+	system.  These numbers have to be adjusted to match the size of
+	the file system.  The first number can be calculated by dividing
+	the number of 512byte blocks recorded in step 2 by 16.  The second
+	number can be retrieved from mkfs by invoking it without a proto
+	file.  For example, if the file system /dev/rsd0a has 2000 8K blocks,
+	running the command (must be su):
+		mkfs /dev/rsd0a 2000
+	will print something like:
+		isize = 12416
+		m/n = 3 1000
+	and then build a file system. You can kill it after the lines are
+	printed as you don't actually need to build the file system yet.
+	The value of isize should be moved to the second value on the second
+	line of the proto file.
+	The last to next line of proto0a.* determines where the unix kernel
+	binary is taken from.  If the system is a Sun 3/50 the line should
+	read:
+		unix		---755 0 4 test/unix.50
+	while for a Sun 3/75 it should be:
+		unix		---755 0 4 test/unix.75.
+	In the /usr proto file, proto0g.*, only the second line, containing
+	the number of blocks + inodes needs to be modified.
+     6) The binaries to construct a system are in sys/construct/test.
+	Some of these files need to be edited to match your site and
+	configuration.  The only one that needs modification is etc/rc.
+	Look for the line with "ipconfig" in it.  If the system is a
+	3-75, the line should be (Intel Ethernet chips):
+/usr/ipc/mgrs/ipconfig /dev/ie00 `cat /etc/whoami` mh-capek-net /dev/ie01 &
+	while for a 3-50 it should be: (AMD Lance Ethernet chips):
+/usr/ipc/mgrs/ipconfig /dev/le00 `cat /etc/whoami` mh-capek-net /dev/le01 &
+
+	Other files that you probably want to modify are:
+		etc/passwd
+		etc/whoami - should contain name of the system
+     7) You are now ready to build the file systems:
+		cd sys/construct
+		mkfs /dev/rsd0a proto0a.new
+		mkfs /dev/rsd0g proto0g.new
+     8) I would check them after you make them with fsck.
+		fsck /dev/rsd0a /dev/rsd0g
+	Expect fsck to complain:
+		file is not a block or character device; OK?
+	when it starts up, as it is compiled with v9's idea of
+	a file system, not SunOS'.  Just type "y".  If there are
+	any other problems, something went wrong making the file systems.
+     9) Install the boot block on /dev/rsd0a (since the file systems have
+	a different format, a new boot block must also be installed):
+		cd test/stand
+		installboot bootpr /dev/rsd0a
+		cd ../..
+    10) You are now ready to boot the v9 system.  Halt SunOS and boot
+	the v9 system in single user mode (it is IMPORTANT that you
+	bring it up single user when first booting):
+		b sd(0,0,0) -s
+    11) It should print out the configuration info and then give you
+	the # prompt.  Congratulations, you are now running under
+	Ninth Edition.
+    12) Finish the installation procedure by executing the shell file
+	"startup" in the root directory:
+		cd /
+		startup	
+	This file takes care of unpacking all the tar files used to
+	construct the system.  It will run for several minutes as many of
+	the tar files have been compressed to save space.
+	You can see what it does by looking at it before you build
+	the system (sys/construct/test/startup).
+    13) Give root a passwd
+    14) Edit the Ethernet host and authentication tables in /usr/ipc/lib.
+	The files of interest are
+		inaddr.local
+		auth.local
+	to correspond to your site.  The format of the files should be
+	obvious from looking at them.
+    15) Type control-D to bring the system up multiuser.
+    16) Log in as root and give yourself a login
+    17) Log in as yourself. To use the X window system, copy the
+	following files from the /usr/dak directory:
+		.profile	/* For correct PATH */
+		.Xstart		/* X startup file */
+		.uwmrc
+	To start the X window system:
+		. .profile
+		Xstart
+	To get out of the X window system, type Xexit in any of the windows.
+	The window manager is configure so holding down the Sun keyboard
+	"LEFT" or "RIGHT" key and hitting the right mouse button generates
+	the window manager menu.
+    19) After the system has been installed, future boots should be
+	automatic.  Just power up or type >b sd() to the console monitor.
+    20) Good luck
+
+If your are going to build your own system, you will need to build the
+v9 config (sys/conf/src/config) first.  There is a man page in that
+directory describing it. The configuration files themselves, look
+very similar to the configuration files used by Sun to build their kernels.
+See sys/{3-50|3-75}/conf for examples.
+
+Some known bugs (I'm sure there are more):
+	The keyboard line discipline that the kernel pops on the console
+	(sys/sundev/kbdld.c) to map up-down keystrokes of the Sun keyboard
+	to ASCII characters is buggy.  This discipline is only used when using 	the PROM to drive the screen (i.e. when not using a window system).
+	The problem is the discipline believes it will get
+	an up/down sequence for each key hit.  Unfortunately, Sun
+	keyboads don't generate up/down codes like they are supposed to.
+	Sometimes the up or down sequence never gets transmitted.
+	The fix that Sun uses in their driver keeps a table containing
+	the state of each key, so if for example an up code for a key
+	is received but the driver thinks the key is already up, the
+	driver fakes the down code when it receives the up code.
+	If you have noticed that when you type quickly to a Sun
+	characters get transposed with a higher frequency than normal,
+	this is the reason.  The driver in the X11 server keeps a
+	a state map of the keys and generates the fake codes.
+	The symptom you will see when not using X windows, is typed
+	characters on the console will be lost.
+
+	The SCSI tape driver is not compatible with the drives shipped
+	by Sun.  It works with the ARCHIVE Corporation Viper (2060S)
+	Half-Height Intelligent SCSI driver (the controller is built
+	in the drive).
+
+	The SCSI disconned/reconnect doesn't work.  It didn't work in
+	the SunOS release 3.1 drivers, from which the SCSI driver is
+	derived, either.
+	
+
+	David Kapilow			5/11/89
+	alice!dak or dak@alice.att.com
+	(201)-582-3596
+	AT&T Bell Laboratories
+	RM 2B-424
+	600 Mountain Ave
+	Murray Hill, N.J.  07974

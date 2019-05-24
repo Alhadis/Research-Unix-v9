@@ -1,0 +1,77 @@
+ALL=con push pull rx nrx telnet rcp ftp
+CALL=Con Push Pull Rx Nrx
+BIN=/usr/ipc/bin
+LIB=/usr/lib
+CFLAGS=
+CLIBS=../libipc/*.O
+INCS=-I../h
+
+all:V: $ALL
+#all:V: cyntax $ALL
+cyntax:V: $CALL
+
+con: con.o ../libipc/libipc.a
+	$CC -o con $prereq
+Con: con.O
+	cyntax con.O $CLIBS && touch Con
+
+push: push.o ../libipc/libipc.a
+	$CC -o push $prereq
+Push: push.O
+	cyntax push.O $CLIBS && touch Push
+
+pull: pull.o ../libipc/libipc.a
+	$CC -o pull $prereq
+Pull: pull.O
+	cyntax pull.O $CLIBS && touch Pull
+
+rx: rx.o ../libipc/libipc.a
+	$CC -o rx $prereq
+Rx: rx.O
+	cyntax rx.O $CLIBS && touch Rx
+
+nrx: nrx.o ../libipc/libipc.a
+	$CC -o nrx $prereq
+Nrx: nrx.O
+	cyntax nrx.O $CLIBS && touch Nrx
+
+rcp:	rcp.o ../libipc/libipc.a
+	$CC -o rcp $prereq
+
+telnet:	telnet.o ../libipc/libipc.a
+	$CC -o telnet $prereq
+
+ftp:	ftpcmds.o ftpcmdtab.o ftp.o ftpmain.o ../libipc/libipc.a ../libin/libin.a
+	$CC -o ftp $prereq
+
+telnet.o: telnet.c ../servers/telnet.h
+	$CC -c $CFLAGS -I../servers telnet.c
+ftp.o:	../servers/ftp.h ../servers/ftp_var.h
+	$CC -c $CFLAGS -I../servers ftp.c
+ftpcmds.o:	../servers/ftp.h ../servers/ftp_var.h
+	$CC -c $CFLAGS -I../servers ftpcmds.c
+ftpcmdtab.o: ../servers/ftp_var.h
+	$CC -c $CFLAGS -I../servers ftpcmdtab.c
+ftpmain.o: ../servers/ftp_var.h
+	$CC -c $CFLAGS -I../servers ftpmain.c
+
+%.o: %.c ../h/ipc.h
+%.O: %.c ../h/ipc.h
+	cyntax -c -DLINT $INCS $stem.c
+
+clean:
+	rm -f *.[Oo] core $ALL $CALL
+
+install:V: all
+	rm -f *.[oO]
+	rm -f $BIN/con $BIN/dcon $BIN/ndcon $BIN/rogin $BIN/rlogin
+	rm -f $BIN/push $BIN/pull $LIB/Rpush $LIB/Rpull
+	rm -f $BIN/rsh $BIN/rexec
+	cp $ALL $BIN
+	ln $BIN/con $BIN/dcon
+	ln $BIN/con $BIN/ndcon
+	ln $BIN/con $BIN/rogin
+	ln $BIN/con $BIN/rlogin
+	ln -s $BIN/push $LIB/Rpush
+	ln -s $BIN/pull $LIB/Rpull
+	ln $BIN/rx $BIN/rsh

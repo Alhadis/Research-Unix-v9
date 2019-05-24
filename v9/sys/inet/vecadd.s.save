@@ -1,0 +1,56 @@
+	.text
+/*
+ * Compute a 16-bit checksum
+ *
+ * vecadd(w, len, sum)
+ *	unsigned long *w;
+ *	int len;
+ *	unsigned sum;
+ */
+	.globl	_vecadd
+_vecadd:
+	movl	d2,sp@-
+	movl	sp@(8),a0
+	movl	sp@(12),d0
+	movl	sp@(16),d1
+	movl	d0,d2
+	lsrl	#2,d0
+	lsll	#2,d0
+	subl	d0,d2
+	lsrl	#2,d0
+	movw	#0,cc
+	jra	L_2
+L_1:
+	addl	a0@+,d1
+L_2:
+	dbcs	d0,L_1
+	jcc	L_3
+	addql	#1,d1
+	jra	L_2
+L_3:
+	btst	#1,d2		| if there is another short add it in
+	jeq	L_4
+	moveq	#0,d0
+	movw	a0@+,d0
+	addl	d0,d1
+	jcc	L_4
+	addql	#1,d1
+L_4:
+	btst	#0,d2		| if there is another byte add it in
+	jeq	L_5
+	moveq	#0,d0
+	movb	a0@+,d0
+	lsll	#8,d0
+	addl	d0,d1
+	jcc	L_5
+	addql	#1,d1
+L_5:
+	movl	d1,d0		| fold the 32 bits into 16
+	lsrl	#16,d0
+	andl	#0xFFFF,d1
+	addw	d1,d0
+	jcc	L_6
+	addql	#1,d0
+L_6:
+	movl	sp@+,d2
+	rts

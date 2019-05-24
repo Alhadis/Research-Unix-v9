@@ -1,0 +1,6 @@
+       INCLUDES = -I$(OLDXRMSRC) -I$(TOP) -I$(TOP)/X11
+           OBJS = xlabel.o
+           SRCS = xlabel.c
+
+SingleProgramTarget(xlabel,$(OBJS),$(XTOOLLIB) $(OLDXRMLIB) $(XLIB),)
+DependTarget()

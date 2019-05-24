@@ -1,0 +1,50 @@
+.TH MUXSTRING 3
+.SH NAME
+setmuxbuf, getmuxbuf \- exchanging strings between tools
+.SH SYNOPSIS
+.B #include <jerq.h>
+.PP
+.B setmuxbuf(s); String *s;
+.PP
+.B getmuxbuf(d); String *d;
+.SH DESCRIPTION
+These functions manipulate strings represented
+in the following form.
+.IP
+.EX
+.ta \w'struct 'u
+struct	String {
+	char *s;
+	short n;
+	short size;
+};
+.EE
+.LP
+The string proper occupies the first 
+.B n
+characters of a data block of
+.L size
+characters pointed to by
+.BR s .
+Initially both
+.B size
+and
+.B s
+should be 0.
+Strings are always counted, not terminated by
+.BR \e0 .
+The functions obtain space as needed from
+.IR gcalloc  ;
+see
+.IR alloc (3).
+.PP
+.I Setmuxbuf
+copies string 
+.I s
+into the snarf buffer maintained by
+the underlying window system;
+.I getmuxbuf
+copies from the snarf buffer into
+.I d.
+.SH SEE ALSO
+.IR string (3)

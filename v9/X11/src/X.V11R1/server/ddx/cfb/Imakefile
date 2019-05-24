@@ -1,0 +1,29 @@
+SRCS =	 cfbgc.c cfbwindow.c cfbmisc.c \
+	 cfbpntwin.c cfbmskbits.c cfbpixmap.c cfbbitblt.c \
+	 cfbfillsp.c cfbsetsp.c cfbscrinit.c \
+	 cfbgetsp.c cfbutils.c \
+	 cfbcmap.c cfboldmfb.c
+
+OBJS =   cfbgc.o cfbwindow.o cfbmisc.o \
+	 cfbgetsp.o cfbutils.o \
+	 cfbfillsp.o cfbsetsp.o cfbscrinit.o \
+	 cfbpntwin.o cfbmskbits.o cfbpixmap.o cfbbitblt.o \
+	 cfbcmap.o cfboldmfb.o
+
+CDEBUGFLAGS = ServerCDebugFlags
+   INCLUDES = -I. -I../../include -I../../../include -I../mfb
+       LINT = lint
+     LFLAGS = -buxz
+
+NormalLibraryObjectRule()
+NormalLibraryTarget(cfb,$(OBJS))
+
+DependTarget()
+
+lint: ${SRCS}
+	@echo 'Expect the following warnings from lint:' >lint.out
+	@echo '  cfbpntwin.c: srcStartOver set but not used' >>lint.out
+	@echo '  cfbfillsp.c: srcStartOver set but not used' >>lint.out
+	@echo '  cfbbitblt.c: tmpDst set but not used (4 of these)' >>lint.out
+	@echo '-------' >>lint.out
+	$(LINT) $(LFLAGS) -Clibcfb $(INCLUDES) $(SRCS) >> lint.out 2>&1

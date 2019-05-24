@@ -1,0 +1,11 @@
+.TH PLAID "13 June 1987" "X Version 11"
+.UC 4
+.SH NAME
+plaid \- paint some plaid-like patterns in a window
+.SH SYNOPSIS
+.B Plaid
+.SH DESCRIPTION
+.I Plaid
+displays a continually changing plaid-like pattern in a window.
+.SH BUGS
+There are no known bugs.  There are lots of lacking features.

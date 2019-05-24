@@ -1,0 +1,12 @@
+SRCS = connection.c WaitFor.c util.c utils.c io.c fileio.c filenames.c access.c \
+	 osinit.c oscolor.c
+OBJS = connection.o WaitFor.o util.o utils.o io.o fileio.o filenames.o access.o \
+	 osinit.o oscolor.o
+DEFINES= 
+CDEBUGFLAGS = ServerCDebugFlags
+INCLUDES = -I.  -I../../include -I../../../include
+
+NormalLibraryObjectRule()
+NormalLibraryTarget(os,$(OBJS))
+
+DependTarget()

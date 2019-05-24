@@ -1,0 +1,13 @@
+SRCS = lk201.c
+OBJS = lk201.o
+CDEBUGFLAGS = ServerCDebugFlags
+INCLUDES = -I. -I../../include -I../../../include
+
+NormalLibraryObjectRule()
+
+all: $(OBJS)
+
+DependTarget()
+
+lint:
+	lint -I../../include $(SRCS)

@@ -1,0 +1,56 @@
+.TH PUZZLE 6 "August 20, 1987"
+.UC 4
+.SH NAME
+puzzle \- X-window V11 15-puzzle game
+.SH SYNOPSIS
+.B puzzle
+[
+.B geometry
+] [
+.B display
+] [
+.B size
+] [
+.B -s<move-steps>
+] [
+.B -p<picture-file>
+]
+.SH DESCRIPTION
+.I Puzzle
+with no arguments plays a 4x4 15-puzzle.  The title bar has two boxes in
+it.  Clicking in the left box scrambles the puzzle.  Clicking in the right
+box solves the puzzle.  Clicking anywhere else in the title bar causes
+puzzle to exit. Clicking in the tiled region moves the empty spot to that
+location if the region you click in is in the same row or column as the
+empty slot. 
+
+.PP
+.TP 10
+.B geometry
+The desired size and location of the puzzle.
+.TP 10
+.B display
+Name of the display you want the puzzle to run on.
+.TP 10
+.B size
+The desired size of the puzzle, specified as <width>x<height>.
+The default and minimum size is 4x4.
+.TP
+.B \-s<move-steps>
+Set the number of block moves used to move the empty slot from place
+to place. By adjusting the value of move-steps, you can control the 
+speed of the empty slot as it careens around the puzzle.
+-s3 seems to give reasonable animation with no hardware bit mover
+support; you may need a much larger value (like 40-50) if you have
+a hardware bit mover.
+.TP
+.B \-p<picture-file>
+Create a pixmap from picture-file and use it as the puzzle.
+
+.PP
+.SH AUTHORS
+.PD 0
+.TP
+Don Bennett,   HP Labs        - Puzzle program & X interface
+.TP
+Jack Palevich, Apple Computer - Picture display code

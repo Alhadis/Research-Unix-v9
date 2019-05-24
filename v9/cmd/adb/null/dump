@@ -1,0 +1,47 @@
+From research!cithep!sickkids!mark Thu Nov  7 15:24 EST 1985
+I need to make a couple minor changes to dump, and having looked through
+the code I've been reminded of just how sleazy it is.  I've already told
+you about how it uses 1 rather than 0 as its normal exit status, thus
+ignoring all the standard unix conventions regarding such things.  Now
+I found another goodie.  There's an option which permits messages to be
+broadcast to all logged in users whom the program deems to be operators.
+The broadcasting is done by a subprocess.  (Never mind why; that's another
+story.)  What you may be amused and/or disgusted by is the following code
+fragment ...
+
+	switch (pid = fork()) {
+	case -1:
+		return;
+	case 0:
+		break;
+	default:
+		while (wait(&s) != pid)
+			continue;
+		return;
+	}
+
+	if (!notify || gp == 0)
+		exit(0);
+
+Given that the default is notify==0, think of all those poor processes,
+spawned only to die an immediate death!
+
+But wait -- there's more!  It goes on to do its thing.  When it finishes
+up, it does ...
+
+	Exit(0);	/* the wait in this same routine will catch this */
+
+... which is correct, provided you think it makes sense to do all this in a
+subprocess.  However, before getting to this point, one finds the following:
+
+	if((f_utmp = fopen("/etc/utmp", "r")) == NULL) {
+		msg("Cannot open /etc/utmp\n");
+		return;
+	}
+
+Yes, "return", not "exit"!  Who wrote this mess, anyway?  It seems worse
+than even my wildest nightmare of the possible product of a Joy/Horton
+collaboration.
+
+
+

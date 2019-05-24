@@ -1,0 +1,17 @@
+#SERVICE	ACTIONS
+login		ttyld+login
+dcon		v9auth+ttyld+login
+mesgdcon	v9auth+mesgld+login
+exec		v9auth+args+exec
+mesgexec	v9auth+args+mesgld+exec
+uucp		user(uucp)+cmd(/usr/lib/uucp/uucico)
+asd		auth+cmd(/usr/lib/asd/dkinstall)
+vsmtp		v9auth+args+cmd(/usr/lib/upas/vsmtpd)
+cwire		user(presotto)+cmd(cat > /tmp/cwire)
+#tcp.21		user(root)+cmd(ftp)
+tcp.23		user(root)+cmd(/usr/ipc/servers/telnetd)
+#tcp.25		user(root)+cmd(smtp)
+tcp.64		user(uucp)+cmd(/usr/lib/uucp/uucico)
+tcp.513		inauth+term+ttyld+login
+tcp.514		inauth+args+exec
+pupu		auth+cmd(/usr/lib/pupu)

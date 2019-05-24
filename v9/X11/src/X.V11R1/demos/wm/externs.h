@@ -1,0 +1,25 @@
+/* $Header: externs.h,v 1.1 87/09/11 08:23:32 toddb Exp $ */
+extern int errorStatus;
+extern Pixmap MakePixmap();
+extern void RemoveGizmos();
+extern GenericAssoc *GimmeAssocStruct();
+extern void AddGizmos();
+extern void ChangeBorderWidth();
+extern void MapCompleteWindow();
+extern void RegisterCompleteWindow();
+extern Window MakeHeader();
+extern Window MakeFrame();
+extern Window MakeGrowBox();
+extern Window MakeUpBox();
+extern Window MakeBackground();
+extern Window Frame();
+extern Window MakeIconBox();
+extern char *WindowType();
+extern void ReconfigureFrameAndClient();
+extern int ErrorHandler();
+extern void MakeReachable();
+extern Bool FillName();
+extern void FillIconName();
+extern void ProcessNewName();
+extern void ProcessNewIconName();
+extern Window MakeHeaderParent();

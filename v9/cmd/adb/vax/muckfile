@@ -1,0 +1,54 @@
+C=../comm
+CFLAGS=	-g -I. -I$C
+LDFLAGS= -g
+OFILES= access.o command.o expr.o format.o input.o main.o \
+	opset.o optab.o output.o pcs.o print.o regs.o runpcs.o setup.o sym.o \
+	syminit.o mchio.o mchrun.o mchsys.o mchframe.o
+
+adb:	${OFILES}
+	${CC} ${LDFLAGS} -o adb ${OFILES}
+
+optab.o:
+	${CC} -c -R $(CFLAGS) optab.c
+
+install:	adb
+	strip adb
+	cp adb ${DESTDIR}/bin
+
+clean:
+	rm -f adb ${OFILES}
+
+defs.h: mtype.h
+
+access.o: $C/defs.h regs.h $C/access.c
+	$(CC) -c $(CFLAGS) $C/access.c
+command.o: $C/defs.h regs.h $C/command.c
+	$(CC) -c $(CFLAGS) $C/command.c
+expr.o: $C/defs.h regs.h $C/expr.c
+	$(CC) -c $(CFLAGS) $C/expr.c
+format.o: $C/defs.h $C/format.c
+	$(CC) -c $(CFLAGS) $C/format.c
+input.o: $C/defs.h $C/input.c
+	$(CC) -c $(CFLAGS) $C/input.c
+main.o: $C/defs.h $C/main.c
+	$(CC) -c $(CFLAGS) $C/main.c
+mchframe.o: $C/defs.h regs.h
+mchio.o: $C/defs.h
+mchrun.o: $C/defs.h regs.h
+mchsys.o: $C/defs.h machine.h
+opset.o: $C/defs.h
+optab.o: $C/defs.h instrs
+output.o: $C/defs.h $C/output.c
+	$(CC) -c $(CFLAGS) $C/output.c
+pcs.o: $C/defs.h $C/pcs.c
+	$(CC) -c $(CFLAGS) $C/pcs.c
+print.o: $C/defs.h regs.h $C/print.c
+	$(CC) -c $(CFLAGS) $C/print.c
+regs.o: $C/defs.h regs.h
+runpcs.o: $C/defs.h regs.h $C/runpcs.c
+	$(CC) -c $(CFLAGS) $C/runpcs.c
+setup.o: $C/defs.h machine.h base.h
+sym.o: $C/defs.h $C/sym.c
+	$(CC) -c $(CFLAGS) $C/sym.c
+syminit.o: $C/defs.h $C/sym.h $C/syminit.c
+	$(CC) -c $(CFLAGS) $C/syminit.c

@@ -1,0 +1,102 @@
+.TH JTOOLS 1
+.CT 1 proc_man
+.SH NAME
+jtools \(mi 9th edition 5620 style tools for X11 and Suntools
+.SH DESCRIPTION
+.I Jtools
+is a set of tools derived from the 9th edition 5620
+tools which run under the X11 and Suntools windowing systems.
+To use them, add the directory
+.F /usr/jtools/bin
+to your
+.FR PATH .
+The files in this directory determine the architecture of the machine
+and the window system being used, and call the appropriate binary files.
+Each tool, in addition to the arguments specified in the manual pages
+take arguments appropriate to the window system.
+.PP
+In the X11 environment each tool will parse X standard
+.F =
+geometry specifications.
+Arguments of the form
+.F "-fn font"
+can be used to set the
+.I font
+for a particular instance of a tool.
+Suitable
+.I font
+names can be obtained with
+.I xlsfonts (1).
+Alternatively, a default font for all the tools
+can be set with an entry of the form:
+.RS
+.F
+JerqFont:	font
+.RE
+in the file
+.FR $HOME/.Xdefaults .
+To specify a particular font for all instances of a particular tool
+use an entry of the form:
+.RS
+.F
+tool.JerqFont:	font
+.RE
+Under X11, all the tools can be executed remotely by setting the
+X environment variable
+.F DISPLAY
+to the appropriate machine.
+See
+.IR X (1)
+for more information on setting X defaults and the
+.F DISPLAY
+environment variable.
+.PP
+In the
+.I suntools
+environment each tool will interpret standard
+.F -W
+window arguments.
+See
+.IR suntools (1)
+for the possible formats.
+The default font for the tools can be changed by setting the
+.F DEFAULT_FONT
+environment variable.
+.SH SEE ALSO
+.IR cip (1), 
+.IR hang (1), 
+.IR icon (1), 
+.IR life (1), 
+.IR pi (1), 
+.IR sam (1), 
+.IR suntools (1), 
+.IR sux (1), 
+.IR sysmon (1), 
+.IR tek (1), 
+.IR X (1), 
+.SH BUGS
+The
+.IR X (1)
+server presently does not have a backing store implemented.
+This causes a tools to redraw itself in X environments
+whenever a new section of the tool is exposed due to a rearrangement
+of windows by the window manager.
+In X, the tools may wait indefinitely if a window manager is not running
+and a geometry specification argument is not given when the tool is started.
+.PP
+Every tool under \fIsuntools\fR(1) requires a separate process to maintain the border.
+.PP
+Some of the tools implemented as 2 processes (such as
+.I pi
+and
+.IR sam )
+check the environment variable
+.F TERM
+to determine the name of the companion process.
+In these tools,
+.F TERM
+should be set to
+.I sun
+or
+.I xterm
+for correct operation.

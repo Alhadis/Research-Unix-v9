@@ -1,0 +1,19 @@
+OFILES=cache.o pad.o term.o menu.o remote.o sf.o padrcv.o stats.o help.o\
+	libC.o trace.o popen.o extern.o
+WD=/usr/jtools/src/pads/host
+
+libpads4.a: $(OFILES)
+	ar cr libpads4.a $(OFILES)
+	ranlib libpads4.a
+
+trace.o: trace.c
+	cc -c -g $(WD)/trace.c
+
+.c.o:	../pads.pri
+	CC  -I.. -c -g -DBSD $(WD)/$*.c
+
+clean:
+	rm -f *.i *junk* core jim.recover
+
+a.out:	test.o libpads4.a
+	CC test.o libpads4.a

@@ -1,0 +1,47 @@
+.\" $Header: Xapollo.man,v 1.1 87/09/14 15:30:06 toddb Exp $
+.TH XAPOLLO 8 "9 Sep 1987" "X Version 11"
+.SH NAME
+Xapollo \- Apollo server for X Version 11
+.SH SYNOPSIS
+.B Xapollo
+[ option ] ...
+.SH DESCRIPTION
+.I Xapollo
+is the server for Version 11 of the
+.I X
+window system on Apollo systems.
+It will normally be started by
+.I xinit (1),
+or by a shell script run from an interactive shell.
+.SH CONFIGURATIONS
+.I Xapollo
+operates under DOMAIN/IX, with at least Apollo software release SR9.5.1.
+It operates on any Apollo display hardware, although it runs in monochrome
+even on color systems.
+It requires a keyboard with a mouse.
+TCP/IP software must also be installed and running.
+.SH OPTIONS
+The Xapollo server program takes no device-dependent options; only the
+"standard" X11 server command line options can be used.
+These options are described under
+.I X (8).
+.SH "SEE ALSO"
+.PP
+.I X (8),
+.I xinit (1).
+.SH LIMITATIONS
+As mentioned above, this is a monochrome-only port using the portable MFB
+code, therefore performance is not as good as it is for the Apollo X Version 10
+implementation.  Also, the keyboard support for keyboard 3 could allow more
+natural use of control and shift, and it could add more Apollo keys to the
+keymap.
+.SH BUGS
+There is a known race condition in the pre-SR9.7 versions of TCP/IP which may
+make local clients hang just after establishing connections to the server.
+This problem does not exist with remote clients.
+.PP
+At SR9.7, this problem has been fixed.
+.SH AUTHORS
+.TP
+Apollo Computer Inc.
+

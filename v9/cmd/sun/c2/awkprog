@@ -1,0 +1,148 @@
+#
+# @(#)awkprog 1.1 86/02/03 SMI
+#
+
+BEGIN{
+	flavor = "AS"
+	FS = " "
+	MNEMONIC = 1
+	OPTYPE = 2
+	SUBOP = 3
+	OPCODES = 4
+	TOUCHOP = 5
+	OPACCESS = 6
+	CCODES = 7
+	NASSOC = 8
+	MACHINE  = 9
+}
+{
+	if (NF == 0){
+		printf("\n")
+		next
+	}
+	if ($MNEMONIC == "FLAVOR"){
+		flavor = $OPTYPE
+		next
+	}
+	if ($MNEMONIC == "##"){
+		next
+	}
+	nop = split( $OPTYPE, op, "," )
+	noperand = split( $TOUCHOP, touch, ",")
+	if (flavor == "C2"){
+	    if ( $OPTYPE == "PSEUDO" ){
+		# flavor is C2, and this is a pseudoop
+		nop = split( $3, op, "," )
+		printf( "P(\"%s\", OP_%s, %d, %d, SUBOP_%s )\n", $MNEMONIC, op[2], $5, $7, $4 )
+		next
+	    }
+	    # flavor is C2, this is a machine instruction.
+	    if ( nop == 2){
+		$OPTYPE = op[2]
+	    } else if ( $OPTYPE == "JBRNCH" || $OPTYPE == "cp_branch" ) {
+		$OPTYPE = "BRANCH"
+	    } else if ( $OPTYPE != "BRANCH" && $OPTYPE != "DBRA" ) {
+		$OPTYPE = "OTHER"
+	    } 
+	    if ( $OPTYPE != "BRANCH" && $OPTYPE != "DBRA" && $OPTYPE != "FBRANCH" && $OPTYPE != "FDBRA" ) {
+		$SUBOP = "SUBOP_" $SUBOP
+	    }
+	    printf( "I(\"%s\", OP_%s, %s, ", $MNEMONIC, $OPTYPE, $SUBOP )
+	    if (touch[1] == "X"){
+		printf("T_X, ")
+		noperand = 0
+	    } else {
+		if (noperand == 1){
+		    printf("T_ONE(%s),", $TOUCHOP)
+		} else if (noperand == 2){
+		    printf("T_TWO(%s),", $TOUCHOP)
+		} else {
+		    printf("T_THREE(%s),",$TOUCHOP)
+		}
+	    }
+	    printf( "%d, %s, %d, ", noperand, $CCODES, $NASSOC )
+	    naccess = split( $OPACCESS, access, ",")
+	    # next, go print OPACCESS info.
+	} else if (flavor == "AS"){
+	    if ( $OPTYPE == "PSEUDO"){
+		# flavor is AS, this is a pseodoop
+		nop = split( $3, op, "," )
+		if ($8 == "") $8 = "0"
+		naccess = split( $8, access, ",")
+		printf( "P(\"%s\", %s, OP_%s, SUBOP_%s, %d, %d, %d, ", $MNEMONIC, op[1], op[2], $4, $5, $6, $7 )
+		if (naccess==1){
+		    printf("A_ONE( %s )", $8 )
+		} else if (naccess==2){
+		    printf("A_TWO( %s )", $8 )
+		} else printf("help")
+		print ")\n"
+		next
+	    }
+	    # flavor is AS, and this is a machine instruction.
+	    naccess = split( $OPACCESS, access, ",")
+	    ncode = split( $OPCODES, code, "," )
+	    if (touch[1] == "X"){
+		noperand = 0
+		$OPACCESS = 0
+	    }
+	    if (op[1] == "BRANCH" ){
+		if ($MNEMONIC ~ /b..s/ ){
+		    op[1] = "BRNCHS"
+		} else if ( $MNEMONIC ~ /b..l/){
+		    op[1] = "BRNCHL"
+		}
+		if (op[2]==""){
+		    op[2] = "BRANCH"
+		}
+	    }
+	    if (op[2] == "") op[2] = "OTHER"
+	    if (length($SUBOP) == 1) $SUBOP = "SUBOP_" $SUBOP
+	    printf("I(\"%s\", %s, OP_%s, %s, ", $MNEMONIC, op[1], op[2], $SUBOP )
+	    printf("%d, ", noperand)
+	    if (touch[1] == "X"){
+		printf("T_X, ")
+	    } else {
+		if (noperand == 1){
+		    printf("T_ONE(%s),", $TOUCHOP)
+		} else if (noperand == 2){
+		    printf("T_TWO(%s),", $TOUCHOP)
+		} else {
+		    printf("T_THREE(%s),",$TOUCHOP)
+		}
+	    }
+	    if (ncode==1) {
+		printf("A_ONE(%s), ",$OPCODES)
+	    } else if (ncode==2){
+		printf("A_TWO(%s, %s), ",code[1], code[2])
+	    } else if (ncode==3){
+		printf("A_TH3(%s, %s, %s), ",code[1], code[2], code[3] )
+	    } else if (ncode==4){
+		printf("A_4R(%s, %s, %s, %s), ", code[1], code[2], code[3], code[4] )
+	    } else {
+		printf("A_5V(%s, %s, %s, %s, %s), ", code[1], code[2], code[3], code[4], code[5] )
+	    }
+	} else {
+	    print "FLAVOR IS " flavor
+	    exit
+	}
+	# here we print the OPACCESS stuff for any flavor.
+	if (naccess == 1){
+	    printf("A_ONE(%s) ", access[1] )
+	} else if (naccess==2){
+	    printf("A_TWO(%s, %s) ", access[1], access[2] )
+	} else if (naccess==3){
+	    printf("A_TH3(%s, %s, %s) ", access[1], access[2], access[3] )
+	} else if (naccess==4){
+	    printf("A_4R(%s, %s, %s, %s) ", access[1], access[2], access[3], access[4] )
+	} else if (naccess==5){
+	    printf("A_5V(%s, %s, %s, %s, %s) ", access[1], access[2], access[3], access[4], access[5] )
+	} else if (naccess==6){
+	    printf("A_6X(%s, %s, %s, %s, %s, %s) ", access[1], access[2], access[3], access[4], access[5], access[6] )
+ 	} else if (naccess==8){
+ 	    printf("A_8T(%s, %s, %s, %s, %s, %s, %s, %s) ", access[1], access[2], access[3], access[4], access[5], access[6], access[7], access[8] )
+ 	} else {
+ 	    printf("\n#include NACCESS==%d NOT DEALT WITH IN AWK PROG",naccess)
+	}
+	print " )"
+	next
+}

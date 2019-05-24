@@ -1,0 +1,14 @@
+OBJ=a.o batcomp.o bomb.o event.o explode.o image.o rock.o ship.o
+LIBS=	../../sunlib/libj.a -lX11 -lipc
+CFLAGS=	-I../../sunlib -DX11 -g
+NPROC= 2
+
+a: $OBJ
+	$CC $CFLAGS $OBJ $LIBS -o a
+	strip -s a
+
+lint:
+	lint -p -I/usr/jerq/include $(FILES)
+
+clean:
+	rm -f *.o core a m.out

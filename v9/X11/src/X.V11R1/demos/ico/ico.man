@@ -1,0 +1,15 @@
+.\" $Header: ico.man,v 1.1 87/09/13 20:11:38 toddb Exp $
+.TH ICO "13 June 1987" "X Version 11"
+.UC 4
+.SH NAME
+ico \- animate an icosahedron
+.SH SYNOPSIS
+.B Ico
+[ -r ]
+.SH DESCRIPTION
+.I Ico
+displays a wire-frame rotating icosahedron, with hidden lines removed.
+The -r option will display on the
+root window instead of creating a new one
+.SH BUGS
+There are no known bugs.  There are lots of lacking features.

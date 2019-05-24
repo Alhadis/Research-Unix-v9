@@ -1,0 +1,52 @@
+CFLAGS=-g
+MGRDIR=/usr/ipc/mgrs
+BINDIR=/usr/ipc/bin
+MYDIR=/usr/presotto/bin
+MGRS=ipconfig routed dkipconfig udpconfig
+BINS=route netstat
+MYS=transform
+ALL=$MGRS $BINS $MYS
+LIBIN=../libin/libin.a
+
+all:V:	$ALL
+
+transform: transform.o $LIBIN
+	cc transform.o $LIBIN -o transform
+
+transform.o: transform.c
+
+ipconfig :	ipconfig.o
+		cc $CFLAGS -o ipconfig ipconfig.o $LIBIN
+
+dipconfig :	dipconfig.o
+		cc $CFLAGS -o dipconfig dipconfig.o $LIBIN
+
+dkipconfig :	dkipconfig.o
+		cc $CFLAGS -o dkipconfig dkipconfig.o -ldk $LIBIN
+
+udpconfig :	udpconfig.o
+		cc $CFLAGS -o udpconfig udpconfig.o
+
+netstat	:	netstat.o
+		cc $CFLAGS -o netstat netstat.o $LIBIN
+
+routed	:	routed.o
+		cc $CFLAGS -o routed routed.o $LIBIN
+
+route	:	route.o
+		cc $CFLAGS -o route route.o $LIBIN
+
+install	:	all
+		( cd $MGRDIR ; rm -f $MGRS )
+		cp $MGRS $MGRDIR
+		( cd $MGRDIR ; /etc/chown daemon dkipconfig )
+		( cd $MGRDIR ; chmod go-w,u+s dkipconfig )
+		( cd $BINDIR ; rm -f $BINS )
+		cp $BINS $BINDIR
+		( cd $MYDIR ; rm -f $MYS )
+		cp $MYS $MYDIR
+
+cyntax:V:
+
+clean:
+	rm -f *.[oO] dipconfig interlan ipconfig loopback netstat route routed transform

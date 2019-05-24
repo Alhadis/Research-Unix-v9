@@ -1,0 +1,35 @@
+cp.c	defines - changed BLOCKSIZE from BUFSIZ to BUFSIZE
+
+df.c	main() - changed argc >= 1 test to argc > 1 to avoid null
+	reference
+	 Added KBYTE definition.
+	dfree() - changed BITFS test to always divide BSIZE(dev)/KBYTE
+	for blocks, free, and used.
+
+file.c	added types for different 68000 executables.
+	Added #ifdef for <pagsiz.h> include.
+
+fsck.c	Added define for MAXDATA for mc68000's
+	pindoe() - changed call of getpw to getpwuid();
+
+init.c	setupio() - Look at line disciplines before popping them.
+	This allows the console/keyboard to not be popped as it
+	isn't in the stream table (it's pushed and popped
+	automatically).
+
+ls.c	getname() - added test if lastip != NULL before test
+	getgroup() - added test if lastip != NULL before test
+
+vmstat/vmstat.c - changed from massbusio and unibusio to mbio
+
+w.c	changed declaration of avenrun from double to float
+
+wc.c	line 68, added space so opt=++... is opt= ++...
+
+ps/ps.h	added STTOP for stack top and SYSADR and UBASE defines for sun.
+ps/getargs.c	changed UBASE to STTOP.
+		divided NBPG by ctod(1) on seek when reading /dev/drum.
+ps/doselect.c	getuarea() - divide NBPG by ctod(1) when reading /dev/drum.
+
+inet/bin/netstat.c main() - line 11. added test argc >1 so no attempt is
+		made to access argv[1][0] if there are no arguments.

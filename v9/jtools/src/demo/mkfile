@@ -1,0 +1,14 @@
+CFLAGS=	-I../sunlib -DSUNTOOLS -DBSD -g
+LIBS=	../sunlib/libsj.a -lsunwindow -lpixrect
+PROGS=	bounce ball clock
+
+all: $PROGS
+
+bounce: bounce.o
+	cc -s -o bounce bounce.o $LIBS
+
+ball: ball.o
+	cc -s -o ball ball.o $LIBS
+
+clock: clock.o
+	cc -g -o clock clock.o $LIBS

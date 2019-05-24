@@ -1,0 +1,998 @@
+##
+## @(#)Instructions 1.1 86/02/03 SMI
+##
+
+##	obsolete MIT syntax
+
+movb  MOVE,MOVE       B  0x1000        BR,BW     AM_DATA,AM_ADAT                                   CC2 0
+movw  MOVE,MOVE       W  0x3000,0,0x44C0,0x42C0 WR,WW     AM_ALL,AM_ADAT|AM_AREG,AM_CCREG,AM_ADAT,AM_DATA,AM_CCREG   CC2 1
+movl  MOVE,MOVE       L  0x2000,0x4E60 LR,LW     AM_ALL,AM_ADAT|AM_AREG,AM_USPREG,AM_AREG,AM_AREG,AM_USPREG CC2 2
+movc  MOVEC           Z  0x4E7A        LR,LW     AM_REG,AM_CTRLREG,AM_CTRLREG,AM_REG               CCX 0
+movsb MOVS            B  0x0E00        BR,BW     AM_REG,AM_AMEM,AM_AMEM,AM_REG                     CCX 0
+movsw MOVS            W  0x0E40        WR,WW     AM_REG,AM_AMEM,AM_AMEM,AM_REG                     CCX 0
+movsl MOVS            L  0x0E80        LR,LW     AM_REG,AM_AMEM,AM_AMEM,AM_REG                     CCX 0
+tstb  ONE_OP,TST      B  0x4A00        BR        AM_ADAT                                           CC1 0
+tstw  ONE_OP,TST      W  0x4A40        WR        AM_ALL                                            CC1 1
+tstl  ONE_OP,TST      L  0x4A80        LR        AM_ALL                                            CC1 2
+
+## move family
+
+moveb  MOVE,MOVE       B  0x1000        BR,BW     AM_DATA,AM_ADAT                                   CC2 0
+movew  MOVE,MOVE       W  0x3000,0,0x44C0,0x42C0 WR,WW     AM_ALL,AM_ADAT|AM_AREG,AM_CCREG,AM_ADAT,AM_DATA,AM_CCREG   CC2 1
+movel  MOVE,MOVE       L  0x2000,0x4E60 LR,LW     AM_ALL,AM_ADAT|AM_AREG,AM_USPREG,AM_AREG,AM_AREG,AM_USPREG CC2 2
+moveq MOVEQ,MOVE      L  0x7000        LR,LW     AM_IMMED,AM_DREG                                  CC2 0
+exg   EXG             Z  0xC100        LR+LW,LR+LW AM_REG,AM_REG                                   CC0 0
+movec  MOVEC           Z  0x4E7A        LR,LW     AM_REG,AM_CTRLREG,AM_CTRLREG,AM_REG               CCX 0
+movesb MOVS            B  0x0E00        BR,BW     AM_REG,AM_AMEM,AM_AMEM,AM_REG                     CCX 0
+movesw MOVS            W  0x0E40        WR,WW     AM_REG,AM_AMEM,AM_AMEM,AM_REG                     CCX 0
+movesl MOVS            L  0x0E80        LR,LW     AM_REG,AM_AMEM,AM_AMEM,AM_REG                     CCX 0
+movepw MOVEP          W  0x0108,0x0188 WR,WW     AM_DREG,AM_DISPL,AM_DISPL,AM_DREG                 CC0 0 
+movepl MOVEP          L  0x0148,0x01C8 LR,LW     AM_DREG,AM_DISPL,AM_DISPL,AM_DREG                 CC0 0 
+movemw MOVEM,MOVEM    W  0x4880,0x4c80        0,0       AM_IMMED,AM_ACTRL|AM_PREDEC,AM_CTRL|AM_POSTINC,AM_IMMED CC0 0
+moveml MOVEM,MOVEM    L  0x48C0,0x4cc0        0,0       AM_IMMED,AM_ACTRL|AM_PREDEC,AM_CTRL|AM_POSTINC,AM_IMMED CC0 0
+
+## bcd decimal family
+abcd  REGMEM          Z  0xC100        BR,BR+BW  AM_PREDEC,AM_PREDEC,AM_DREG,AM_DREG               CCX 0
+sbcd  REGMEM          Z  0x8100        BR,BR+BW  AM_PREDEC,AM_PREDEC,AM_DREG,AM_DREG               CCX 0
+nbcd  ONE_OP          Z  0x4800        BR+BW     AM_ADAT                                           CCX 0
+pack  PACK            W  0x8140        WR,BW,WR  AM_DREG,AM_DREG,AM_IMMED,AM_PREDEC,AM_PREDEC,AM_IMMED CCX 0 68020
+unpk  PACK            W  0x8180        BR,WW,WR  AM_DREG,AM_DREG,AM_IMMED,AM_PREDEC,AM_PREDEC,AM_IMMED CCX 0 68020
+
+## arithmetic family
+addb  TWO_OP,ADD      B  0xD000,0,0x0600,0      BR,BR+BW  AM_DATA,AM_DREG,AM_DREG|AM_IMMED,AM_ADAT          CC2 0
+addw  TWO_OP,ADD      W  0xD040,0xD0C0,0x0640,0 WR,WR+WW  AM_ALL,AM_REG,AM_DREG|AM_IMMED,AM_ADAT            CC2 1
+addl  TWO_OP,ADD      L  0xD080,0xD1C0,0x0680,0 LR,LR+LW  AM_ALL,AM_REG,AM_DREG|AM_IMMED,AM_ADAT            CC2 2
+addqb QUICK,ADD       B  0x5000        BR,BR+BW  AM_IMMED,AM_AA                                    CC2 0
+addqw QUICK,ADD       W  0x5040        WR,WR+WW  AM_IMMED,AM_AA                                    CC2 0
+addql QUICK,ADD       L  0x5080        LR,LR+LW  AM_IMMED,AM_AA                                    CC2 0
+addxb REGMEM          B  0xD100        BR,BR+BW  AM_PREDEC,AM_PREDEC,AM_DREG,AM_DREG               CC2 0
+addxw REGMEM          W  0xD140        WR,WR+WW  AM_PREDEC,AM_PREDEC,AM_DREG,AM_DREG               CC2 1
+addxl REGMEM          L  0xD180        LR,LR+LW  AM_PREDEC,AM_PREDEC,AM_DREG,AM_DREG               CC2 2
+cmpb  TWO_OP,CMP      B  0xB000,0,0x0C00,0 BR,BR          AM_DATA,AM_DREG,AM_IMMED,AM_ADAT                  CC2 0
+cmpw  TWO_OP,CMP      W  0xB040,0xB0C0,0x0C40,0 WR,WR     AM_ALL,AM_REG,AM_IMMED,AM_ADAT                    CC2 1
+cmpl  TWO_OP,CMP      L  0xB080,0xB1C0,0x0C80,0 LR,LR     AM_ALL,AM_REG,AM_IMMED,AM_ADAT                    CC2 2
+cmpmb REGMEM          B  0xB108        BR,BR     AM_POSTINC,AM_POSTINC                             CC2 0
+cmpmw REGMEM          W  0xB148        WR,WR     AM_POSTINC,AM_POSTINC                             CC2 1
+cmpml REGMEM          L  0xB188        LR,LR     AM_POSTINC,AM_POSTINC                             CC2 2
+cmp2b CHK2            B  0x00C0,0x0000 BR,BR     AM_CTRL,AM_REG                                    CCX 0 68020
+cmp2w CHK2            W  0x02C0,0x0000 WR,WR     AM_CTRL,AM_REG                                    CCX 0 68020
+cmp2l CHK2            L  0x04C0,0x0000 LR,LR     AM_CTRL,AM_REG                                    CCX 0 68020
+divs   TWO_OP         W  0x81C0,0,0xffff,0       WR,LR+LW  AM_DATA,AM_DREG                            CC2 0
+divsl  DIV_OP         L  0x4C40,0x0800,0x0C00 LR,LR+LW  AM_DATA,AM_DREG|AM_REGPAIR                 CC2 0 68020
+divsll DIV_OP         L  0x4C40,0x0800,0x0800 LR,LR+LW  AM_DATA,AM_REGPAIR                         CC2 0 68020
+divu   TWO_OP         W  0x80C0,0,0xffff,0       WR,LR+LW  AM_DATA,AM_DREG                            CC2 0
+divul  DIV_OP         L  0x4C40,0x0000,0x0400 LR,LR+LW  AM_DATA,AM_DREG|AM_REGPAIR                 CC2 0 68020
+divull DIV_OP         L  0x4C40,0x0000,0x0000 LR,SPEC(6) AM_DATA,AM_REGPAIR                         CC2 0 68020
+muls   TWO_OP         W  0xC1C0,0,0xffff,0    WR,WR+LW  AM_DATA,AM_DREG                            CC2 0
+mulsl  DIV_OP         L  0x4C00,0x0800,0x0C00 LR,SPEC(6) AM_DATA,AM_DREG|AM_REGPAIR                 CC2 0 68020
+mulu   TWO_OP         W  0xC0C0,0,0xffff,0    WR,WR+LW  AM_DATA,AM_DREG                            CC2 0
+mulul  DIV_OP         L  0x4C00,0x0000,0x0400 LR,SPEC(6) AM_DATA,AM_DREG|AM_REGPAIR                 CC2 0 68020
+negb  ONE_OP          B  0x4400        BR+BW     AM_ADAT                                           CC1 0
+negw  ONE_OP          W  0x4440        WR+WW     AM_ADAT                                           CC1 1
+negl  ONE_OP          L  0x4480        LR+LW     AM_ADAT                                           CC1 2
+negxb ONE_OP          B  0x4000        BR+BW     AM_ADAT                                           CC1 0
+negxw ONE_OP          W  0x4040        WR+WW     AM_ADAT                                           CC1 1
+negxl ONE_OP          L  0x4080        LR+LW     AM_ADAT                                           CC1 2
+subb  TWO_OP,SUB      B  0x9000,0,0x0400,0      BR,BR+BW  AM_DATA,AM_DREG,AM_DREG|AM_IMMED,AM_ADAT          CC2 0
+subw  TWO_OP,SUB      W  0x9040,0x90C0,0x0440,0 WR,WR+WW  AM_ALL,AM_REG,AM_DREG|AM_IMMED,AM_ADAT            CC2 1
+subl  TWO_OP,SUB      L  0x9080,0x91C0,0x0480,0 LR,LR+LW  AM_ALL,AM_REG,AM_DREG|AM_IMMED,AM_ADAT            CC2 2
+subqb QUICK,SUB       B  0x5100        BR,BR+BW  AM_IMMED,AM_AA                                    CC2 0
+subqw QUICK,SUB       W  0x5140        WR,WR+WW  AM_IMMED,AM_AA                                    CC2 0
+subql QUICK,SUB       L  0x5180        LR,LR+LW  AM_IMMED,AM_AA                                    CC2 0
+subxb REGMEM          B  0x9100        BR,BR+BW  AM_PREDEC,AM_PREDEC,AM_DREG,AM_DREG               CC2 0
+subxw REGMEM          W  0x9140        WR,WR+WW  AM_PREDEC,AM_PREDEC,AM_DREG,AM_DREG               CC2 1
+subxl REGMEM          L  0x9180        LR,LR+LW  AM_PREDEC,AM_PREDEC,AM_DREG,AM_DREG               CC2 2
+
+## logical family
+andb  TWO_OP,AND      B 0xC000,0,0x0200,0x023C  BR,BR+BW  AM_DATA,AM_DREG,AM_DREG|AM_IMMED,AM_ADAT,AM_IMMED,AM_CCREG      CC2 0
+andw  TWO_OP,AND      W 0xC040,0,0x0240,0x027C  WR,WR+WW  AM_DATA,AM_DREG,AM_DREG|AM_IMMED,AM_ADAT,AM_IMMED,AM_CCREG CC2 1
+andl  TWO_OP,AND      L 0xC080,0,0x0280,0       LR,LR+LW  AM_DATA,AM_DREG,AM_DREG|AM_IMMED,AM_ADAT          CC2 2
+orb   TWO_OP,OR       B 0x8000,0,0x0000,0x003C  BR,BR+BW  AM_DATA,AM_DREG,AM_DREG|AM_IMMED,AM_ADAT,AM_IMMED,AM_CCREG      CC2 0
+orw   TWO_OP,OR       W 0x8040,0,0x0040,0x007C  WR,WR+WW  AM_DATA,AM_DREG,AM_DREG|AM_IMMED,AM_ADAT,AM_IMMED,AM_CCREG CC2 1
+orl   TWO_OP,OR       L 0x8080,0,0x0080,0       LR,LR+LW  AM_DATA,AM_DREG,AM_DREG|AM_IMMED,AM_ADAT          CC2 2
+eorb  TWO_OP,EOR      B 0xB100,0,0x0A00,0x0A3C  BR,BR+BW                  AM_DREG|AM_IMMED,AM_ADAT,AM_IMMED,AM_CCREG      CC2 0
+eorw  TWO_OP,EOR      W 0xB140,0,0x0A40,0x0A7C  WR,WR+WW                  AM_DREG|AM_IMMED,AM_ADAT,AM_IMMED,AM_CCREG CC2 1
+eorl  TWO_OP,EOR      L 0xB180,0,0x0A80,0       LR,LR+LW                  AM_DREG|AM_IMMED,AM_ADAT          CC2 2
+notb  ONE_OP          B  0X4600        BR+BW     AM_ADAT                                           CC1 0
+notw  ONE_OP          W  0X4640        WR+WW     AM_ADAT                                           CC1 1
+notl  ONE_OP          L  0X4680        LR+LW     AM_ADAT                                           CC1 2
+clrb  ONE_OP,CLR      B  0X4200        BW        AM_ADAT                                           CC1 0
+clrw  ONE_OP,CLR      W  0X4240        WW        AM_ADAT                                           CC1 1
+clrl  ONE_OP,CLR      L  0X4280        LW        AM_ADAT                                           CC1 2
+
+## shift family
+aslb  SHIFT_OP,ASL    B  0xE100        SPEC(2),BR+BW AM_DREG|AM_IMMED,AM_DREG                      CC2 0
+aslw  SHIFT_OP,ASL    W  0xE140,0xE1C0 SPEC(2),WR+WW AM_DREG|AM_IMMED,AM_DREG,AM_AMEM,0            CC2 1
+asll  SHIFT_OP,ASL    L  0xE180        SPEC(2),LR+LW AM_DREG|AM_IMMED,AM_DREG                      CC2 2
+asrb  SHIFT_OP,ASR    B  0xE000        SPEC(2),BR+BW AM_DREG|AM_IMMED,AM_DREG                      CC2 0
+asrw  SHIFT_OP,ASR    W  0xE040,0xE0C0 SPEC(2),WR+WW AM_DREG|AM_IMMED,AM_DREG,AM_AMEM,0            CC2 1
+asrl  SHIFT_OP,ASR    L  0xE080        SPEC(2),LR+LW AM_DREG|AM_IMMED,AM_DREG                      CC2 2
+lslb  SHIFT_OP        B  0xE108        SPEC(2),BR+BW AM_DREG|AM_IMMED,AM_DREG                      CC2 0
+lslw  SHIFT_OP        W  0xE148,0xE3C0 SPEC(2),WR+WW AM_DREG|AM_IMMED,AM_DREG,AM_AMEM,0            CC2 1
+lsll  SHIFT_OP        L  0xE188        SPEC(2),LR+LW AM_DREG|AM_IMMED,AM_DREG                      CC2 2
+lsrb  SHIFT_OP        B  0xE008        SPEC(2),BR+BW AM_DREG|AM_IMMED,AM_DREG                      CC2 0
+lsrw  SHIFT_OP        W  0xE048,0xE2C0 SPEC(2),WR+WW AM_DREG|AM_IMMED,AM_DREG,AM_AMEM,0            CC2 1
+lsrl  SHIFT_OP        L  0xE088        SPEC(2),LR+LW AM_DREG|AM_IMMED,AM_DREG                      CC2 2
+rolb  SHIFT_OP        B  0xE118        SPEC(2),BR+BW AM_DREG|AM_IMMED,AM_DREG                      CC2 0
+rolw  SHIFT_OP        W  0xE158,0xE7C0 SPEC(2),WR+WW AM_DREG|AM_IMMED,AM_DREG,AM_AMEM,0            CC2 1
+roll  SHIFT_OP        L  0xE198        SPEC(2),LR+LW AM_DREG|AM_IMMED,AM_DREG                      CC2 2
+rorb  SHIFT_OP        B  0xE018        SPEC(2),BR+BW AM_DREG|AM_IMMED,AM_DREG                      CC2 0
+rorw  SHIFT_OP        W  0xE058,0xE6C0 SPEC(2),WR+WW AM_DREG|AM_IMMED,AM_DREG,AM_AMEM,0            CC2 1
+rorl  SHIFT_OP        L  0xE098        SPEC(2),LR+LW AM_DREG|AM_IMMED,AM_DREG                      CC2 2
+roxlb SHIFT_OP        B  0xE110        SPEC(2),BR+BW AM_DREG|AM_IMMED,AM_DREG                      CC2 0
+roxlw SHIFT_OP        W  0xE150,0xE5C0 SPEC(2),WR+WW AM_DREG|AM_IMMED,AM_DREG,AM_AMEM,0            CC2 1
+roxll SHIFT_OP        L  0xE190        SPEC(2),LR+LW AM_DREG|AM_IMMED,AM_DREG                      CC2 2
+roxrb SHIFT_OP        B  0xE010        SPEC(2),BR+BW AM_DREG|AM_IMMED,AM_DREG                      CC2 0
+roxrw SHIFT_OP        W  0xE050,0xE4C0 SPEC(2),WR+WW AM_DREG|AM_IMMED,AM_DREG,AM_AMEM,0            CC2 1
+roxrl SHIFT_OP        L  0xE090        SPEC(2),LR+LW AM_DREG|AM_IMMED,AM_DREG                      CC2 2
+
+## true branch family
+bras  BRANCH          JALL 0x6000      0             AM_NORMAL                                     CC0 0
+bra   BRANCH          JALL 0x6000      0             AM_NORMAL                                     CC0 1
+bral  BRANCH          JALL 0x60FF      0             AM_NORMAL                                     CC0 2 68020
+bsrs  BRANCH,CALL     Z    0x6100      0             AM_NORMAL                                     CCX 0
+bsr   BRANCH,CALL     Z    0x6100      0             AM_NORMAL                                     CCX 1
+bsrl  BRANCH,CALL     Z    0x61FF      0             AM_NORMAL                                     CCX 2 68020
+bccs  BRANCH          JCC  0x6400      0             AM_NORMAL                                     CCR 0
+bcc   BRANCH          JCC  0x6400      0             AM_NORMAL                                     CCR 1
+bccl  BRANCH          JCC  0x64FF      0             AM_NORMAL                                     CCR 2 68020
+bcss  BRANCH          JCS  0x6500      0             AM_NORMAL                                     CCR 0
+bcs   BRANCH          JCS  0x6500      0             AM_NORMAL                                     CCR 1
+bcsl  BRANCH          JCS  0x65FF      0             AM_NORMAL                                     CCR 2 68020
+beqs  BRANCH          JEQ  0x6700      0             AM_NORMAL                                     CCR 0
+beq   BRANCH          JEQ  0x6700      0             AM_NORMAL                                     CCR 1
+beql  BRANCH          JEQ  0x67FF      0             AM_NORMAL                                     CCR 2 68020
+bnes  BRANCH          JNE  0x6600      0             AM_NORMAL                                     CCR 0
+bne   BRANCH          JNE  0x6600      0             AM_NORMAL                                     CCR 1
+bnel  BRANCH          JNE  0x66FF      0             AM_NORMAL                                     CCR 2 68020
+bges  BRANCH          JGE  0x6C00      0             AM_NORMAL                                     CCR 0
+bge   BRANCH          JGE  0x6C00      0             AM_NORMAL                                     CCR 1
+bgel  BRANCH          JGE  0x6CFF      0             AM_NORMAL                                     CCR 2 68020
+bgts  BRANCH          JGT  0x6E00      0             AM_NORMAL                                     CCR 0
+bgt   BRANCH          JGT  0x6E00      0             AM_NORMAL                                     CCR 1
+bgtl  BRANCH          JGT  0x6EFF      0             AM_NORMAL                                     CCR 2 68020
+bhis  BRANCH          JHI  0x6200      0             AM_NORMAL                                     CCR 0
+bhi   BRANCH          JHI  0x6200      0             AM_NORMAL                                     CCR 1
+bhil  BRANCH          JHI  0x62FF      0             AM_NORMAL                                     CCR 2 68020
+bles  BRANCH          JLE  0x6F00      0             AM_NORMAL                                     CCR 0
+ble   BRANCH          JLE  0x6F00      0             AM_NORMAL                                     CCR 1
+blel  BRANCH          JLE  0x6FFF      0             AM_NORMAL                                     CCR 2 68020
+blss  BRANCH          JLS  0x6300      0             AM_NORMAL                                     CCR 0
+bls   BRANCH          JLS  0x6300      0             AM_NORMAL                                     CCR 1
+blsl  BRANCH          JLS  0x63FF      0             AM_NORMAL                                     CCR 2 68020
+blts  BRANCH          JLT  0x6D00      0             AM_NORMAL                                     CCR 0
+blt   BRANCH          JLT  0x6D00      0             AM_NORMAL                                     CCR 1
+bltl  BRANCH          JLT  0x6DFF      0             AM_NORMAL                                     CCR 2 68020
+bmis  BRANCH          JMI  0x6B00      0             AM_NORMAL                                     CCR 0
+bmi   BRANCH          JMI  0x6B00      0             AM_NORMAL                                     CCR 1
+bmil  BRANCH          JMI  0x6BFF      0             AM_NORMAL                                     CCR 2 68020
+bpls  BRANCH          JPL  0x6A00      0             AM_NORMAL                                     CCR 0
+bpl   BRANCH          JPL  0x6A00      0             AM_NORMAL                                     CCR 1
+bpll  BRANCH          JPL  0x6AFF      0             AM_NORMAL                                     CCR 2 68020
+bvcs  BRANCH          JVC  0x6800      0             AM_NORMAL                                     CCR 0 
+bvc   BRANCH          JVC  0x6800      0             AM_NORMAL                                     CCR 1 
+bvcl  BRANCH          JVC  0x68FF      0             AM_NORMAL                                     CCR 2 68020
+bvss  BRANCH          JVS  0x6900      0             AM_NORMAL                                     CCR 0 
+bvs   BRANCH          JVS  0x6900      0             AM_NORMAL                                     CCR 1 
+bvsl  BRANCH          JVS  0x69FF      0             AM_NORMAL                                     CCR 2 68020
+jmp   ONE_OP,BRANCH   JALL 0x4EC0,1    0             AM_CTRL                                       CC0 0
+jsr   ONE_OP,CALL     Z    0x4E80,1    0             AM_CTRL                                       CCX 0
+callm CALLM           Z    0x06C0      WR,0          AM_IMMED,AM_CTRL                              CCX 0 68020
+
+## jump family
+jra   JBRNCH          JALL 0x6000,0x4EC0 0           AM_NORMAL|AM_CTRL                             CC0 0
+jbsr  JBRNCH,CALL     Z    0x6100,0x4E80 0           AM_NORMAL|AM_CTRL                             CCX 1
+jcc   JBRNCH          JCC  0x6400,0x6500 0           AM_NORMAL|AM_CTRL                             CCR 0
+jcs   JBRNCH          JCS  0x6500,0x6400 0           AM_NORMAL|AM_CTRL                             CCR 0
+jeq   JBRNCH          JEQ  0x6700,0x6600 0           AM_NORMAL|AM_CTRL                             CCR 0
+jne   JBRNCH          JNE  0x6600,0x6700 0           AM_NORMAL|AM_CTRL                             CCR 0
+jge   JBRNCH          JGE  0x6C00,0x6D00 0           AM_NORMAL|AM_CTRL                             CCR 0
+jgt   JBRNCH          JGT  0x6E00,0x6F00 0           AM_NORMAL|AM_CTRL                             CCR 0
+jhi   JBRNCH          JHI  0x6200,0x6300 0           AM_NORMAL|AM_CTRL                             CCR 0
+jle   JBRNCH          JLE  0x6F00,0x6E00 0           AM_NORMAL|AM_CTRL                             CCR 0
+jls   JBRNCH          JLS  0x6300,0x6200 0           AM_NORMAL|AM_CTRL                             CCR 0
+jlt   JBRNCH          JLT  0x6D00,0x6C00 0           AM_NORMAL|AM_CTRL                             CCR 0
+jmi   JBRNCH          JMI  0x6B00,0x6A00 0           AM_NORMAL|AM_CTRL                             CCR 0
+jpl   JBRNCH          JPL  0x6A00,0x6B00 0           AM_NORMAL|AM_CTRL                             CCR 0
+jvc   JBRNCH          JVC  0x6800,0x6900 0           AM_NORMAL|AM_CTRL                             CCR 0 
+jvs   JBRNCH          JVS  0x6900,0x6800 0           AM_NORMAL|AM_CTRL                             CCR 0 
+## floating jumps
+jfeq  JBRNCH          JFEQ  000000,000000 0          AM_NORMAL|AM_CTRL                             CCR 0
+jfne JBRNCH          JFNEQ 000000,000000 0          AM_NORMAL|AM_CTRL                             CCR 0
+jfneq JBRNCH          JFNEQ 000000,000000 0          AM_NORMAL|AM_CTRL                             CCR 0
+jflt  JBRNCH          JFLT  000000,000000 0          AM_NORMAL|AM_CTRL                             CCR 0
+jfnlt JBRNCH          JFNLT 000000,000000 0          AM_NORMAL|AM_CTRL                             CCR 0
+jfle  JBRNCH          JFLE  000000,000000 0          AM_NORMAL|AM_CTRL                             CCR 0
+jfnle JBRNCH          JFNLE 000000,000000 0          AM_NORMAL|AM_CTRL                             CCR 0
+jfgt  JBRNCH          JFGT  000000,000000 0          AM_NORMAL|AM_CTRL                             CCR 0
+jfngt JBRNCH          JFNGT 000000,000000 0          AM_NORMAL|AM_CTRL                             CCR 0
+jfge  JBRNCH          JFGE  000000,000000 0          AM_NORMAL|AM_CTRL                             CCR 0
+jfnge JBRNCH          JFNGE 000000,000000 0          AM_NORMAL|AM_CTRL                             CCR 0
+
+## dbxx family
+dbra   DBRA           JNONE 0x51C8      WR+WW,0       AM_DREG,AM_NORMAL                             CC0 0
+dbf    DBRA           JNONE 0x51C8      WR+WW,0       AM_DREG,AM_NORMAL                             CC0 0
+dbcc   DBRA            JCC  0x54C8      WR+WW,0       AM_DREG,AM_NORMAL                             CCR 0
+dbcs   DBRA            JCS  0x55C8      WR+WW,0       AM_DREG,AM_NORMAL                             CCR 0
+dbeq   DBRA            JEQ  0x57C8      WR+WW,0       AM_DREG,AM_NORMAL                             CCR 0
+dbne   DBRA            JNE  0x56C8      WR+WW,0       AM_DREG,AM_NORMAL                             CCR 0
+dbge   DBRA            JGE  0x5CC8      WR+WW,0       AM_DREG,AM_NORMAL                             CCR 0
+dbgt   DBRA            JGT  0x5EC8      WR+WW,0       AM_DREG,AM_NORMAL                             CCR 0
+dbhi   DBRA            JHI  0x52C8      WR+WW,0       AM_DREG,AM_NORMAL                             CCR 0
+dble   DBRA            JLE  0x5FC8      WR+WW,0       AM_DREG,AM_NORMAL                             CCR 0
+dbls   DBRA            JLS  0x53C8      WR+WW,0       AM_DREG,AM_NORMAL                             CCR 0
+dblt   DBRA            JLT  0x5DC8      WR+WW,0       AM_DREG,AM_NORMAL                             CCR 0
+dbmi   DBRA            JMI  0x5BC8      WR+WW,0       AM_DREG,AM_NORMAL                             CCR 0
+dbpl   DBRA            JPL  0x5AC8      WR+WW,0       AM_DREG,AM_NORMAL                             CCR 0
+dbvc   DBRA            JVC  0x58C8      WR+WW,0       AM_DREG,AM_NORMAL                             CCR 0 
+dbvs   DBRA            JVS  0x59C8      WR+WW,0       AM_DREG,AM_NORMAL                             CCR 0 
+dbt    DBRA            JALL 0x50C8      WR+WW,0       AM_DREG,AM_NORMAL                             CC0 0
+
+## set family
+sf    ONE_OP          Z    0x51C0      BW            AM_ADAT                                       CC0 0
+scc   ONE_OP          Z    0x54C0      BW            AM_ADAT                                       CCR 0
+scs   ONE_OP          Z    0x55C0      BW            AM_ADAT                                       CCR 0
+seq   ONE_OP          Z    0x57C0      BW            AM_ADAT                                       CCR 0
+sne   ONE_OP          Z    0x56C0      BW            AM_ADAT                                       CCR 0
+sge   ONE_OP          Z    0x5CC0      BW            AM_ADAT                                       CCR 0
+sgt   ONE_OP          Z    0x5EC0      BW            AM_ADAT                                       CCR 0
+shi   ONE_OP          Z    0x52C0      BW            AM_ADAT                                       CCR 0
+sle   ONE_OP          Z    0x5FC0      BW            AM_ADAT                                       CCR 0
+sls   ONE_OP          Z    0x53C0      BW            AM_ADAT                                       CCR 0
+slt   ONE_OP          Z    0x5DC0      BW            AM_ADAT                                       CCR 0
+smi   ONE_OP          Z    0x5BC0      BW            AM_ADAT                                       CCR 0
+spl   ONE_OP          Z    0x5AC0      BW            AM_ADAT                                       CCR 0
+svc   ONE_OP          Z    0x58C0      BW            AM_ADAT                                       CCR 0 
+svs   ONE_OP          Z    0x59C0      BW            AM_ADAT                                       CCR 0 
+st    ONE_OP          Z    0x50C0      BW            AM_ADAT                                       CC0 0
+## floating sets
+sfeq  ONE_OP          Z    0x0000      BW            AM_ADAT                                       CCR 0
+sfne ONE_OP          Z    0x0000      BW            AM_ADAT                                       CCR 0
+sfneq ONE_OP          Z    0x0000      BW            AM_ADAT                                       CCR 0
+sflt  ONE_OP          Z    0x0000      BW            AM_ADAT                                       CCR 0
+sfnlt ONE_OP          Z    0x0000      BW            AM_ADAT                                       CCR 0
+sfle  ONE_OP          Z    0x0000      BW            AM_ADAT                                       CCR 0
+sfnle ONE_OP          Z    0x0000      BW            AM_ADAT                                       CCR 0
+sfgt  ONE_OP          Z    0x0000      BW            AM_ADAT                                       CCR 0
+sfngt ONE_OP          Z    0x0000      BW            AM_ADAT                                       CCR 0
+sfge  ONE_OP          Z    0x0000      BW            AM_ADAT                                       CCR 0
+sfnge ONE_OP          Z    0x0000      BW            AM_ADAT                                       CCR 0
+
+## bit family
+btst   BIT,BOP    Z    0x0100,0x0800   BR,SPEC(1)    AM_DREG,AM_ADAT,AM_IMMED,AM_ADAT              CCX 0
+bclr   BIT,BOP    Z    0x0180,0x0880   BR,SPEC(0)    AM_DREG,AM_ADAT,AM_IMMED,AM_ADAT              CCX 0
+bset   BIT,BOP    Z    0x01C0,0x08C0   BR,SPEC(0)    AM_DREG,AM_ADAT,AM_IMMED,AM_ADAT              CCX 0
+bchg   BIT,BOP    Z    0x0140,0x0840   BR,SPEC(0)    AM_DREG,AM_ADAT,AM_IMMED,AM_ADAT              CCX 0
+bfchg  BITF       Z    0xEAC0          SPEC(4)       AM_DREG|AM_ACTRL                              CCX 0 68020
+bfclr  BITF       Z    0xECC0          SPEC(4)       AM_DREG|AM_ACTRL                              CCX 0 68020
+bfexts BITFR      L    0xEBC0          SPEC(5),LW    AM_DREG|AM_CTRL,AM_DREG                       CC2 0 68020
+bfextu BITFR      L    0xE9C0          SPEC(5),LW    AM_DREG|AM_CTRL,AM_DREG                       CC2 0 68020
+bfffo  BITFR      L    0xEDC0          SPEC(5),LW    AM_DREG|AM_CTRL,AM_DREG                       CC2 0 68020
+bfins  BITFR      Z    0xEFC0          LR,SPEC(4)    AM_DREG,AM_DREG|AM_ACTRL                      CCX 0 68020
+bfset  BITF       Z    0xEEC0          SPEC(4)       AM_DREG|AM_ACTRL                              CCX 0 68020
+bftst  BITF       Z    0xE8C0          SPEC(5)       AM_DREG|AM_ACTRL                              CCX 0 68020
+
+## breakpoint and trap family
+bkpt   TRAP            Z    0x4848      WR            AM_IMMED                                      CCX 0 68020
+chk    TWO_OP          W    0x4180,0,0xffff,0 WR,WR   AM_DATA,AM_DREG                               CCX 0
+chkl   TWO_OP          L    0x4100,0,0xffff,0 LR,LR   AM_DATA,AM_DREG                               CCX 0
+chk2b  CHK2            B    0x00C0,0x0800 BR,BR       AM_CTRL,AM_REG                                CCX 0 68020
+chk2w  CHK2            W    0x02C0,0x0800 WR,WR       AM_CTRL,AM_REG                                CCX 0 68020
+chk2l  CHK2            L    0x04C0,0x0800 LR,LR       AM_CTRL,AM_REG                                CCX 0 68020
+trap   TRAP            Z    0x4E40      LR            AM_IMMED                                      CCX 0
+trapv  NO              Z    0x4E76      X             0                                             CC0 0
+trapt  NO              Z    0x50FC      X             0                                             CC0 0 68020
+traptw STOP            W    0x50FA      WR            AM_IMMED                                      CC0 0 68020
+traptl STOP            L    0x50FB      LR            AM_IMMED                                      CC0 0 68020
+trapf  NO              Z    0x51FC      X             0                                             CC0 0 68020
+trapfw STOP            W    0x51FA      WR            AM_IMMED                                      CC0 0 68020
+trapfl STOP            L    0x51FB      LR            AM_IMMED                                      CC0 0 68020
+traphi  NO             Z    0x52FC      X             0                                             CC0 0 68020
+traphiw STOP           W    0x52FA      WR            AM_IMMED                                      CC0 0 68020
+traphil STOP           L    0x52FB      LR            AM_IMMED                                      CC0 0 68020
+trapls  NO             Z    0x53FC      X             0                                             CC0 0 68020
+traplsw STOP           W    0x53FA      WR            AM_IMMED                                      CC0 0 68020
+traplsl STOP           L    0x53FB      LR            AM_IMMED                                      CC0 0 68020
+trapcc  NO             Z    0x54FC      X             0                                             CC0 0 68020
+trapccw STOP           W    0x54FA      WR            AM_IMMED                                      CC0 0 68020
+trapccl STOP           L    0x54FB      LR            AM_IMMED                                      CC0 0 68020
+trapcs  NO             Z    0x55FC      X             0                                             CC0 0 68020
+trapcsw STOP           W    0x55FA      WR            AM_IMMED                                      CC0 0 68020
+trapcsl STOP           L    0x55FB      LR            AM_IMMED                                      CC0 0 68020
+trapne  NO             Z    0x56FC      X             0                                             CC0 0 68020
+trapnew STOP           W    0x56FA      WR            AM_IMMED                                      CC0 0 68020
+trapnel STOP           L    0x56FB      LR            AM_IMMED                                      CC0 0 68020
+trapeq  NO             Z    0x57FC      X             0                                             CC0 0 68020
+trapeqw STOP           W    0x57FA      WR            AM_IMMED                                      CC0 0 68020
+trapeql STOP           L    0x57FB      LR            AM_IMMED                                      CC0 0 68020
+trapvc  NO             Z    0x58FC      X             0                                             CC0 0 68020
+trapvcw STOP           W    0x58FA      WR            AM_IMMED                                      CC0 0 68020
+trapvcl STOP           L    0x58FB      LR            AM_IMMED                                      CC0 0 68020
+trapvs  NO             Z    0x59FC      X             0                                             CC0 0 68020
+trapvsw STOP           W    0x59FA      WR            AM_IMMED                                      CC0 0 68020
+trapvsl STOP           L    0x59FB      LR            AM_IMMED                                      CC0 0 68020
+trappl  NO             Z    0x5AFC      X             0                                             CC0 0 68020
+trapplw STOP           W    0x5AFA      WR            AM_IMMED                                      CC0 0 68020
+trappll STOP           L    0x5AFB      LR            AM_IMMED                                      CC0 0 68020
+trapmi  NO             Z    0x5BFC      X             0                                             CC0 0 68020
+trapmiw STOP           W    0x5BFA      WR            AM_IMMED                                      CC0 0 68020
+trapmil STOP           L    0x5BFB      LR            AM_IMMED                                      CC0 0 68020
+trapge  NO             Z    0x5CFC      X             0                                             CC0 0 68020
+trapgew STOP           W    0x5CFA      WR            AM_IMMED                                      CC0 0 68020
+trapgel STOP           L    0x5CFB      LR            AM_IMMED                                      CC0 0 68020
+traplt  NO             Z    0x5DFC      X             0                                             CC0 0 68020
+trapltw STOP           W    0x5DFA      WR            AM_IMMED                                      CC0 0 68020
+trapltl STOP           L    0x5DFB      LR            AM_IMMED                                      CC0 0 68020
+trapgt  NO             Z    0x5EFC      X             0                                             CC0 0 68020
+trapgtw STOP           W    0x5EFA      WR            AM_IMMED                                      CC0 0 68020
+trapgtl STOP           L    0x5EFB      LR            AM_IMMED                                      CC0 0 68020
+traple  NO             Z    0x5FFC      X             0                                             CC0 0 68020
+traplew STOP           W    0x5FFA      WR            AM_IMMED                                      CC0 0 68020
+traplel STOP           L    0x5FFB      LR            AM_IMMED                                      CC0 0 68020
+
+## semiphore ops
+casb   CAS1            B    0x0AC0      BR+BW,BR,BR+BW AM_DREG,AM_DREG,AM_AMEM                      CCX 0 68020
+casw   CAS1            W    0x0CC0      WR+WW,WR,WR+WW AM_DREG,AM_DREG,AM_AMEM                      CCX 0 68020
+casl   CAS1            L    0x0EC0      LR+LW,LR,LR+LW AM_DREG,AM_DREG,AM_AMEM                      CCX 0 68020
+cas2b  CAS2            B    0x0AFC      BR+BW,BR,BR+BW AM_REGPAIR,AM_REGPAIR,AM_REGPAIR             CCX 0 68020
+cas2w  CAS2            W    0x0CFC      WR+WW,WR,WR+WW AM_REGPAIR,AM_REGPAIR,AM_REGPAIR             CCX 0 68020
+cas2l  CAS2            L    0x0EFC      LR+LW,LR,LR+LW AM_REGPAIR,AM_REGPAIR,AM_REGPAIR             CCX 0 68020
+tas    ONE_OP          Z    0x4AC0      BR+BW         AM_ADAT                                       CCX 0
+
+## others
+extl   REG_OP,EXT      L    0x48C0      WR+LW         AM_DREG                                       CC1 0
+extw   REG_OP,EXT      W    0x4880      BR+WW         AM_DREG                                       CC1 0
+extbl  REG_OP,EXT      L    0x49C0      BR+LW         AM_DREG                                       CC1 0 68020
+lea    TWO_OP,LEA      L    0,0x41C0    0,LW          AM_CTRL,AM_AREG                               CC0 0
+link   LINK,LINK       Z    0x4E50,0x4808 0,SPEC(3)   AM_AREG,AM_IMMED                              CC0 0
+nop    NO              Z    0x4E71      X             0                                             CC0 0
+pea    ONE_OP,PEA      Z    0x4840,0    SPEC(3)       AM_CTRL                                       CC0 0
+reset  NO              Z    0x4E70      X             0                                             CC0 0
+rte    NO,EXIT         Z    0x4E73      X             0                                             CCX 0
+rtr    NO,EXIT         Z    0x4E77      X             0                                             CCX 0
+rts    RTS,EXIT        Z    0x4E75,0x4E74 SPEC(7)     AM_IMMED                                      CCX 0
+rtm    TRAP            Z    0x06C0      LW            AM_REG                                        CCX 0 68020
+stop   STOP            W    0x4E72      WR            AM_IMMED                                      CCX 0
+swap   REG_OP          Z    0x4840      LR+LW         AM_DREG                                       CCX 0
+unlk   REG_OP,UNLK     Z    0x4E58      SPEC(3)       AM_AREG                                       CC0 0
+
+## pseudo ops
+.long  PSEUDO     BYTE,LONG     L       -1            1
+.word  PSEUDO     BYTE,WORD     W       -1            1
+.byte  PSEUDO     BYTE,BYTE     B       -1            0
+.text  PSEUDO     DATA,TEXT     Z        0
+.data  PSEUDO     DATA,DATA     Z        0
+.data1 PSEUDO     DATA,DATA1    Z        0
+.data2 PSEUDO     DATA,DATA2    Z        0
+.bss   PSEUDO     DATA,BSS      Z        0
+.globl PSEUDO    GLOBL,GLOBL    Z       -1
+.comm  PSEUDO     COMM,COMM     Z        2            0             0      AM_NORMAL,AM_NORMAL
+.even  PSEUDO     EVEN,EVEN     Z        0
+.align PSEUDO     ALIGN,ALIGN   Z        1            0             0      AM_NORMAL
+.asciz PSEUDO     ASCII,ASCIZ   Z       -1            0             1
+.ascii PSEUDO     ASCII,ASCII   Z       -1            0             0
+.single PSEUDO    FLOAT,FLOAT   Z       -1            1             0
+.double PSEUDO    FLOAT,DOUBLE  Z       -1            1             0
+.stabs PSEUDO     STAB,STABS    Z       -1
+.stabd PSEUDO     STAB,STABD    Z       -1
+.stabn PSEUDO     STAB,STABN    Z       -1
+.skip  PSEUDO     SKIP,SKIP     Z        1            0             0      AM_NORMAL
+.lcomm PSEUDO     COMM,LCOMM    Z        2            0             0      AM_NORMAL,AM_NORMAL
+.fcpid  PSEUDO     CPID,CPID     Z        1            0             0      AM_NORMAL
+
+## MOVE Floating Point Instructions
+
+fmovex	cp_move,MOVE	X	0x4000+X_SIZE,0x6000+X_SIZE,0x00 XR,FW AM_ADDR,AM_FREG,AM_FREG,AM_AMEM,AM_FREG,AM_FREG	FCC  0 68881
+fmovel	cp_move,MOVE	L	0x4000+L_SIZE,0x6000+L_SIZE,0x8000,0xa000	LR,FW	AM_DATA,AM_FREG,AM_FREG,AM_ADAT,AM_DATA,AM_FCTRLREG,AM_FCTRLREG,AM_ADAT	FCC  0 68881
+fmoves	cp_move,MOVE	S	0x4000+S_SIZE,0x6000+S_SIZE	SR,FW	AM_DATA,AM_FREG,AM_FREG,AM_ADAT	FCC  0 68881
+
+## kluge: fmovp fpm,ea  uses d7 as k-factor!
+
+fmovep	cp_move,MOVE	P	0x4000+P_SIZE,0x6070+C_SIZE	PR,FW	AM_ADDR,AM_FREG,AM_FREG,AM_AMEM	FCC  0 68881
+fmovew	cp_move,MOVE	W	0x4000+W_SIZE,0x6000+W_SIZE	WR,FW	AM_DATA,AM_FREG,AM_FREG,AM_ADAT	FCC  0 68881
+fmoved	cp_move,MOVE	D	0x4000+D_SIZE,0x6000+D_SIZE	DR,FW	AM_MEM,AM_FREG,AM_FREG,AM_AMEM	FCC  0 68881
+fmoveb	cp_move,MOVE	B	0x4000+B_SIZE,0x6000+B_SIZE	BR,FW	AM_DATA,AM_FREG,AM_FREG,AM_ADAT FCC  0 68881
+
+## Monadic Floating point instructions
+
+fabsx	cp_general	X	0x4018+X_SIZE,0x18 XR,FW AM_ADDR,AM_FREG,AM_FREG,AM_FREG FCC  0 68881
+fabsl	cp_general	L	0x4018+L_SIZE	LR,FW	AM_DATA,AM_FREG FCC  0 68881
+fabss	cp_general	S	0x4018+S_SIZE	SR,FW	AM_DATA,AM_FREG FCC  0 68881
+fabsp	cp_general	P	0x4018+P_SIZE	PR,FW	AM_ADDR,AM_FREG FCC  0 68881
+fabsw	cp_general	W	0x4018+W_SIZE	WR,FW	AM_DATA,AM_FREG FCC  0 68881
+fabsd	cp_general	D	0x4018+D_SIZE	DR,FW	AM_MEM,AM_FREG FCC  0 68881
+fabsb	cp_general	B	0x4018+B_SIZE	BR,FW	AM_DATA,AM_FREG FCC  0 68881
+
+facosx	cp_general	X	0x401c+X_SIZE,0x1c XR,FW AM_ADDR,AM_FREG,AM_FREG,AM_FREG FCC  0 68881
+facosl	cp_general	L	0x401c+L_SIZE	LR,FW	AM_DATA,AM_FREG FCC  0 68881
+facoss	cp_general	S	0x401c+S_SIZE	SR,FW	AM_DATA,AM_FREG FCC  0 68881
+facosp	cp_general	P	0x401c+P_SIZE	PR,FW	AM_ADDR,AM_FREG FCC  0 68881
+facosw	cp_general	W	0x401c+W_SIZE	WR,FW	AM_DATA,AM_FREG FCC  0 68881
+facosd	cp_general	D	0x401c+D_SIZE	DR,FW	AM_MEM,AM_FREG FCC  0 68881
+facosb	cp_general	B	0x401c+B_SIZE	BR,FW	AM_DATA,AM_FREG FCC  0 68881
+
+fasinx	cp_general	X	0x400c+X_SIZE,0x0c XR,FW AM_ADDR,AM_FREG,AM_FREG,AM_FREG FCC  0 68881
+fasinl	cp_general	L	0x400c+L_SIZE	LR,FW	AM_DATA,AM_FREG FCC  0 68881
+fasins	cp_general	S	0x400c+S_SIZE	SR,FW	AM_DATA,AM_FREG FCC  0 68881
+fasinp	cp_general	P	0x400c+P_SIZE	PR,FW	AM_ADDR,AM_FREG FCC  0 68881
+fasinw	cp_general	W	0x400c+W_SIZE	WR,FW	AM_DATA,AM_FREG FCC  0 68881
+fasind	cp_general	D	0x400c+D_SIZE	DR,FW	AM_MEM,AM_FREG FCC  0 68881
+fasinb	cp_general	B	0x400c+B_SIZE	BR,FW	AM_DATA,AM_FREG FCC  0 68881
+
+fatanx	cp_general	X	0x400a+X_SIZE,0x0a XR,FW AM_ADDR,AM_FREG,AM_FREG,AM_FREG FCC  0 68881
+fatanl	cp_general	L	0x400a+L_SIZE	LR,FW	AM_DATA,AM_FREG FCC  0 68881
+fatans	cp_general	S	0x400a+S_SIZE	SR,FW	AM_DATA,AM_FREG FCC  0 68881
+fatanp	cp_general	P	0x400a+P_SIZE	PR,FW	AM_ADDR,AM_FREG FCC  0 68881
+fatanw	cp_general	W	0x400a+W_SIZE	WR,FW	AM_DATA,AM_FREG FCC  0 68881
+fatand	cp_general	D	0x400a+D_SIZE	DR,FW	AM_MEM,AM_FREG FCC  0 68881
+fatanb	cp_general	B	0x400a+B_SIZE	BR,FW	AM_DATA,AM_FREG FCC  0 68881
+
+fatanhx	cp_general	X	0x400d+X_SIZE,0x0d XR,FW AM_ADDR,AM_FREG,AM_FREG,AM_FREG FCC  0 68881
+fatanhl	cp_general	L	0x400d+L_SIZE	LR,FW	AM_DATA,AM_FREG FCC  0 68881
+fatanhs	cp_general	S	0x400d+S_SIZE	SR,FW	AM_DATA,AM_FREG FCC  0 68881
+fatanhp	cp_general	P	0x400d+P_SIZE	PR,FW	AM_ADDR,AM_FREG FCC  0 68881
+fatanhw	cp_general	W	0x400d+W_SIZE	WR,FW	AM_DATA,AM_FREG FCC  0 68881
+fatanhd	cp_general	D	0x400d+D_SIZE	DR,FW	AM_MEM,AM_FREG FCC  0 68881
+fatanhb	cp_general	B	0x400d+B_SIZE	BR,FW	AM_DATA,AM_FREG FCC  0 68881
+
+fcosx	cp_general	X	0x401d+X_SIZE,0x1d XR,FW AM_ADDR,AM_FREG,AM_FREG,AM_FREG FCC  0 68881
+fcosl	cp_general	L	0x401d+L_SIZE	LR,FW	AM_DATA,AM_FREG FCC  0 68881
+fcoss	cp_general	S	0x401d+S_SIZE	SR,FW	AM_DATA,AM_FREG FCC  0 68881
+fcosp	cp_general	P	0x401d+P_SIZE	PR,FW	AM_ADDR,AM_FREG FCC  0 68881
+fcosw	cp_general	W	0x401d+W_SIZE	WR,FW	AM_DATA,AM_FREG FCC  0 68881
+fcosd	cp_general	D	0x401d+D_SIZE	DR,FW	AM_MEM,AM_FREG FCC  0 68881
+fcosb	cp_general	B	0x401d+B_SIZE	BR,FW	AM_DATA,AM_FREG FCC  0 68881
+
+fcoshx	cp_general	X	0x4019+X_SIZE,0x19 XR,FW AM_ADDR,AM_FREG,AM_FREG,AM_FREG FCC  0 68881
+fcoshl	cp_general	L	0x4019+L_SIZE	LR,FW	AM_DATA,AM_FREG FCC  0 68881
+fcoshs	cp_general	S	0x4019+S_SIZE	SR,FW	AM_DATA,AM_FREG FCC  0 68881
+fcoshp	cp_general	P	0x4019+P_SIZE	PR,FW	AM_ADDR,AM_FREG FCC  0 68881
+fcoshw	cp_general	W	0x4019+W_SIZE	WR,FW	AM_DATA,AM_FREG FCC  0 68881
+fcoshd	cp_general	D	0x4019+D_SIZE	DR,FW	AM_MEM,AM_FREG FCC  0 68881
+fcoshb	cp_general	B	0x4019+B_SIZE	BR,FW	AM_DATA,AM_FREG FCC  0 68881
+
+fetoxx	cp_general	X	0x4010+X_SIZE,0x10 XR,FW AM_ADDR,AM_FREG,AM_FREG,AM_FREG FCC  0 68881
+fetoxl	cp_general	L	0x4010+L_SIZE	LR,FW	AM_DATA,AM_FREG FCC  0 68881
+fetoxs	cp_general	S	0x4010+S_SIZE	SR,FW	AM_DATA,AM_FREG FCC  0 68881
+fetoxp	cp_general	P	0x4010+P_SIZE	PR,FW	AM_ADDR,AM_FREG FCC  0 68881
+fetoxw	cp_general	W	0x4010+W_SIZE	WR,FW	AM_DATA,AM_FREG FCC  0 68881
+fetoxd	cp_general	D	0x4010+D_SIZE	DR,FW	AM_MEM,AM_FREG FCC  0 68881
+fetoxb	cp_general	B	0x4010+B_SIZE	BR,FW	AM_DATA,AM_FREG FCC  0 68881
+
+fetoxm1x	cp_general	X	0x4008+X_SIZE,0x08 XR,FW AM_ADDR,AM_FREG,AM_FREG,AM_FREG FCC  0 68881
+fetoxm1l	cp_general	L	0x4008+L_SIZE	LR,FW	AM_DATA,AM_FREG FCC  0 68881
+fetoxm1s	cp_general	S	0x4008+S_SIZE	SR,FW	AM_DATA,AM_FREG FCC  0 68881
+fetoxm1p	cp_general	P	0x4008+P_SIZE	PR,FW	AM_ADDR,AM_FREG FCC  0 68881
+fetoxm1w	cp_general	W	0x4008+W_SIZE	WR,FW	AM_DATA,AM_FREG FCC  0 68881
+fetoxm1d	cp_general	D	0x4008+D_SIZE	DR,FW	AM_MEM,AM_FREG FCC  0 68881
+fetoxm1b	cp_general	B	0x4008+B_SIZE	BR,FW	AM_DATA,AM_FREG FCC  0 68881
+
+fgetexpx	cp_general	X	0x401e+X_SIZE,0x1e XR,FW AM_ADDR,AM_FREG,AM_FREG,AM_FREG FCC  0 68881
+fgetexpl	cp_general	L	0x401e+L_SIZE	LR,FW	AM_DATA,AM_FREG FCC  0 68881
+fgetexps	cp_general	S	0x401e+S_SIZE	SR,FW	AM_DATA,AM_FREG FCC  0 68881
+fgetexpp	cp_general	P	0x401e+P_SIZE	PR,FW	AM_ADDR,AM_FREG FCC  0 68881
+fgetexpw	cp_general	W	0x401e+W_SIZE	WR,FW	AM_DATA,AM_FREG FCC  0 68881
+fgetexpd	cp_general	D	0x401e+D_SIZE	DR,FW	AM_MEM,AM_FREG FCC  0 68881
+fgetexpb	cp_general	B	0x401e+B_SIZE	BR,FW	AM_DATA,AM_FREG FCC  0 68881
+
+fgetmanx	cp_general	X	0x401f+X_SIZE,0x1f XR,FW AM_ADDR,AM_FREG,AM_FREG,AM_FREG FCC  0 68881
+fgetmanl	cp_general	L	0x401f+L_SIZE	LR,FW	AM_DATA,AM_FREG FCC  0 68881
+fgetmans	cp_general	S	0x401f+S_SIZE	SR,FW	AM_DATA,AM_FREG FCC  0 68881
+fgetmanp	cp_general	P	0x401f+P_SIZE	PR,FW	AM_ADDR,AM_FREG FCC  0 68881
+fgetmanw	cp_general	W	0x401f+W_SIZE	WR,FW	AM_DATA,AM_FREG FCC  0 68881
+fgetmand	cp_general	D	0x401f+D_SIZE	DR,FW	AM_MEM,AM_FREG FCC  0 68881
+fgetmanb	cp_general	B	0x401f+B_SIZE	BR,FW	AM_DATA,AM_FREG FCC  0 68881
+
+fintx	cp_general	X	0x4001+X_SIZE,0x01 XR,FW AM_ADDR,AM_FREG,AM_FREG,AM_FREG FCC  0 68881
+fintl	cp_general	L	0x4001+L_SIZE	LR,FW	AM_DATA,AM_FREG FCC  0 68881
+fints	cp_general	S	0x4001+S_SIZE	SR,FW	AM_DATA,AM_FREG FCC  0 68881
+fintp	cp_general	P	0x4001+P_SIZE	PR,FW	AM_ADDR,AM_FREG FCC  0 68881
+fintw	cp_general	W	0x4001+W_SIZE	WR,FW	AM_DATA,AM_FREG FCC  0 68881
+fintd	cp_general	D	0x4001+D_SIZE	DR,FW	AM_MEM,AM_FREG FCC  0 68881
+fintb	cp_general	B	0x4001+B_SIZE	BR,FW	AM_DATA,AM_FREG FCC  0 68881
+
+fintrzx	cp_general	X	0x4003+X_SIZE,0x01 XR,FW AM_ADDR,AM_FREG,AM_FREG,AM_FREG FCC  0 68881
+fintrzl	cp_general	L	0x4003+L_SIZE	LR,FW	AM_DATA,AM_FREG FCC  0 68881
+fintrzs	cp_general	S	0x4003+S_SIZE	SR,FW	AM_DATA,AM_FREG FCC  0 68881
+fintrzp	cp_general	P	0x4003+P_SIZE	PR,FW	AM_ADDR,AM_FREG FCC  0 68881
+fintrzw	cp_general	W	0x4003+W_SIZE	WR,FW	AM_DATA,AM_FREG FCC  0 68881
+fintrzd	cp_general	D	0x4003+D_SIZE	DR,FW	AM_MEM,AM_FREG FCC  0 68881
+fintrzb	cp_general	B	0x4003+B_SIZE	BR,FW	AM_DATA,AM_FREG FCC  0 68881
+
+flog10x	cp_general	X	0x4015+X_SIZE,0x15 XR,FW AM_ADDR,AM_FREG,AM_FREG,AM_FREG FCC  0 68881
+flog10l	cp_general	L	0x4015+L_SIZE	LR,FW	AM_DATA,AM_FREG FCC  0 68881
+flog10s	cp_general	S	0x4015+S_SIZE	SR,FW	AM_DATA,AM_FREG FCC  0 68881
+flog10p	cp_general	P	0x4015+P_SIZE	PR,FW	AM_ADDR,AM_FREG FCC  0 68881
+flog10w	cp_general	W	0x4015+W_SIZE	WR,FW	AM_DATA,AM_FREG FCC  0 68881
+flog10d	cp_general	D	0x4015+D_SIZE	DR,FW	AM_MEM,AM_FREG FCC  0 68881
+flog10b	cp_general	B	0x4015+B_SIZE	BR,FW	AM_DATA,AM_FREG FCC  0 68881
+
+flog2x	cp_general	X	0x4016+X_SIZE,0x16 XR,FW AM_ADDR,AM_FREG,AM_FREG,AM_FREG	FCC  0 68881
+flog2l	cp_general	L	0x4016+L_SIZE	LR,FW	AM_DATA,AM_FREG	FCC  0 68881
+flog2s	cp_general	S	0x4016+S_SIZE	SR,FW	AM_DATA,AM_FREG	FCC  0 68881
+flog2p	cp_general	P	0x4016+P_SIZE	PR,FW	AM_ADDR,AM_FREG	FCC  0 68881
+flog2w	cp_general	W	0x4016+W_SIZE	WR,FW	AM_DATA,AM_FREG	FCC  0 68881
+flog2d	cp_general	D	0x4016+D_SIZE	DR,FW	AM_MEM,AM_FREG	FCC  0 68881
+flog2b	cp_general	B	0x4016+B_SIZE	BR,FW	AM_DATA,AM_FREG	FCC  0 68881
+
+flognx	cp_general	X	0x4014+X_SIZE,0x15 XR,FW AM_ADDR,AM_FREG,AM_FREG,AM_FREG	FCC  0 68881
+flognl	cp_general	L	0x4014+L_SIZE	LR,FW	AM_DATA,AM_FREG	FCC  0 68881
+flogns	cp_general	S	0x4014+S_SIZE	SR,FW	AM_DATA,AM_FREG	FCC  0 68881
+flognp	cp_general	P	0x4014+P_SIZE	PR,FW	AM_ADDR,AM_FREG	FCC  0 68881
+flognw	cp_general	W	0x4014+W_SIZE	WR,FW	AM_DATA,AM_FREG	FCC  0 68881
+flognd	cp_general	D	0x4014+D_SIZE	DR,FW	AM_MEM,AM_FREG	FCC  0 68881
+flognb	cp_general	B	0x4014+B_SIZE	BR,FW	AM_DATA,AM_FREG	FCC  0 68881
+
+flognp1x	cp_general	X	0x4006+X_SIZE,0x06 XR,FW AM_ADDR,AM_FREG,AM_FREG,AM_FREG	FCC  0 68881
+flognp1l	cp_general	L	0x4006+L_SIZE	LR,FW	AM_DATA,AM_FREG	FCC  0 68881
+flognp1s	cp_general	S	0x4006+S_SIZE	SR,FW	AM_DATA,AM_FREG	FCC  0 68881
+flognp1p	cp_general	P	0x4006+P_SIZE	PR,FW	AM_ADDR,AM_FREG	FCC  0 68881
+flognp1w	cp_general	W	0x4006+W_SIZE	WR,FW	AM_DATA,AM_FREG	FCC  0 68881
+flognp1d	cp_general	D	0x4006+D_SIZE	DR,FW	AM_MEM,AM_FREG	FCC  0 68881
+flognp1b	cp_general	B	0x4006+B_SIZE	BR,FW	AM_DATA,AM_FREG	FCC  0 68881
+
+fnegx	cp_general	X	0x401a+X_SIZE,0x1a XR,FW AM_ADDR,AM_FREG,AM_FREG,AM_FREG	FCC  0 68881
+fnegl	cp_general	L	0x401a+L_SIZE	LR,FW	AM_DATA,AM_FREG	FCC  0 68881
+fnegs	cp_general	S	0x401a+S_SIZE	SR,FW	AM_DATA,AM_FREG	FCC  0 68881
+fnegp	cp_general	P	0x401a+P_SIZE	PR,FW	AM_ADDR,AM_FREG	FCC  0 68881
+fnegw	cp_general	W	0x401a+W_SIZE	WR,FW	AM_DATA,AM_FREG	FCC  0 68881
+fnegd	cp_general	D	0x401a+D_SIZE	DR,FW	AM_MEM,AM_FREG	FCC  0 68881
+fnegb	cp_general	B	0x401a+B_SIZE	BR,FW	AM_DATA,AM_FREG	FCC  0 68881
+
+fsinx	cp_general	X	0x400e+X_SIZE,0x0e XR,FW AM_ADDR,AM_FREG,AM_FREG,AM_FREG	FCC  0 68881
+fsinl	cp_general	L	0x400e+L_SIZE	LR,FW	AM_DATA,AM_FREG	FCC  0 68881
+fsins	cp_general	S	0x400e+S_SIZE	SR,FW	AM_DATA,AM_FREG	FCC  0 68881
+fsinp	cp_general	P	0x400e+P_SIZE	PR,FW	AM_ADDR,AM_FREG	FCC  0 68881
+fsinw	cp_general	W	0x400e+W_SIZE	WR,FW	AM_DATA,AM_FREG	FCC  0 68881
+fsind	cp_general	D	0x400e+D_SIZE	DR,FW	AM_MEM,AM_FREG	FCC  0 68881
+fsinb	cp_general	B	0x400e+B_SIZE	BR,FW	AM_DATA,AM_FREG	FCC  0 68881
+
+fsinhx	cp_general	X	0x4002+X_SIZE,0x02 XR,FW AM_ADDR,AM_FREG,AM_FREG,AM_FREG	FCC  0 68881
+fsinhl	cp_general	L	0x4002+L_SIZE	LR,FW	AM_DATA,AM_FREG	FCC  0 68881
+fsinhs	cp_general	S	0x4002+S_SIZE	SR,FW	AM_DATA,AM_FREG	FCC  0 68881
+fsinhp	cp_general	P	0x4002+P_SIZE	PR,FW	AM_ADDR,AM_FREG	FCC  0 68881
+fsinhw	cp_general	W	0x4002+W_SIZE	WR,FW	AM_DATA,AM_FREG	FCC  0 68881
+fsinhd	cp_general	D	0x4002+D_SIZE	DR,FW	AM_MEM,AM_FREG	FCC  0 68881
+fsinhb	cp_general	B	0x4002+B_SIZE	BR,FW	AM_DATA,AM_FREG	FCC  0 68881
+
+fsqrtx	cp_general	X	0x4004+X_SIZE,0x04 XR,FW AM_ADDR,AM_FREG,AM_FREG,AM_FREG	FCC  0 68881
+fsqrtl	cp_general	L	0x4004+L_SIZE	LR,FW	AM_DATA,AM_FREG	FCC  0 68881
+fsqrts	cp_general	S	0x4004+S_SIZE	SR,FW	AM_DATA,AM_FREG	FCC  0 68881
+fsqrtp	cp_general	P	0x4004+P_SIZE	PR,FW	AM_ADDR,AM_FREG	FCC  0 68881
+fsqrtw	cp_general	W	0x4004+W_SIZE	WR,FW	AM_DATA,AM_FREG	FCC  0 68881
+fsqrtd	cp_general	D	0x4004+D_SIZE	DR,FW	AM_MEM,AM_FREG	FCC  0 68881
+fsqrtb	cp_general	B	0x4004+B_SIZE	BR,FW	AM_DATA,AM_FREG	FCC  0 68881
+
+ftanx	cp_general	X	0x400f+X_SIZE,0x0f XR,FW AM_ADDR,AM_FREG,AM_FREG,AM_FREG	FCC  0 68881
+ftanl	cp_general	L	0x400f+L_SIZE	LR,FW	AM_DATA,AM_FREG	FCC  0 68881
+ftans	cp_general	S	0x400f+S_SIZE	SR,FW	AM_DATA,AM_FREG	FCC  0 68881
+ftanp	cp_general	P	0x400f+P_SIZE	PR,FW	AM_ADDR,AM_FREG	FCC  0 68881
+ftanw	cp_general	W	0x400f+W_SIZE	WR,FW	AM_DATA,AM_FREG	FCC  0 68881
+ftand	cp_general	D	0x400f+D_SIZE	DR,FW	AM_MEM,AM_FREG	FCC  0 68881
+ftanb	cp_general	B	0x400f+B_SIZE	BR,FW	AM_DATA,AM_FREG	FCC  0 68881
+
+ftanhx	cp_general	X	0x4009+X_SIZE,0x09 XR,FW AM_ADDR,AM_FREG,AM_FREG,AM_FREG	FCC  0 68881
+ftanhl	cp_general	L	0x4009+L_SIZE	LR,FW	AM_DATA,AM_FREG	FCC  0 68881
+ftanhs	cp_general	S	0x4009+S_SIZE	SR,FW	AM_DATA,AM_FREG	FCC  0 68881
+ftanhp	cp_general	P	0x4009+P_SIZE	PR,FW	AM_ADDR,AM_FREG	FCC  0 68881
+ftanhw	cp_general	W	0x4009+W_SIZE	WR,FW	AM_DATA,AM_FREG	FCC  0 68881
+ftanhd	cp_general	D	0x4009+D_SIZE	DR,FW	AM_MEM,AM_FREG	FCC  0 68881
+ftanhb	cp_general	B	0x4009+B_SIZE	BR,FW	AM_DATA,AM_FREG	FCC  0 68881
+
+ftentoxx	cp_general	X	0x4012+X_SIZE,0x12 XR,FW AM_ADDR,AM_FREG,AM_FREG,AM_FREG	FCC  0 68881
+ftentoxl	cp_general	L	0x4012+L_SIZE	LR,FW	AM_DATA,AM_FREG	FCC  0 68881
+ftentoxs	cp_general	S	0x4012+S_SIZE	SR,FW	AM_DATA,AM_FREG	FCC  0 68881
+ftentoxp	cp_general	P	0x4012+P_SIZE	PR,FW	AM_ADDR,AM_FREG	FCC  0 68881
+ftentoxw	cp_general	W	0x4012+W_SIZE	WR,FW	AM_DATA,AM_FREG	FCC  0 68881
+ftentoxd	cp_general	D	0x4012+D_SIZE	DR,FW	AM_MEM,AM_FREG	FCC  0 68881
+ftentoxb	cp_general	B	0x4012+B_SIZE	BR,FW	AM_DATA,AM_FREG	FCC  0 68881
+
+ftwotoxx	cp_general	X	0x4011+X_SIZE,0x11 XR,FW AM_ADDR,AM_FREG,AM_FREG,AM_FREG	FCC  0 68881
+ftwotoxl	cp_general	L	0x4011+L_SIZE	LR,FW	AM_DATA,AM_FREG	FCC  0 68881
+ftwotoxs	cp_general	S	0x4011+S_SIZE	SR,FW	AM_DATA,AM_FREG	FCC  0 68881
+ftwotoxp	cp_general	P	0x4011+P_SIZE	PR,FW	AM_ADDR,AM_FREG	FCC  0 68881
+ftwotoxw	cp_general	W	0x4011+W_SIZE	WR,FW	AM_DATA,AM_FREG	FCC  0 68881
+ftwotoxd	cp_general	D	0x4011+D_SIZE	DR,FW	AM_MEM,AM_FREG	FCC  0 68881
+ftwotoxb	cp_general	B	0x4011+B_SIZE	BR,FW	AM_DATA,AM_FREG	FCC  0 68881
+
+## Dyadic Floating point instructions
+
+faddx	cp_general	X	0x4022+X_SIZE,0x22 XR,FR+FW AM_ADDR,AM_FREG,AM_FREG,AM_FREG	FCC  0 68881
+faddl	cp_general	L	0x4022+L_SIZE	LR,FR+FW	AM_DATA,AM_FREG	FCC  0 68881
+fadds	cp_general	S	0x4022+S_SIZE	SR,FR+FW	AM_DATA,AM_FREG	FCC  0 68881
+faddp	cp_general	P	0x4022+P_SIZE	PR,FR+FW	AM_ADDR,AM_FREG	FCC  0 68881
+faddw	cp_general	W	0x4022+W_SIZE	WR,FR+FW	AM_DATA,AM_FREG	FCC  0 68881
+faddd	cp_general	D	0x4022+D_SIZE	DR,FR+FW	AM_MEM,AM_FREG	FCC  0 68881
+faddb	cp_general	B	0x4022+B_SIZE	BR,FR+FW	AM_DATA,AM_FREG	FCC  0 68881
+
+fdivx	cp_general	X	0x4020+X_SIZE,0x20 XR,FR+FW AM_ADDR,AM_FREG,AM_FREG,AM_FREG	FCC  0 68881
+fdivl	cp_general	L	0x4020+L_SIZE	LR,FR+FW	AM_DATA,AM_FREG	FCC  0 68881
+fdivs	cp_general	S	0x4020+S_SIZE	SR,FR+FW	AM_DATA,AM_FREG	FCC  0 68881
+fdivp	cp_general	P	0x4020+P_SIZE	PR,FR+FW	AM_ADDR,AM_FREG	FCC  0 68881
+fdivw	cp_general	W	0x4020+W_SIZE	WR,FR+FW	AM_DATA,AM_FREG	FCC  0 68881
+fdivd	cp_general	D	0x4020+D_SIZE	DR,FR+FW	AM_MEM,AM_FREG	FCC  0 68881
+fdivb	cp_general	B	0x4020+B_SIZE	BR,FR+FW	AM_DATA,AM_FREG	FCC  0 68881
+
+fmodx	cp_general	X	0x4021+X_SIZE,0x21 XR,FR+FW AM_ADDR,AM_FREG,AM_FREG,AM_FREG	FCC  0 68881
+fmodl	cp_general	L	0x4021+L_SIZE	LR,FR+FW	AM_DATA,AM_FREG	FCC  0 68881
+fmods	cp_general	S	0x4021+S_SIZE	SR,FR+FW	AM_DATA,AM_FREG	FCC  0 68881
+fmodp	cp_general	P	0x4021+P_SIZE	PR,FR+FW	AM_ADDR,AM_FREG	FCC  0 68881
+fmodw	cp_general	W	0x4021+W_SIZE	WR,FR+FW	AM_DATA,AM_FREG	FCC  0 68881
+fmodd	cp_general	D	0x4021+D_SIZE	DR,FR+FW	AM_MEM,AM_FREG	FCC  0 68881
+fmodb	cp_general	B	0x4021+B_SIZE	BR,FR+FW	AM_DATA,AM_FREG	FCC  0 68881
+
+fmulx	cp_general	X	0x4023+X_SIZE,0x23 XR,FR+FW AM_ADDR,AM_FREG,AM_FREG,AM_FREG	FCC  0 68881
+fmull	cp_general	L	0x4023+L_SIZE	LR,FR+FW	AM_DATA,AM_FREG	FCC  0 68881
+fmuls	cp_general	S	0x4023+S_SIZE	SR,FR+FW	AM_DATA,AM_FREG	FCC  0 68881
+fmulp	cp_general	P	0x4023+P_SIZE	PR,FR+FW	AM_ADDR,AM_FREG	FCC  0 68881
+fmulw	cp_general	W	0x4023+W_SIZE	WR,FR+FW	AM_DATA,AM_FREG	FCC  0 68881
+fmuld	cp_general	D	0x4023+D_SIZE	DR,FR+FW	AM_MEM,AM_FREG	FCC  0 68881
+fmulb	cp_general	B	0x4023+B_SIZE	BR,FR+FW	AM_DATA,AM_FREG	FCC  0 68881
+
+fremx	cp_general	X	0x4025+X_SIZE,0x25 XR,FR+FW AM_ADDR,AM_FREG,AM_FREG,AM_FREG	FCC  0 68881
+freml	cp_general	L	0x4025+L_SIZE	LR,FR+FW	AM_DATA,AM_FREG	FCC  0 68881
+frems	cp_general	S	0x4025+S_SIZE	SR,FR+FW	AM_DATA,AM_FREG	FCC  0 68881
+fremp	cp_general	P	0x4025+P_SIZE	PR,FR+FW	AM_ADDR,AM_FREG	FCC  0 68881
+fremw	cp_general	W	0x4025+W_SIZE	WR,FR+FW	AM_DATA,AM_FREG	FCC  0 68881
+fremd	cp_general	D	0x4025+D_SIZE	DR,FR+FW	AM_MEM,AM_FREG	FCC  0 68881
+fremb	cp_general	B	0x4025+B_SIZE	BR,FR+FW	AM_DATA,AM_FREG	FCC  0 68881
+
+fscalex	cp_general	X	0x4026+X_SIZE,0x26 XR,FR+FW AM_ADDR,AM_FREG,AM_FREG,AM_FREG	FCC  0 68881
+fscalel	cp_general	L	0x4026+L_SIZE	LR,FR+FW	AM_DATA,AM_FREG	FCC  0 68881
+fscales	cp_general	S	0x4026+S_SIZE	SR,FR+FW	AM_DATA,AM_FREG	FCC  0 68881
+fscalep	cp_general	P	0x4026+P_SIZE	PR,FR+FW	AM_ADDR,AM_FREG	FCC  0 68881
+fscalew	cp_general	W	0x4026+W_SIZE	WR,FR+FW	AM_DATA,AM_FREG	FCC  0 68881
+fscaled	cp_general	D	0x4026+D_SIZE	DR,FR+FW	AM_MEM,AM_FREG	FCC  0 68881
+fscaleb	cp_general	B	0x4026+B_SIZE	BR,FR+FW	AM_DATA,AM_FREG	FCC  0 68881
+
+fsgldivx	cp_general	X	0x4024+X_SIZE,0x24 XR,FR+FW AM_ADDR,AM_FREG,AM_FREG,AM_FREG	FCC  0 68881
+fsgldivs	cp_general	S	0x4024+S_SIZE 	SR,FR+FW 	AM_DATA,AM_FREG	FCC  0 68881
+fsgldivl	cp_general	L	0x4024+L_SIZE	LR,FR+FW	AM_DATA,AM_FREG	FCC  0 68881
+fsgldivp	cp_general	P	0x4024+P_SIZE	PR,FR+FW	AM_ADDR,AM_FREG	FCC  0 68881
+fsgldivw	cp_general	W	0x4024+W_SIZE	WR,FR+FW	AM_DATA,AM_FREG	FCC  0 68881
+fsgldivb	cp_general	B	0x4024+B_SIZE	BR,FR+FW	AM_DATA,AM_FREG	FCC  0 68881
+
+fsglmulx	cp_general	X	0x4027+X_SIZE,0x27 XR,FR+FW AM_ADDR,AM_FREG,AM_FREG,AM_FREG	FCC  0 68881
+fsglmuls	cp_general	S	0x4027+S_SIZE	SR,FR+FW 	AM_DATA,AM_FREG	FCC  0 68881
+fsglmull	cp_general	L	0x4027+L_SIZE	LR,FR+FW	AM_DATA,AM_FREG	FCC  0 68881
+fsglmulp	cp_general	P	0x4027+P_SIZE	PR,FR+FW	AM_ADDR,AM_FREG	FCC  0 68881
+fsglmulw	cp_general	W	0x4027+W_SIZE	WR,FR+FW	AM_DATA,AM_FREG	FCC  0 68881
+fsglmulb	cp_general	B	0x4027+B_SIZE	BR,FR+FW	AM_DATA,AM_FREG	FCC  0 68881
+
+fsubx	cp_general	X	0x4028+X_SIZE,0x28 XR,FR+FW AM_ADDR,AM_FREG,AM_FREG,AM_FREG	FCC  0 68881
+fsubl	cp_general	L	0x4028+L_SIZE	LR,FR+FW	AM_DATA,AM_FREG	FCC  0 68881
+fsubs	cp_general	S	0x4028+S_SIZE	SR,FR+FW	AM_DATA,AM_FREG	FCC  0 68881
+fsubp	cp_general	P	0x4028+P_SIZE	PR,FR+FW	AM_ADDR,AM_FREG	FCC  0 68881
+fsubw	cp_general	W	0x4028+W_SIZE	WR,FR+FW	AM_DATA,AM_FREG	FCC  0 68881
+fsubd	cp_general	D	0x4028+D_SIZE	DR,FR+FW	AM_MEM,AM_FREG	FCC  0 68881
+fsubb	cp_general	B	0x4028+B_SIZE	BR,FR+FW	AM_DATA,AM_FREG	FCC  0 68881
+
+fytoxx	cp_general	X	0x402c+X_SIZE,0x2c XR,FR+FW AM_ADDR,AM_FREG,AM_FREG,AM_FREG	FCC  0 68881
+fytoxl	cp_general	L	0x402c+L_SIZE	LR,FR+FW	AM_DATA,AM_FREG	FCC  0 68881
+fytoxs	cp_general	S	0x402c+S_SIZE	SR,FR+FW	AM_DATA,AM_FREG	FCC  0 68881
+fytoxp	cp_general	P	0x402c+P_SIZE	PR,FR+FW	AM_ADDR,AM_FREG	FCC  0 68881
+fytoxw	cp_general	W	0x402c+W_SIZE	WR,FR+FW	AM_DATA,AM_FREG	FCC  0 68881
+fytoxd	cp_general	D	0x402c+D_SIZE	DR,FR+FW	AM_MEM,AM_FREG	FCC  0 68881
+fytoxb	cp_general	B	0x402c+B_SIZE	BR,FR+FW	AM_DATA,AM_FREG	FCC  0 68881
+
+## Oddball general format floating point instructions
+
+fcmpx	cp_general,CMP	X	0x4038+X_SIZE,0x38 XR,FR AM_ADDR,AM_FREG,AM_FREG,AM_FREG	FCC  0 68881
+fcmpl	cp_general,CMP	L	0x4038+L_SIZE	LR,FR	AM_DATA,AM_FREG	FCC  0 68881
+fcmps	cp_general,CMP	S	0x4038+S_SIZE	SR,FR	AM_DATA,AM_FREG	FCC  0 68881
+fcmpp	cp_general	P	0x4038+P_SIZE	PR,FR	AM_ADDR,AM_FREG	FCC  0 68881
+fcmpw	cp_general,CMP	W	0x4038+W_SIZE	WR,FR	AM_DATA,AM_FREG	FCC  0 68881
+fcmpd	cp_general,CMP	D	0x4038+D_SIZE	DR,FR	AM_MEM,AM_FREG	FCC  0 68881
+fcmpb	cp_general,CMP	B	0x4038+B_SIZE	BR,FR	AM_DATA,AM_FREG	FCC  0 68881
+
+fmovecr	cp_movecr	X	0x5c00	BR,FW	AM_IMMED,AM_FREG	FCC  0 68881
+fmovem	cp_movem,MOVEM	X	0xd000,0xe000,0x8000,0xa000	0,0	AM_CTRL|AM_POSTINC,AM_IMMED|AM_FREGLIST|AM_DREG,AM_IMMED|AM_FREGLIST|AM_DREG,AM_ACTRL|AM_PREDEC,AM_MEM,AM_FCREGLIST,AM_FCREGLIST,AM_AMEM	FCC0 0 68881
+
+## kluge: sincos ea,fpn uses fpn as an even/odd pair for sin/cos
+
+fsincosx	cp_regpair	X	0x4030+X_SIZE,0x30 XR,FW AM_ADDR,AM_FREG,AM_FREG,AM_FREG	FCC  0 68881
+fsincosl	cp_regpair	L	0x4030+L_SIZE	LR,FW	AM_DATA,AM_FREG	FCC  0 68881
+fsincoss	cp_regpair	S	0x4030+S_SIZE	SR,FW	AM_DATA,AM_FREG	FCC  0 68881
+fsincosp	cp_regpair	P	0x4030+P_SIZE	PR,FW	AM_ADDR,AM_FREG	FCC  0 68881
+fsincosw	cp_regpair	W	0x4030+W_SIZE	WR,FW	AM_DATA,AM_FREG	FCC  0 68881
+fsincosd	cp_regpair	D	0x4030+D_SIZE	DR,FW	AM_MEM,AM_FREG	FCC  0 68881
+fsincosb	cp_regpair	B	0x4030+B_SIZE	BR,FW	AM_DATA,AM_FREG	FCC  0 68881
+
+ftestx	cp_general,FTST	X	0x403a+X_SIZE,0x3a XR 	AM_ADDR,AM_FREG	FCC  0 68881
+ftestl	cp_general,FTST	L	0x403a+L_SIZE	LR	AM_DATA	FCC  0 68881
+ftests	cp_general,FTST	S	0x403a+S_SIZE	SR	AM_DATA	FCC  0 68881
+ftestp	cp_general	P	0x403a+P_SIZE	PR	AM_ADDR	FCC  0 68881
+ftestw	cp_general,FTST	W	0x403a+W_SIZE	WR	AM_DATA	FCC  0 68881
+ftestd	cp_general,FTST	D	0x403a+D_SIZE	DR	AM_MEM	FCC  0 68881
+ftestb	cp_general,FTST	B	0x403a+B_SIZE	BR	AM_DATA	FCC  0 68881
+ftstx	cp_general,FTST	X	0x403a+X_SIZE,0x3a XR 	AM_ADDR,AM_FREG	FCC  0 68881
+ftstl	cp_general,FTST	L	0x403a+L_SIZE	LR	AM_DATA	FCC  0 68881
+ftsts	cp_general,FTST	S	0x403a+S_SIZE	SR	AM_DATA	FCC  0 68881
+ftstp	cp_general	P	0x403a+P_SIZE	PR	AM_ADDR	FCC  0 68881
+ftstw	cp_general,FTST	W	0x403a+W_SIZE	WR	AM_DATA	FCC  0 68881
+ftstd	cp_general,FTST	D	0x403a+D_SIZE	DR	AM_MEM	FCC  0 68881
+ftstb	cp_general,FTST	B	0x403a+B_SIZE	BR	AM_DATA	FCC  0 68881
+
+##	Coprocessor conditional branch, 16 bit displacements
+
+fbeq	cp_branch	FJEQ	0xf080+FCC_EQ	0 AM_NORMAL	FCCR 0 68881
+fbne	cp_branch	FJNEQ	0xf080+FCC_NEQ	0 AM_NORMAL	FCCR 0 68881
+fbneq	cp_branch	FJNEQ	0xf080+FCC_NEQ	0 AM_NORMAL	FCCR 0 68881
+fbgt	cp_branch	FJGT	0xf080+FCC_GT	0 AM_NORMAL	FCCR 0 68881
+fbngt	cp_branch	FJNGT	0xf080+FCC_NGT	0 AM_NORMAL	FCCR 0 68881
+fbge	cp_branch	FJGE	0xf080+FCC_GE	0 AM_NORMAL	FCCR 0 68881
+fbnge	cp_branch	FJNGE	0xf080+FCC_NGE	0 AM_NORMAL	FCCR 0 68881
+fblt	cp_branch	FJLT	0xf080+FCC_LT	0 AM_NORMAL	FCCR 0 68881
+fbnlt	cp_branch	FJNLT	0xf080+FCC_NLT	0 AM_NORMAL	FCCR 0 68881
+fble	cp_branch	FJLE	0xf080+FCC_LE	0 AM_NORMAL	FCCR 0 68881
+fbnle	cp_branch	FJNLE	0xf080+FCC_NLE	0 AM_NORMAL	FCCR 0 68881
+fbgl	cp_branch	FJGL	0xf080+FCC_GL	0 AM_NORMAL	FCCR 0 68881
+fbngl	cp_branch	FJNGL	0xf080+FCC_NGL	0 AM_NORMAL	FCCR 0 68881
+fbgle	cp_branch	FJGLE	0xf080+FCC_GLE	0 AM_NORMAL	FCCR 0 68881
+fbngle	cp_branch	FJNGLE	0xf080+FCC_NGLE	0 AM_NORMAL	FCCR 0 68881
+fbogt	cp_branch	FJOGT	0xf080+FCC_OGT	0 AM_NORMAL	FCCR 0 68881
+fbule	cp_branch	FJULE	0xf080+FCC_ULE	0 AM_NORMAL	FCCR 0 68881
+fboge	cp_branch	FJOGE	0xf080+FCC_OGE	0 AM_NORMAL	FCCR 0 68881
+fbult	cp_branch	FJULT	0xf080+FCC_ULT	0 AM_NORMAL	FCCR 0 68881
+fbolt	cp_branch	FJOLT	0xf080+FCC_OLT	0 AM_NORMAL	FCCR 0 68881
+fbuge	cp_branch	FJUGE	0xf080+FCC_UGE	0 AM_NORMAL	FCCR 0 68881
+fbole	cp_branch	FJOLE	0xf080+FCC_OLE	0 AM_NORMAL	FCCR 0 68881
+fbugt	cp_branch	FJUGT	0xf080+FCC_UGT	0 AM_NORMAL	FCCR 0 68881
+fbogl	cp_branch	FJOGL	0xf080+FCC_OGL	0 AM_NORMAL	FCCR 0 68881
+fbueq	cp_branch	FJUEQ	0xf080+FCC_UEQ	0 AM_NORMAL	FCCR 0 68881
+fbor	cp_branch	FJOR	0xf080+FCC_OR	0 AM_NORMAL	FCCR 0 68881
+fbun	cp_branch	FJUN	0xf080+FCC_UN	0 AM_NORMAL	FCCR 0 68881
+fbf	cp_branch	JNONE	0xf080+FCC_F	0 AM_NORMAL	FCCR 0 68881
+fbt	cp_branch	JALL	0xf080+FCC_T	0 AM_NORMAL	FCCR 0 68881
+fbsf	cp_branch	JNONE	0xf080+FCC_SF	0 AM_NORMAL	FCCR 0 68881
+fbst	cp_branch	JALL	0xf080+FCC_ST	0 AM_NORMAL	FCCR 0 68881
+fbseq	cp_branch	FJSEQ	0xf080+FCC_SEQ	0 AM_NORMAL	FCCR 0 68881
+fbsne	cp_branch	FJSNEQ	0xf080+FCC_SNEQ	0 AM_NORMAL	FCCR 0 68881
+
+fnop	cp_branch	JNONE	0xf080+FCC_F	X 0 		FCC0 0 68881
+
+##	Coprocessor conditional branch, 32 bit displacements
+
+fbeql	cp_branch	FJEQ	0xf0c0+FCC_EQ	0 AM_NORMAL	FCCR 0 68881
+fbnel	cp_branch	FJNEQ	0xf0c0+FCC_NEQ	0 AM_NORMAL	FCCR 0 68881
+fbneql	cp_branch	FJNEQ	0xf0c0+FCC_NEQ	0 AM_NORMAL	FCCR 0 68881
+fbgtl	cp_branch	FJGT	0xf0c0+FCC_GT	0 AM_NORMAL	FCCR 0 68881
+fbngtl	cp_branch	FJNGT	0xf0c0+FCC_NGT	0 AM_NORMAL	FCCR 0 68881
+fbgel	cp_branch	FJGE	0xf0c0+FCC_GE	0 AM_NORMAL	FCCR 0 68881
+fbngel	cp_branch	FJNGE	0xf0c0+FCC_NGE	0 AM_NORMAL	FCCR 0 68881
+fbltl	cp_branch	FJLT	0xf0c0+FCC_LT	0 AM_NORMAL	FCCR 0 68881
+fbnltl	cp_branch	FJNLT	0xf0c0+FCC_NLT	0 AM_NORMAL	FCCR 0 68881
+fblel	cp_branch	FJLE	0xf0c0+FCC_LE	0 AM_NORMAL	FCCR 0 68881
+fbnlel	cp_branch	FJNLE	0xf0c0+FCC_NLE	0 AM_NORMAL	FCCR 0 68881
+fbgll	cp_branch	FJGL	0xf0c0+FCC_GL	0 AM_NORMAL	FCCR 0 68881
+fbngll	cp_branch	FJNGL	0xf0c0+FCC_NGL	0 AM_NORMAL	FCCR 0 68881
+fbglel	cp_branch	FJGLE	0xf0c0+FCC_GLE	0 AM_NORMAL	FCCR 0 68881
+fbnglel	cp_branch	FJNGLE	0xf0c0+FCC_NGLE	0 AM_NORMAL	FCCR 0 68881
+fbogtl	cp_branch	FJOGT	0xf0c0+FCC_OGT	0 AM_NORMAL	FCCR 0 68881
+fbulel	cp_branch	FJULE	0xf0c0+FCC_ULE	0 AM_NORMAL	FCCR 0 68881
+fbogel	cp_branch	FJOGE	0xf0c0+FCC_OGE	0 AM_NORMAL	FCCR 0 68881
+fbultl	cp_branch	FJULT	0xf0c0+FCC_ULT	0 AM_NORMAL	FCCR 0 68881
+fboltl	cp_branch	FJOLT	0xf0c0+FCC_OLT	0 AM_NORMAL	FCCR 0 68881
+fbugel	cp_branch	FJUGE	0xf0c0+FCC_UGE	0 AM_NORMAL	FCCR 0 68881
+fbolel	cp_branch	FJOLE	0xf0c0+FCC_OLE	0 AM_NORMAL	FCCR 0 68881
+fbugtl	cp_branch	FJUGT	0xf0c0+FCC_UGT	0 AM_NORMAL	FCCR 0 68881
+fbogll	cp_branch	FJOGL	0xf0c0+FCC_OGL	0 AM_NORMAL	FCCR 0 68881
+fbueql	cp_branch	FJUEQ	0xf0c0+FCC_UEQ	0 AM_NORMAL	FCCR 0 68881
+fborl	cp_branch	FJOR	0xf0c0+FCC_OR	0 AM_NORMAL	FCCR 0 68881
+fbunl	cp_branch	FJUN	0xf0c0+FCC_UN	0 AM_NORMAL	FCCR 0 68881
+fbfl	cp_branch	JNONE	0xf0c0+FCC_F	0 AM_NORMAL	FCCR 0 68881
+fbtl	cp_branch	JALL	0xf0c0+FCC_T	0 AM_NORMAL	FCCR 0 68881
+fbsfl	cp_branch	JNONE	0xf0c0+FCC_SF	0 AM_NORMAL	FCCR 0 68881
+fbstl	cp_branch	JALL	0xf0c0+FCC_ST	0 AM_NORMAL	FCCR 0 68881
+fbseql	cp_branch	FJSEQ	0xf0c0+FCC_SEQ	0 AM_NORMAL	FCCR 0 68881
+fbsnel	cp_branch	FJSNEQ	0xf0c0+FCC_SNEQ	0 AM_NORMAL	FCCR 0 68881
+
+##	Coprocessor conditional branch, displacements to be determined
+
+fjeq	cp_branch	FJEQ	0xf000+FCC_EQ	0 AM_NORMAL	FCCR 0 68881
+fjne	cp_branch	FJNEQ	0xf000+FCC_NEQ	0 AM_NORMAL	FCCR 0 68881
+fjneq	cp_branch	FJNEQ	0xf000+FCC_NEQ	0 AM_NORMAL	FCCR 0 68881
+fjgt	cp_branch	FJGT	0xf000+FCC_GT	0 AM_NORMAL	FCCR 0 68881
+fjngt	cp_branch	FJNGT	0xf000+FCC_NGT	0 AM_NORMAL	FCCR 0 68881
+fjge	cp_branch	FJGE	0xf000+FCC_GE	0 AM_NORMAL	FCCR 0 68881
+fjnge	cp_branch	FJNGE	0xf000+FCC_NGE	0 AM_NORMAL	FCCR 0 68881
+fjlt	cp_branch	FJLT	0xf000+FCC_LT	0 AM_NORMAL	FCCR 0 68881
+fjnlt	cp_branch	FJNLT	0xf000+FCC_NLT	0 AM_NORMAL	FCCR 0 68881
+fjle	cp_branch	FJLE	0xf000+FCC_LE	0 AM_NORMAL	FCCR 0 68881
+fjnle	cp_branch	FJNLE	0xf000+FCC_NLE	0 AM_NORMAL	FCCR 0 68881
+fjgl	cp_branch	FJGL	0xf000+FCC_GL	0 AM_NORMAL	FCCR 0 68881
+fjngl	cp_branch	FJNGL	0xf000+FCC_NGL	0 AM_NORMAL	FCCR 0 68881
+fjgle	cp_branch	FJGLE	0xf000+FCC_GLE	0 AM_NORMAL	FCCR 0 68881
+fjngle	cp_branch	FJNGLE	0xf000+FCC_NGLE	0 AM_NORMAL	FCCR 0 68881
+fjogt	cp_branch	FJOGT	0xf000+FCC_OGT	0 AM_NORMAL	FCCR 0 68881
+fjule	cp_branch	FJULE	0xf000+FCC_ULE	0 AM_NORMAL	FCCR 0 68881
+fjoge	cp_branch	FJOGE	0xf000+FCC_OGE	0 AM_NORMAL	FCCR 0 68881
+fjult	cp_branch	FJULT	0xf000+FCC_ULT	0 AM_NORMAL	FCCR 0 68881
+fjolt	cp_branch	FJOLT	0xf000+FCC_OLT	0 AM_NORMAL	FCCR 0 68881
+fjuge	cp_branch	FJUGE	0xf000+FCC_UGE	0 AM_NORMAL	FCCR 0 68881
+fjole	cp_branch	FJOLE	0xf000+FCC_OLE	0 AM_NORMAL	FCCR 0 68881
+fjugt	cp_branch	FJUGT	0xf000+FCC_UGT	0 AM_NORMAL	FCCR 0 68881
+fjogl	cp_branch	FJOGL	0xf000+FCC_OGL	0 AM_NORMAL	FCCR 0 68881
+fjueq	cp_branch	FJUEQ	0xf000+FCC_UEQ	0 AM_NORMAL	FCCR 0 68881
+fjor	cp_branch	FJOR	0xf000+FCC_OR	0 AM_NORMAL	FCCR 0 68881
+fjun	cp_branch	FJUN	0xf000+FCC_UN	0 AM_NORMAL	FCCR 0 68881
+fjf	cp_branch	JNONE	0xf000+FCC_F	0 AM_NORMAL	FCCR 0 68881
+fjt	cp_branch	JALL	0xf000+FCC_T	0 AM_NORMAL	FCCR 0 68881
+fjsf	cp_branch	FJSF	0xf000+FCC_SF	0 AM_NORMAL	FCCR 0 68881
+fjst	cp_branch	FJST	0xf000+FCC_ST	0 AM_NORMAL	FCCR 0 68881
+fjseq	cp_branch	FJSEQ	0xf000+FCC_SEQ	0 AM_NORMAL	FCCR 0 68881
+fjsne	cp_branch	FJSNEQ	0xf000+FCC_SNEQ	0 AM_NORMAL	FCCR 0 68881
+
+##	Coprocessor conditional instructions
+
+fdbeq	cp_conditional,DBRA	FJEQ	0xf048,FCC_EQ	WR+WW,0 AM_DREG,AM_NORMAL	FCCR 0 68881
+fdbne	cp_conditional,DBRA	FJNEQ	0xf048,FCC_NEQ	WR+WW,0 AM_DREG,AM_NORMAL	FCCR 0 68881
+fdbgt	cp_conditional,DBRA	FJGT	0xf048,FCC_GT	WR+WW,0 AM_DREG,AM_NORMAL	FCCR 0 68881
+fdbngt	cp_conditional,DBRA	FJNGT	0xf048,FCC_NGT	WR+WW,0 AM_DREG,AM_NORMAL	FCCR 0 68881
+fdbge	cp_conditional,DBRA	FJGE	0xf048,FCC_GE	WR+WW,0 AM_DREG,AM_NORMAL	FCCR 0 68881
+fdbnge	cp_conditional,DBRA	FJNGE	0xf048,FCC_NGE	WR+WW,0 AM_DREG,AM_NORMAL	FCCR 0 68881
+fdblt	cp_conditional,DBRA	FJLT	0xf048,FCC_LT	WR+WW,0 AM_DREG,AM_NORMAL	FCCR 0 68881
+fdbnlt	cp_conditional,DBRA	FJNLT	0xf048,FCC_NLT	WR+WW,0 AM_DREG,AM_NORMAL	FCCR 0 68881
+fdble	cp_conditional,DBRA	FJLE	0xf048,FCC_LE	WR+WW,0 AM_DREG,AM_NORMAL	FCCR 0 68881
+fdbnle	cp_conditional,DBRA	FJNLE	0xf048,FCC_NLE	WR+WW,0 AM_DREG,AM_NORMAL	FCCR 0 68881
+fdbgl	cp_conditional,DBRA	FJGL	0xf048,FCC_GL	WR+WW,0 AM_DREG,AM_NORMAL	FCCR 0 68881
+fdbngl	cp_conditional,DBRA	FJNGL	0xf048,FCC_NGL	WR+WW,0 AM_DREG,AM_NORMAL	FCCR 0 68881
+fdbgle	cp_conditional,DBRA	FJGLE	0xf048,FCC_GLE	WR+WW,0 AM_DREG,AM_NORMAL	FCCR 0 68881
+fdbngle	cp_conditional,DBRA	FJNGLE	0xf048,FCC_NGLE	WR+WW,0 AM_DREG,AM_NORMAL	FCCR 0 68881
+fdbogt	cp_conditional,DBRA	FJOGT	0xf048,FCC_OGT	WR+WW,0 AM_DREG,AM_NORMAL	FCCR 0 68881
+fdbule	cp_conditional,DBRA	FJULE	0xf048,FCC_ULE	WR+WW,0 AM_DREG,AM_NORMAL	FCCR 0 68881
+fdboge	cp_conditional,DBRA	FJOGE	0xf048,FCC_OGE	WR+WW,0 AM_DREG,AM_NORMAL	FCCR 0 68881
+fdbult	cp_conditional,DBRA	FJULT	0xf048,FCC_ULT	WR+WW,0 AM_DREG,AM_NORMAL	FCCR 0 68881
+fdbolt	cp_conditional,DBRA	FJOLT	0xf048,FCC_OLT	WR+WW,0 AM_DREG,AM_NORMAL	FCCR 0 68881
+fdbuge	cp_conditional,DBRA	FJUGE	0xf048,FCC_UGE	WR+WW,0 AM_DREG,AM_NORMAL	FCCR 0 68881
+fdbole	cp_conditional,DBRA	FJOLE	0xf048,FCC_OLE	WR+WW,0 AM_DREG,AM_NORMAL	FCCR 0 68881
+fdbugt	cp_conditional,DBRA	FJUGT	0xf048,FCC_UGT	WR+WW,0 AM_DREG,AM_NORMAL	FCCR 0 68881
+fdbogl	cp_conditional,DBRA	FJOGL	0xf048,FCC_OGL	WR+WW,0 AM_DREG,AM_NORMAL	FCCR 0 68881
+fdbueq	cp_conditional,DBRA	FJUEQ	0xf048,FCC_UEQ	WR+WW,0 AM_DREG,AM_NORMAL	FCCR 0 68881
+fdbor	cp_conditional,DBRA	FJOR	0xf048,FCC_OR	WR+WW,0 AM_DREG,AM_NORMAL	FCCR 0 68881
+fdbun	cp_conditional,DBRA	FJUN	0xf048,FCC_UN	WR+WW,0 AM_DREG,AM_NORMAL	FCCR 0 68881
+fdbf	cp_conditional,DBRA	JNONE	0xf048,FCC_F	WR+WW,0 AM_DREG,AM_NORMAL	FCCR 0 68881
+fdbt	cp_conditional,DBRA	JALL	0xf048,FCC_T	WR+WW,0 AM_DREG,AM_NORMAL	FCCR 0 68881
+fdbsf	cp_conditional,DBRA	FJSF	0xf048,FCC_SF	WR+WW,0 AM_DREG,AM_NORMAL	FCCR 0 68881
+fdbst	cp_conditional,DBRA	FJST	0xf048,FCC_ST	WR+WW,0 AM_DREG,AM_NORMAL	FCCR 0 68881
+fdbseq	cp_conditional,DBRA	FJSEQ	0xf048,FCC_SEQ	WR+WW,0 AM_DREG,AM_NORMAL	FCCR 0 68881
+fdbsne	cp_conditional,DBRA	FJSNEQ	0xf048,FCC_SNEQ	WR+WW,0 AM_DREG,AM_NORMAL	FCCR 0 68881
+
+fseq	cp_conditional	Z	0xf040,FCC_EQ	BW AM_ADAT	FCCR 0 68881
+fsne	cp_conditional	Z	0xf040,FCC_NEQ	BW AM_ADAT	FCCR 0 68881
+fsneq	cp_conditional	Z	0xf040,FCC_NEQ	BW AM_ADAT	FCCR 0 68881
+fsgt	cp_conditional	Z	0xf040,FCC_GT	BW AM_ADAT	FCCR 0 68881
+fsngt	cp_conditional	Z	0xf040,FCC_NGT	BW AM_ADAT	FCCR 0 68881
+fsge	cp_conditional	Z	0xf040,FCC_GE	BW AM_ADAT	FCCR 0 68881
+fsnge	cp_conditional	Z	0xf040,FCC_NGE	BW AM_ADAT	FCCR 0 68881
+fslt	cp_conditional	Z	0xf040,FCC_LT	BW AM_ADAT	FCCR 0 68881
+fsnlt	cp_conditional	Z	0xf040,FCC_NLT	BW AM_ADAT	FCCR 0 68881
+fsle	cp_conditional	Z	0xf040,FCC_LE	BW AM_ADAT	FCCR 0 68881
+fsnle	cp_conditional	Z	0xf040,FCC_NLE	BW AM_ADAT	FCCR 0 68881
+fsgl	cp_conditional	Z	0xf040,FCC_GL	BW AM_ADAT	FCCR 0 68881
+fsngl	cp_conditional	Z	0xf040,FCC_NGL	BW AM_ADAT	FCCR 0 68881
+fsgle	cp_conditional	Z	0xf040,FCC_GLE	BW AM_ADAT	FCCR 0 68881
+fsngle	cp_conditional	Z	0xf040,FCC_NGLE	BW AM_ADAT	FCCR 0 68881
+fsogt	cp_conditional	Z	0xf040,FCC_OGT	BW AM_ADAT	FCCR 0 68881
+fsule	cp_conditional	Z	0xf040,FCC_ULE	BW AM_ADAT	FCCR 0 68881
+fsoge	cp_conditional	Z	0xf040,FCC_OGE	BW AM_ADAT	FCCR 0 68881
+fsult	cp_conditional	Z	0xf040,FCC_ULT	BW AM_ADAT	FCCR 0 68881
+fsolt	cp_conditional	Z	0xf040,FCC_OLT	BW AM_ADAT	FCCR 0 68881
+fsuge	cp_conditional	Z	0xf040,FCC_UGE	BW AM_ADAT	FCCR 0 68881
+fsole	cp_conditional	Z	0xf040,FCC_OLE	BW AM_ADAT	FCCR 0 68881
+fsugt	cp_conditional	Z	0xf040,FCC_UGT	BW AM_ADAT	FCCR 0 68881
+fsogl	cp_conditional	Z	0xf040,FCC_OGL	BW AM_ADAT	FCCR 0 68881
+fsueq	cp_conditional	Z	0xf040,FCC_UEQ	BW AM_ADAT	FCCR 0 68881
+fsor	cp_conditional	Z	0xf040,FCC_OR	BW AM_ADAT	FCCR 0 68881
+fsun	cp_conditional	Z	0xf040,FCC_UN	BW AM_ADAT	FCCR 0 68881
+fsf	cp_conditional	Z	0xf040,FCC_F	BW AM_ADAT	FCCR 0 68881
+fst	cp_conditional	Z	0xf040,FCC_T	BW AM_ADAT	FCCR 0 68881
+fssf	cp_conditional	Z	0xf040,FCC_SF	BW AM_ADAT	FCCR 0 68881
+fsst	cp_conditional	Z	0xf040,FCC_ST	BW AM_ADAT	FCCR 0 68881
+fsseq	cp_conditional	Z	0xf040,FCC_SEQ	BW AM_ADAT	FCCR 0 68881
+fssne	cp_conditional	Z	0xf040,FCC_SNEQ	BW AM_ADAT	FCCR 0 68881
+
+ftrapeq	cp_conditional	Z	0xf07c,FCC_EQ	X 0	FCCR 0 68881
+ftrapne	cp_conditional	Z	0xf07c,FCC_NEQ	X 0	FCCR 0 68881
+ftrapgt	cp_conditional	Z	0xf07c,FCC_GT	X 0	FCCR 0 68881
+ftrapngt	cp_conditional	Z	0xf07c,FCC_NGT	X 0	FCCR 0 68881
+ftrapge	cp_conditional	Z	0xf07c,FCC_GE	X 0	FCCR 0 68881
+ftrapnge	cp_conditional	Z	0xf07c,FCC_NGE	X 0	FCCR 0 68881
+ftraplt	cp_conditional	Z	0xf07c,FCC_LT	X 0	FCCR 0 68881
+ftrapnlt	cp_conditional	Z	0xf07c,FCC_NLT	X 0	FCCR 0 68881
+ftraple	cp_conditional	Z	0xf07c,FCC_LE	X 0	FCCR 0 68881
+ftrapnle	cp_conditional	Z	0xf07c,FCC_NLE	X 0	FCCR 0 68881
+ftrapgl	cp_conditional	Z	0xf07c,FCC_GL	X 0	FCCR 0 68881
+ftrapngl	cp_conditional	Z	0xf07c,FCC_NGL	X 0	FCCR 0 68881
+ftrapgle	cp_conditional	Z	0xf07c,FCC_GLE	X 0	FCCR 0 68881
+ftrapngle	cp_conditional	Z	0xf07c,FCC_NGLE	X 0	FCCR 0 68881
+ftrapogt	cp_conditional	Z	0xf07c,FCC_OGT	X 0	FCCR 0 68881
+ftrapule	cp_conditional	Z	0xf07c,FCC_ULE	X 0	FCCR 0 68881
+ftrapoge	cp_conditional	Z	0xf07c,FCC_OGE	X 0	FCCR 0 68881
+ftrapult	cp_conditional	Z	0xf07c,FCC_ULT	X 0	FCCR 0 68881
+ftrapolt	cp_conditional	Z	0xf07c,FCC_OLT	X 0	FCCR 0 68881
+ftrapuge	cp_conditional	Z	0xf07c,FCC_UGE	X 0	FCCR 0 68881
+ftrapole	cp_conditional	Z	0xf07c,FCC_OLE	X 0	FCCR 0 68881
+ftrapugt	cp_conditional	Z	0xf07c,FCC_UGT	X 0	FCCR 0 68881
+ftrapogl	cp_conditional	Z	0xf07c,FCC_OGL	X 0	FCCR 0 68881
+ftrapueq	cp_conditional	Z	0xf07c,FCC_UEQ	X 0	FCCR 0 68881
+ftrapor	cp_conditional	Z	0xf07c,FCC_OR	X 0	FCCR 0 68881
+ftrapun	cp_conditional	Z	0xf07c,FCC_UN	X 0	FCCR 0 68881
+ftrapf	cp_conditional	Z	0xf07c,FCC_F	X 0	FCCR 0 68881
+ftrapt	cp_conditional	Z	0xf07c,FCC_T	X 0	FCCR 0 68881
+ftrapsf	cp_conditional	Z	0xf07c,FCC_SF	X 0	FCCR 0 68881
+ftrapst	cp_conditional	Z	0xf07c,FCC_ST	X 0	FCCR 0 68881
+ftrapseq	cp_conditional	Z	0xf07c,FCC_SEQ	X 0	FCCR 0 68881
+ftrapsne	cp_conditional	Z	0xf07c,FCC_SNEQ	X 0	FCCR 0 68881
+
+ftrapeqw	cp_conditional	W	0xf07a,FCC_EQ	WR AM_IMMED	FCCR 0 68881
+ftrapnew	cp_conditional	W	0xf07a,FCC_NEQ	WR AM_IMMED	FCCR 0 68881
+ftrapgtw	cp_conditional	W	0xf07a,FCC_GT	WR AM_IMMED	FCCR 0 68881
+ftrapngtw	cp_conditional	W	0xf07a,FCC_NGT	WR AM_IMMED	FCCR 0 68881
+ftrapgew	cp_conditional	W	0xf07a,FCC_GE	WR AM_IMMED	FCCR 0 68881
+ftrapngew	cp_conditional	W	0xf07a,FCC_NGE	WR AM_IMMED	FCCR 0 68881
+ftrapltw	cp_conditional	W	0xf07a,FCC_LT	WR AM_IMMED	FCCR 0 68881
+ftrapnltw	cp_conditional	W	0xf07a,FCC_NLT	WR AM_IMMED	FCCR 0 68881
+ftraplew	cp_conditional	W	0xf07a,FCC_LE	WR AM_IMMED	FCCR 0 68881
+ftrapnlew	cp_conditional	W	0xf07a,FCC_NLE	WR AM_IMMED	FCCR 0 68881
+ftrapglw	cp_conditional	W	0xf07a,FCC_GL	WR AM_IMMED	FCCR 0 68881
+ftrapnglw	cp_conditional	W	0xf07a,FCC_NGL	WR AM_IMMED	FCCR 0 68881
+ftrapglew	cp_conditional	W	0xf07a,FCC_GLE	WR AM_IMMED	FCCR 0 68881
+ftrapnglew	cp_conditional	W	0xf07a,FCC_NGLE	WR AM_IMMED	FCCR 0 68881
+ftrapogtw	cp_conditional	W	0xf07a,FCC_OGT	WR AM_IMMED	FCCR 0 68881
+ftrapulew	cp_conditional	W	0xf07a,FCC_ULE	WR AM_IMMED	FCCR 0 68881
+ftrapogew	cp_conditional	W	0xf07a,FCC_OGE	WR AM_IMMED	FCCR 0 68881
+ftrapultw	cp_conditional	W	0xf07a,FCC_ULT	WR AM_IMMED	FCCR 0 68881
+ftrapoltw	cp_conditional	W	0xf07a,FCC_OLT	WR AM_IMMED	FCCR 0 68881
+ftrapugew	cp_conditional	W	0xf07a,FCC_UGE	WR AM_IMMED	FCCR 0 68881
+ftrapolew	cp_conditional	W	0xf07a,FCC_OLE	WR AM_IMMED	FCCR 0 68881
+ftrapugtw	cp_conditional	W	0xf07a,FCC_UGT	WR AM_IMMED	FCCR 0 68881
+ftrapoglw	cp_conditional	W	0xf07a,FCC_OGL	WR AM_IMMED	FCCR 0 68881
+ftrapueqw	cp_conditional	W	0xf07a,FCC_UEQ	WR AM_IMMED	FCCR 0 68881
+ftraporw	cp_conditional	W	0xf07a,FCC_OR	WR AM_IMMED	FCCR 0 68881
+ftrapunw	cp_conditional	W	0xf07a,FCC_UN	WR AM_IMMED	FCCR 0 68881
+ftrapfw	cp_conditional	W	0xf07a,FCC_F	WR AM_IMMED	FCCR 0 68881
+ftraptw	cp_conditional	W	0xf07a,FCC_T	WR AM_IMMED	FCCR 0 68881
+ftrapsfw	cp_conditional	W	0xf07a,FCC_SF	WR AM_IMMED	FCCR 0 68881
+ftrapstw	cp_conditional	W	0xf07a,FCC_ST	WR AM_IMMED	FCCR 0 68881
+ftrapseqw	cp_conditional	W	0xf07a,FCC_SEQ	WR AM_IMMED	FCCR 0 68881
+ftrapsnew	cp_conditional	W	0xf07a,FCC_SNEQ	WR AM_IMMED	FCCR 0 68881
+
+ftrapeql	cp_conditional	L	0xf07b,FCC_EQ	LR AM_IMMED	FCCR 0 68881
+ftrapnel	cp_conditional	L	0xf07b,FCC_NEQ	LR AM_IMMED	FCCR 0 68881
+ftrapgtl	cp_conditional	L	0xf07b,FCC_GT	LR AM_IMMED	FCCR 0 68881
+ftrapngtl	cp_conditional	L	0xf07b,FCC_NGT	LR AM_IMMED	FCCR 0 68881
+ftrapgel	cp_conditional	L	0xf07b,FCC_GE	LR AM_IMMED	FCCR 0 68881
+ftrapngel	cp_conditional	L	0xf07b,FCC_NGE	LR AM_IMMED	FCCR 0 68881
+ftrapltl	cp_conditional	L	0xf07b,FCC_LT	LR AM_IMMED	FCCR 0 68881
+ftrapnltl	cp_conditional	L	0xf07b,FCC_NLT	LR AM_IMMED	FCCR 0 68881
+ftraplel	cp_conditional	L	0xf07b,FCC_LE	LR AM_IMMED	FCCR 0 68881
+ftrapnlel	cp_conditional	L	0xf07b,FCC_NLE	LR AM_IMMED	FCCR 0 68881
+ftrapgll	cp_conditional	L	0xf07b,FCC_GL	LR AM_IMMED	FCCR 0 68881
+ftrapngll	cp_conditional	L	0xf07b,FCC_NGL	LR AM_IMMED	FCCR 0 68881
+ftrapglel	cp_conditional	L	0xf07b,FCC_GLE	LR AM_IMMED	FCCR 0 68881
+ftrapnglel	cp_conditional	L	0xf07b,FCC_NGLE	LR AM_IMMED	FCCR 0 68881
+ftrapogtl	cp_conditional	L	0xf07b,FCC_OGT	LR AM_IMMED	FCCR 0 68881
+ftrapulel	cp_conditional	L	0xf07b,FCC_ULE	LR AM_IMMED	FCCR 0 68881
+ftrapogel	cp_conditional	L	0xf07b,FCC_OGE	LR AM_IMMED	FCCR 0 68881
+ftrapultl	cp_conditional	L	0xf07b,FCC_ULT	LR AM_IMMED	FCCR 0 68881
+ftrapoltl	cp_conditional	L	0xf07b,FCC_OLT	LR AM_IMMED	FCCR 0 68881
+ftrapugel	cp_conditional	L	0xf07b,FCC_UGE	LR AM_IMMED	FCCR 0 68881
+ftrapolel	cp_conditional	L	0xf07b,FCC_OLE	LR AM_IMMED	FCCR 0 68881
+ftrapugtl	cp_conditional	L	0xf07b,FCC_UGT	LR AM_IMMED	FCCR 0 68881
+ftrapogll	cp_conditional	L	0xf07b,FCC_OGL	LR AM_IMMED	FCCR 0 68881
+ftrapueql	cp_conditional	L	0xf07b,FCC_UEQ	LR AM_IMMED	FCCR 0 68881
+ftraporl	cp_conditional	L	0xf07b,FCC_OR	LR AM_IMMED	FCCR 0 68881
+ftrapunl	cp_conditional	L	0xf07b,FCC_UN	LR AM_IMMED	FCCR 0 68881
+ftrapfl	cp_conditional	L	0xf07b,FCC_F	LR AM_IMMED	FCCR 0 68881
+ftraptl	cp_conditional	L	0xf07b,FCC_T	LR AM_IMMED	FCCR 0 68881
+ftrapsfl	cp_conditional	L	0xf07b,FCC_SF	LR AM_IMMED	FCCR 0 68881
+ftrapstl	cp_conditional	L	0xf07b,FCC_ST	LR AM_IMMED	FCCR 0 68881
+ftrapseql	cp_conditional	L	0xf07b,FCC_SEQ	LR AM_IMMED	FCCR 0 68881
+ftrapsnel	cp_conditional	L	0xf07b,FCC_SNEQ	LR AM_IMMED	FCCR 0 68881
+
+
+## 	Coprocessor save/restore instructions
+
+frestore cp_oneword	Z	0xf140	0	AM_CTRL+AM_POSTINC FCC0 0 68881
+fsave	cp_oneword	Z	0xf100	0	AM_ACTRL+AM_PREDEC FCC0 0 68881

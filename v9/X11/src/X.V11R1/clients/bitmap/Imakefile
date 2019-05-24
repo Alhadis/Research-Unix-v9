@@ -1,0 +1,6 @@
+LOCAL_LIBRARIES = $(XLIB)
+  SYS_LIBRARIES = -lm
+           SRCS = bitmap.c dialog.c
+           OBJS = bitmap.o dialog.o
+
+ComplexProgramTarget(bitmap)

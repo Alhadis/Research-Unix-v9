@@ -1,0 +1,136 @@
+#define IHaveSubdirs
+#define PassCDebugFlags 'CDEBUGFLAGS=$(CDEBUGFLAGS)'
+
+    CDEBUGFLAGS = -g
+        SUBDIRS = clients
+       INCLUDES = -I. -I$(OLDXRMSRC) -I$(XLIBSRC) -I$(TOP) -I$(TOP)/X11
+#if BigEndianArchitecture == YES
+        DEFINES = -DLIBDIR=\"$(LIBDIR)\" -DBIGENDIAN
+#else
+        DEFINES = -DLIBDIR=\"$(LIBDIR)\"
+#endif
+   INSTALLFLAGS = -m 0644
+
+HEADERS = \
+	Atoms.h \
+	ButtonBox.h \
+	Clock.h \
+	Command.h \
+	Intrinsic.h \
+	Knob.h \
+	Label.h \
+	Load.h \
+	Misc.h \
+	Quarks.h \
+	Scroll.h \
+	Text.h \
+	TopLevel.h \
+	TM.h
+
+SRCS = \
+	ArgList.c \
+	Alloc.c \
+	AsciiSink.c \
+	ButtonBox.c \
+	Clock.c \
+	Command.c \
+	Conversion.c \
+	Cursors.c \
+	DiskSrc.c \
+	Error.c \
+	Event.c \
+	GCManager.c \
+	Geometry.c \
+	GrayPixmap.c \
+	Initialize.c \
+	Intrinsic.c \
+	Label.c \
+	Load.c \
+	NextEvent.c \
+	Quarks.c \
+	Resources.c \
+	Scroll.c \
+	StringSrc.c \
+	Text.c \
+	TextKinds.c \
+	TMparse.c \
+	TMstate.c \
+	Xrm.c
+#	VPane.c
+
+OBJS = \
+	ArgList.o \
+	Alloc.o \
+	AsciiSink.o \
+	ButtonBox.o \
+	Clock.o \
+	Command.o \
+	Conversion.o \
+	Cursors.o \
+	DiskSrc.o \
+	Error.o \
+	Event.o \
+	GCManager.o \
+	Geometry.o \
+	GrayPixmap.o \
+	Initialize.o \
+	Intrinsic.o \
+	Label.o \
+	Load.o \
+	NextEvent.o \
+	Quarks.o \
+	Resources.o \
+	Scroll.o \
+	StringSrc.o \
+	Text.o \
+	TextKinds.o \
+	TMparse.o \
+	TMstate.o \
+	Xrm.o
+#	VPane.o
+
+#if DebugLibXtk && ProfileLibXtk
+DebuggedAndProfiledLibraryObjectRule()
+#else
+# if DebugLibXtk
+DebuggedLibraryObjectRule()
+# else
+#  if ProfileLibXtk
+ProfiledLibraryObjectRule()
+#  else
+NormalLibraryObjectRule()
+#  endif
+# endif
+#endif
+
+NormalLibraryTarget(Xtk,$(OBJS))
+AliasedLibraryTarget(Xtk,Xtk11)
+LintLibraryTarget(Xtk,$(SRCS))
+InstallLibrary(Xtk,$(USRLIBDIR))
+InstallLibraryAlias(Xtk,Xtk11,$(USRLIBDIR))
+InstallLintLibrary(Xtk,$(USRLIBDIR))
+
+#if ProfileLibXtk
+ProfiledLibraryTarget(Xtk,$(OBJS))
+AliasedLibraryTarget(Xtk_p,Xtk11_p)
+InstallLibrary(Xtk_p,$(USRLIBDIR))
+InstallLibraryAlias(Xtk_p,Xtk11_p,$(USRLIBDIR))
+#endif
+
+#if DebugLibXtk
+DebuggedLibraryTarget(Xtk,$(OBJS))
+AliasedLibraryTarget(Xtk_d,Xtk11_d)
+#endif
+
+MakeSubdirs($(SUBDIRS))
+DependSubdirs($(SUBDIRS))
+
+InstallMultiple($(HEADERS),$(INCDIR))
+
+DependTarget()
+
+lint:
+	$(LINT) -buz ${INCLUDES} \
+		-DLIBDIR=\"${LIBDIR}\" \
+		${SRCS} \
+		$(XLIBSRC)/llib-lX.ln

@@ -1,0 +1,34 @@
+DELETED:
+:errfix
+abs.s
+alloca.s
+atof.s
+frexp.s
+getfields.s
+labs.s
+ldexp.s
+mcount.s
+memccpy.s memchr.s memcmp.s memcpy.s memset.s modf.s
+mon.s
+strcat.s strchr.s strcmp.s strcpy.s strcspn.s strlen.s strncat.s
+strncmp.s strncpy.s strpbrk.s strspn.s
+udiv.s urem.s
+nlist.c
+
+MISSING:
+alloca.s
+frexp.s (in ../sun)
+mcount.s
+modf.s (in ../sun)
+ldexp.s (in ../sun)
+nlist.c
+
+ADDED:
+atof.c
+memory.c
+dummy.s
+
+MODIFIED:
+ltol3.c		defines for mc68000
+l3tol.c		"
+nlist.c		line 73, added check to make sure p != 0

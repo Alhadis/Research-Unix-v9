@@ -1,0 +1,427 @@
+########
+#
+#	libj makefile
+#
+########
+#
+#	Standard Macros
+#
+########
+AUX_CLEAN = 
+MAKE.LO = make.lo
+MAKE.FWROOT = $(FWROOT)/make.root
+MKGEN = mkgen
+ROOT = $(DMD)
+FWROOT = ../../..
+INC = $(FWROOT)/include
+SGSX = 
+
+INC_LIST	=\
+	-I$(INC)
+
+CLEAN =\
+	.C.o\
+	.c.o\
+	.s.o\
+	Jrect.o\
+	addr.o\
+	alloc.o\
+	arc.o\
+	arith.o\
+	balloc.o\
+	bitblt.o\
+	clip.o\
+	defont.o\
+	display.o\
+	gcalloc.o\
+	jlineto.o\
+	jstring.o\
+	jtexture.o\
+	line.o\
+	masks.o\
+	menu.o\
+	min.o\
+	point.o\
+	ptinrect.o\
+	rect.o\
+	rectXrect.o\
+	rectclip.o\
+	rectf.o\
+	screenswap.o\
+	string.o\
+	strwidth.o\
+	texture.o
+
+all:
+install:	all
+
+##########
+#
+#	make.root
+#
+##########
+
+FWBIN=$(FWROOT)/bin
+FWLIB=$(FWROOT)/fwlib
+FWSRC=$(FWROOT)/src
+FWINCLUDE=$(FWROOT)/include
+UINC=/usr/include
+FWDEMO=$(FWROOT)/demo
+MCC=$(ROOT)/bin/dmdcc
+MLD=m32ld
+MAR=ar
+MLORDER=m32lorder
+
+########
+#
+#	make.lo
+#
+########
+
+
+TITLE = libj makefile
+PRODUCTS = libj.a
+
+
+MAKEARG= -$(MAKEFLAGS) 
+
+MLORDER=m32lorder
+LCLCFLAGS=-J -g -O
+CLEAN= $(OBJ) libj.a
+
+
+CC_CMD =	$(MCC) $(MCFLAGS) $(LCLCFLAGS) -c
+
+OBJ=jstring.o menu.o \
+	balloc.o min.o  point.o  \
+	ptinrect.o alloc.o gcalloc.o  \
+	rectXrect.o rectf.o jtexture.o Jrect.o rectclip.o \
+	screenswap.o string.o bitblt.o strwidth.o defont.o rect.o \
+	texture.o  jlineto.o arith.o clip.o line.o \
+	addr.o masks.o  display.o 
+
+CFILES= alloc.c balloc.c\
+	bitblt.s clip.c \
+	display.c gcalloc.c \
+	jlineto.c \
+	Jrect.c jstring.c jtexture.c line.c masks.c menu.c min.c\
+	point.c ptinrect.c \
+	rectXrect.c rectclip.c rectf.c screenswap.c  string.c\
+	defont.c \
+	strwidth.c texture.c  rect.s 
+
+.C.o:
+	echo ".C files no longer built"
+
+.c.o:
+	$(MCC) $(MCFLAGS) $(LCLCFLAGS) -c $<
+
+.s.o:
+	$(MCC) -c $<
+
+libj.a: $(OBJ)
+	rm -f libj.a
+	$(MAR) cr libj.a $(OBJ) 
+
+texture.o:	texture.s
+	$(MCC) $(MCFLAGS) -g -c texture.s
+
+bitblt.o:	bitblt.c
+	$(MCC) $(MCFLAGS) -J -g -c bitblt.c
+
+min.o: 	min.s
+	$(MCC) -c min.s
+
+arith.o: arith.s
+	$(MCC) -c arith.s
+
+rect.o: rect.s
+	$(MCC) -c rect.s
+
+addr.o: addr.s
+	$(MCC) -c addr.s
+
+save:
+	-cp $(FWLIB)/libj.a olibj.a
+
+install:libj.a
+	cp libj.a $(FWLIB)/libj.a
+
+
+########
+#
+#	All dependencies and rules not explicitly stated
+#	(including header and nested header dependencies)
+#
+########
+
+Jrect.o:	Jrect.c
+Jrect.o:	$(INC)/jerq.h
+Jrect.o:	$(INC)/jerqproc.h # nested include from mpx.h
+Jrect.o:	$(INC)/layer.h # nested include from mpx.h
+Jrect.o:	$(INC)/mpx.h # nested include from jerq.h
+Jrect.o:	$(INC)/sys/2681.h # nested include from jerq.h
+	$(MCC) $(MCFLAGS) $(LCLCFLAGS) -c Jrect.c
+
+alloc.o:	alloc.c
+	$(MCC) $(MCFLAGS) $(LCLCFLAGS) -c alloc.c
+
+
+balloc.o:	balloc.c
+balloc.o:	$(INC)/jerq.h
+balloc.o:	$(INC)/jerqproc.h # nested include from mpx.h
+balloc.o:	$(INC)/layer.h # nested include from mpx.h
+balloc.o:	$(INC)/mpx.h # nested include from jerq.h
+balloc.o:	$(INC)/sys/2681.h # nested include from jerq.h
+	$(MCC) $(MCFLAGS) $(LCLCFLAGS) -c balloc.c
+
+bitblt.o:	$(INC)/jerq.h
+bitblt.o:	$(INC)/jerqproc.h # nested include from mpx.h
+bitblt.o:	$(INC)/layer.h # nested include from mpx.h
+bitblt.o:	$(INC)/mpx.h # nested include from jerq.h
+bitblt.o:	$(INC)/sys/2681.h # nested include from jerq.h
+
+clip.o:	clip.c
+clip.o:	$(INC)/jerq.h
+clip.o:	$(INC)/jerqproc.h # nested include from mpx.h
+clip.o:	$(INC)/layer.h # nested include from mpx.h
+clip.o:	$(INC)/line.h
+clip.o:	$(INC)/mpx.h # nested include from jerq.h
+clip.o:	$(INC)/sys/2681.h # nested include from jerq.h
+	$(MCC) $(MCFLAGS) $(LCLCFLAGS) -c clip.c
+
+
+
+defont.o:	defont.c
+defont.o:	$(INC)/font.h
+defont.o:	$(INC)/jerq.h
+defont.o:	$(INC)/jerqproc.h # nested include from mpx.h
+defont.o:	$(INC)/layer.h # nested include from mpx.h
+defont.o:	$(INC)/mpx.h # nested include from jerq.h
+defont.o:	$(INC)/sys/2681.h # nested include from jerq.h
+	$(MCC) $(MCFLAGS) $(LCLCFLAGS) -c defont.c
+
+
+display.o:	display.c
+display.o:	$(INC)/jerq.h
+display.o:	$(INC)/jerqproc.h # nested include from mpx.h
+display.o:	$(INC)/layer.h # nested include from mpx.h
+display.o:	$(INC)/mpx.h # nested include from jerq.h
+display.o:	$(INC)/sys/2681.h # nested include from jerq.h
+	$(MCC) $(MCFLAGS) $(LCLCFLAGS) -c display.c
+
+
+
+gcalloc.o:	gcalloc.c
+gcalloc.o:	$(INC)/jerq.h
+gcalloc.o:	$(INC)/setup.h
+gcalloc.o:	$(INC)/jerqproc.h # nested include from mpx.h
+gcalloc.o:	$(INC)/layer.h # nested include from mpx.h
+gcalloc.o:	$(INC)/mpx.h # nested include from jerq.h
+gcalloc.o:	$(INC)/sys/2681.h # nested include from jerq.h
+	$(MCC) $(MCFLAGS) $(LCLCFLAGS) -c gcalloc.c
+
+
+jlineto.o:	$(INC)/jerq.h
+jlineto.o:	$(INC)/jerqproc.h # nested include from mpx.h
+jlineto.o:	jlineto.c
+jlineto.o:	$(INC)/layer.h # nested include from mpx.h
+jlineto.o:	$(INC)/line.h
+jlineto.o:	$(INC)/mpx.h # nested include from jerq.h
+jlineto.o:	$(INC)/sys/2681.h # nested include from jerq.h
+	$(MCC) $(MCFLAGS) $(LCLCFLAGS) -c jlineto.c
+
+
+jstring.o:	$(INC)/font.h
+jstring.o:	$(INC)/jerq.h
+jstring.o:	$(INC)/jerqproc.h # nested include from mpx.h
+jstring.o:	jstring.c
+jstring.o:	$(INC)/layer.h # nested include from mpx.h
+jstring.o:	$(INC)/mpx.h # nested include from jerq.h
+jstring.o:	$(INC)/sys/2681.h # nested include from jerq.h
+	$(MCC) $(MCFLAGS) $(LCLCFLAGS) -c jstring.c
+
+jtexture.o:	$(INC)/jerq.h
+jtexture.o:	$(INC)/jerqproc.h # nested include from mpx.h
+jtexture.o:	jtexture.c
+jtexture.o:	$(INC)/layer.h # nested include from mpx.h
+jtexture.o:	$(INC)/mpx.h # nested include from jerq.h
+jtexture.o:	$(INC)/sys/2681.h # nested include from jerq.h
+	$(MCC) $(MCFLAGS) $(LCLCFLAGS) -c jtexture.c
+
+line.o:	$(INC)/jerq.h
+line.o:	$(INC)/jerqproc.h # nested include from mpx.h
+line.o:	$(INC)/layer.h # nested include from mpx.h
+line.o:	line.c
+line.o:	$(INC)/line.h
+line.o:	$(INC)/mpx.h # nested include from jerq.h
+line.o:	$(INC)/sys/2681.h # nested include from jerq.h
+	$(MCC) $(MCFLAGS) $(LCLCFLAGS) -c line.c
+
+masks.o:	masks.c
+	$(MCC) $(MCFLAGS) $(LCLCFLAGS) -c masks.c
+
+menu.o:	$(INC)/font.h
+menu.o:	$(INC)/jerq.h
+menu.o:	$(INC)/jerqproc.h # nested include from mpx.h
+menu.o:	$(INC)/layer.h # nested include from mpx.h
+menu.o:	menu.c
+menu.o:	$(INC)/mpx.h # nested include from jerq.h
+menu.o:	$(INC)/sys/2681.h # nested include from jerq.h
+	$(MCC) $(MCFLAGS) $(LCLCFLAGS) -c menu.c
+
+norm.o:	norm.c
+	$(MCC) $(MCFLAGS) $(LCLCFLAGS) -c norm.c
+
+point.o:	$(INC)/jerq.h
+point.o:	$(INC)/jerqproc.h # nested include from mpx.h
+point.o:	$(INC)/layer.h # nested include from mpx.h
+point.o:	$(INC)/mpx.h # nested include from jerq.h
+point.o:	point.c
+point.o:	$(INC)/sys/2681.h # nested include from jerq.h
+	$(MCC) $(MCFLAGS) $(LCLCFLAGS) -c point.c
+
+popen.o:	$(INC)/jerq.h
+popen.o:	$(INC)/jerqio.h
+popen.o:	$(INC)/jerqproc.h # nested include from mpx.h
+popen.o:	$(INC)/layer.h # nested include from mpx.h
+popen.o:	$(INC)/mpx.h # nested include from jerq.h
+popen.o:	popen.c
+popen.o:	$(INC)/sys/2681.h # nested include from jerq.h
+	$(MCC) $(MCFLAGS) $(LCLCFLAGS) -c popen.c
+
+printf.o:	$(INC)/jerq.h
+printf.o:	$(INC)/jerqio.h
+printf.o:	$(INC)/jerqproc.h # nested include from mpx.h
+printf.o:	$(INC)/layer.h # nested include from mpx.h
+printf.o:	$(INC)/mpx.h # nested include from jerq.h
+printf.o:	printf.c
+printf.o:	$(INC)/sys/2681.h # nested include from jerq.h
+	$(MCC) $(MCFLAGS) $(LCLCFLAGS) -c printf.c
+
+ptinrect.o:	$(INC)/jerq.h
+ptinrect.o:	$(INC)/jerqproc.h # nested include from mpx.h
+ptinrect.o:	$(INC)/layer.h # nested include from mpx.h
+ptinrect.o:	$(INC)/mpx.h # nested include from jerq.h
+ptinrect.o:	ptinrect.c
+ptinrect.o:	$(INC)/sys/2681.h # nested include from jerq.h
+	$(MCC) $(MCFLAGS) $(LCLCFLAGS) -c ptinrect.c
+
+put.o:	$(INC)/jerq.h
+put.o:	$(INC)/jerqio.h
+put.o:	$(INC)/jerqproc.h # nested include from mpx.h
+put.o:	$(INC)/layer.h # nested include from mpx.h
+put.o:	$(INC)/mpx.h # nested include from jerq.h
+put.o:	put.c
+put.o:	$(INC)/sys/2681.h # nested include from jerq.h
+	$(MCC) $(MCFLAGS) $(LCLCFLAGS) -c put.c
+
+rdwr.o:	$(INC)/jerq.h
+rdwr.o:	$(INC)/jerqio.h
+rdwr.o:	$(INC)/jerqproc.h # nested include from mpx.h
+rdwr.o:	$(INC)/layer.h # nested include from mpx.h
+rdwr.o:	$(INC)/mpx.h # nested include from jerq.h
+rdwr.o:	rdwr.c
+rdwr.o:	$(INC)/sys/2681.h # nested include from jerq.h
+	$(MCC) $(MCFLAGS) $(LCLCFLAGS) -c rdwr.c
+
+rectXrect.o:	$(INC)/jerq.h
+rectXrect.o:	$(INC)/jerqproc.h # nested include from mpx.h
+rectXrect.o:	$(INC)/layer.h # nested include from mpx.h
+rectXrect.o:	$(INC)/mpx.h # nested include from jerq.h
+rectXrect.o:	rectXrect.c
+rectXrect.o:	$(INC)/sys/2681.h # nested include from jerq.h
+	$(MCC) $(MCFLAGS) $(LCLCFLAGS) -c rectXrect.c
+
+rectclip.o:	$(INC)/jerq.h
+rectclip.o:	$(INC)/jerqproc.h # nested include from mpx.h
+rectclip.o:	$(INC)/layer.h # nested include from mpx.h
+rectclip.o:	$(INC)/mpx.h # nested include from jerq.h
+rectclip.o:	rectclip.c
+rectclip.o:	$(INC)/sys/2681.h # nested include from jerq.h
+	$(MCC) $(MCFLAGS) $(LCLCFLAGS) -c rectclip.c
+
+rectf.o:	$(INC)/jerq.h
+rectf.o:	$(INC)/jerqproc.h # nested include from mpx.h
+rectf.o:	$(INC)/layer.h # nested include from mpx.h
+rectf.o:	$(INC)/mpx.h # nested include from jerq.h
+rectf.o:	rectf.c
+rectf.o:	$(INC)/sys/2681.h # nested include from jerq.h
+	$(MCC) $(MCFLAGS) $(LCLCFLAGS) -c rectf.c
+
+rol.o:	rol.c
+	$(MCC) $(MCFLAGS) $(LCLCFLAGS) -c rol.c
+
+screenswap.o:	$(INC)/jerq.h
+screenswap.o:	$(INC)/jerqproc.h # nested include from mpx.h
+screenswap.o:	$(INC)/layer.h # nested include from mpx.h
+screenswap.o:	$(INC)/mpx.h # nested include from jerq.h
+screenswap.o:	screenswap.c
+screenswap.o:	$(INC)/sys/2681.h # nested include from jerq.h
+	$(MCC) $(MCFLAGS) $(LCLCFLAGS) -c screenswap.c
+
+sqrt.o:	sqrt.c
+	$(MCC) $(MCFLAGS) $(LCLCFLAGS) -c sqrt.c
+
+string.o:	$(INC)/font.h
+string.o:	$(INC)/jerq.h
+string.o:	$(INC)/jerqproc.h # nested include from mpx.h
+string.o:	$(INC)/layer.h # nested include from mpx.h
+string.o:	$(INC)/mpx.h # nested include from jerq.h
+string.o:	string.c
+string.o:	$(INC)/sys/2681.h # nested include from jerq.h
+	$(MCC) $(MCFLAGS) $(LCLCFLAGS) -c string.c
+
+strwidth.o:	$(INC)/font.h
+strwidth.o:	$(INC)/jerq.h
+strwidth.o:	$(INC)/jerqproc.h # nested include from mpx.h
+strwidth.o:	$(INC)/layer.h # nested include from mpx.h
+strwidth.o:	$(INC)/mpx.h # nested include from jerq.h
+strwidth.o:	strwidth.c
+strwidth.o:	$(INC)/sys/2681.h # nested include from jerq.h
+	$(MCC) $(MCFLAGS) $(LCLCFLAGS) -c strwidth.c
+
+texture16.o:	$(INC)/jerq.h
+texture16.o:	$(INC)/jerqproc.h # nested include from mpx.h
+texture16.o:	$(INC)/layer.h # nested include from mpx.h
+texture16.o:	$(INC)/mpx.h # nested include from jerq.h
+texture16.o:	$(INC)/sys/2681.h # nested include from jerq.h
+texture16.o:	texture16.c
+	$(MCC) $(MCFLAGS) $(LCLCFLAGS) -c texture16.c
+
+wait.o:	$(INC)/jerq.h
+wait.o:	$(INC)/jerqproc.h # nested include from mpx.h
+wait.o:	$(INC)/layer.h # nested include from mpx.h
+wait.o:	$(INC)/mpx.h # nested include from jerq.h
+wait.o:	$(INC)/queue.h
+wait.o:	$(INC)/sys/2681.h # nested include from jerq.h
+wait.o:	wait.c
+	$(MCC) $(MCFLAGS) $(LCLCFLAGS) -c wait.c
+
+########
+#
+#	Standard Targets
+#
+#	all		builds all the products specified by PRODUCTS
+#	clean		removes all temporary files (ex. installable object)
+#	clobber		"cleans", and then removes $(PRODUCTS)
+#	makefile	regenerates makefile
+#	install		installs products; user defined in make.lo 
+#
+########
+
+all:		$(PRODUCTS)
+
+clean:
+		rm -f $(CLEAN) $(AUX_CLEAN)
+
+clobber:	clean
+		rm -f $(PRODUCTS)
+
+makefile:	$(MAKE.LO) $(MAKE.FWROOT)
+		$(MKGEN) >make.out
+		if [ -s make.out ]; then mv make.out makefile; fi
+
+makefile_all:	makefile
+
+install: 	# rules, if any, specified above

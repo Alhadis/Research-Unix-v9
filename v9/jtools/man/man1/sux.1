@@ -1,0 +1,82 @@
+.TH SUX 1
+.CT 1 comm_term
+.SH NAME
+sux - mux style terminal windows for X11 and suntools
+.SH SYNOPSIS
+.B sux
+.SH DESCRIPTION
+.I Sux
+creates in interactive terminal window for \fIX11\fR
+and \fIsuntools\fR which emulates 9th Edition \fImux\fR terminal
+windows.
+When sux is started, a separate shell
+(the value of the
+.B SHELL
+environment variable, or
+.I sh
+by default)
+is established, and bound to the window.
+.PP
+There is a point
+in each window, called the `Unix point', where
+the next character from Unix will be inserted.
+The Unix point advances whenever characters
+are received from Unix, but not when echoing typed characters.
+When a newline is typed after the Unix point,
+characters between the Unix point and the newline,
+inclusive, are sent to Unix and the
+Unix point advanced to after the newline.
+This means that
+shell prompts and other output will be inserted before
+characters that have been typed ahead.
+No other characters are sent to Unix (but see the discussion of raw mode
+below).
+Therefore partially typed lines or text anywhere before the Unix
+point may be edited.
+.PP
+.I Sux
+allows any text on the screen to be edited, much as in
+.IR sam (1).
+Text may be selected by sweeping it with button 1 depressed.
+Typed characters replace selected text.
+.PP
+All \fIsux\fR windows share a common `snarf buffer' (distinct from
+.IR sam 's).
+The
+.B cut
+operation on button 2 deletes selected text and puts it
+in the buffer;
+.B snarf
+copies selected text to the buffer;
+.B paste
+replaces selected text (which may be null) from the buffer; and
+.B send
+copies the snarf buffer to after the Unix point.
+.PP
+Normally the terminal doesn't scroll
+as text is received, but a button 2 menu item selects scrolling.
+.PP
+A scroll bar indicates what portion of all the text stored
+for a \fIsux\fR window is on the screen.
+(It measures characters, not lines.)
+Releasing button 1 in the scroll bar brings the line at the top
+of the screen to the cursor;
+releasing button 3 takes the line at the cursor
+to the top of the screen.
+Button 2, treating the scroll bar as a ruler, brings the indicated
+point in the whole stored text to the top of the screen.
+.PP
+In raw mode or no-echo mode (see
+.IR tty (4))
+the Unix point advances with each character
+typed after it.
+.SH SEE ALSO
+.IR sam (1), 
+.SH BUGS
+On non-9th Edition systems, it is not possible for
+.I sux
+to determine when the line discipline changes to and from raw mode.
+As a result,
+.I sux
+always assumes it is in raw mode so it is not possible to use the mouse
+to edit partially typed lines.

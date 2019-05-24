@@ -1,0 +1,9 @@
+CC=cc
+CFLAGS=-DSUNTOOLS -DBSD -g -I../../sunlib
+LIBS= ../../sunlib/libsj.a -lsuntool -lsunwindow -lpixrect
+swar:	swar.o
+	${CC} ${CFLAGS} swar.o ${LIBS} -o swar
+swar.o:	player0.icon player1.icon accel.h missile.icon deathstar.icon boom.icon
+
+clean:
+	rm -f *.o core swar

@@ -1,0 +1,56 @@
+EXPORTS = \
+	X.h \
+	XWDFile.h \
+	Xatom.h \
+	Xmd.h \
+	Xproto.h \
+	Xprotostr.h \
+	copyright.h \
+	keysym.h
+
+IMPORTS = \
+	$(OLDXMENUSRC)/XMenu.h \
+	$(OLDXLIBSRC)/X10.h \
+	$(XRMSRC)/Xresource.h \
+	$(XLIBSRC)/Xlib.h \
+	$(XLIBSRC)/Xutil.h \
+	$(FONTSRC)/cursorfont.h \
+	$(TOOLKITSRC)/Atoms.h \
+	$(TOOLKITSRC)/ButtonBox.h \
+	$(TOOLKITSRC)/Clock.h \
+	$(TOOLKITSRC)/Command.h \
+	$(TOOLKITSRC)/Intrinsic.h \
+	$(TOOLKITSRC)/Knob.h \
+	$(TOOLKITSRC)/Label.h \
+	$(TOOLKITSRC)/Load.h \
+	$(TOOLKITSRC)/Misc.h \
+	$(TOOLKITSRC)/Quarks.h \
+	$(TOOLKITSRC)/Scroll.h \
+	$(TOOLKITSRC)/TM.h \
+	$(TOOLKITSRC)/Text.h \
+	$(TOOLKITSRC)/TopLevel.h \
+	$(TOOLKITSRC)/VPane.h
+
+SUBIMPORTS = \
+	$(EXTENSIONSRC)/include/zoid.h \
+	$(EXTENSIONSRC)/include/bezier.h
+   
+
+INSTALLFLAGS = -m 0444
+
+all: $(IMPORTS) $(SUBIMPORTS) extensions
+	@-(list=`echo $(IMPORTS) | sed -e 's/[^ ]*\///g'`; set -x; rm $$list)
+	ln -s $(IMPORTS) .
+	@-(list=`echo $(SUBIMPORTS) | sed -e 's/[^ ]*\///g'`; \
+		set -x; cd extensions; rm $$list)
+	@for i in $(SUBIMPORTS); do \
+		(set -x; ln -s ../$$i extensions); \
+	done
+
+extensions:
+	mkdir $@
+	
+InstallMultiple($(EXPORTS),$(INCDIR))
+
+depend:
+	@echo "depend: skipping include"

@@ -1,0 +1,14 @@
+# default permissions are obtained by matching passwd files and group files
+# this file contains exceptions to the defaults
+# lines beginning with # are comments , blank lines are ignored
+# the following  (without the #'s)example means that clinet uid root
+# won't translate, client uid osh will be translated to daemon,
+# similarly with gid's, and that the param otherok will be 0.
+# [otherok is the only param there is now, and
+# 1 means that client users have other permissions on the host]
+
+uid root=
+#uid osh=daemon
+#gid camp=
+#gid mail=other
+#param otherok=0

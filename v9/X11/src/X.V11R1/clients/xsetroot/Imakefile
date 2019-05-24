@@ -1,0 +1,5 @@
+LOCAL_LIBRARIES = $(XLIB)
+           SRCS = xsetroot.c wsimple.c
+           OBJS = xsetroot.o wsimple.o
+
+ComplexProgramTarget(xsetroot)

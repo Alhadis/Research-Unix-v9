@@ -1,0 +1,24 @@
+.TH TEK 1
+.CT 1 comm_term
+.SH NAME
+tek \- Tektronix 4014 emulator
+.SH SYNOPSIS
+.B tek
+.SH DESCRIPTION
+.I Tek
+an interactive window which emulates a Tektronix 4014
+display.
+When \fItek\fR is started, a separate shell
+(the value of the
+.B SHELL
+environment variable, or
+.I sh
+by default)
+is established, and bound to the window.
+.PP
+The row of switches above the keyboard are emulated by the
+middle mouse button.
+.SH BUGS
+Characters may overlap if the created window is too small.
+The \fIsuntools\fR(1) version does not support the different
+line types.

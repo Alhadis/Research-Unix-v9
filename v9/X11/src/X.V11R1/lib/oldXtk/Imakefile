@@ -1,0 +1,69 @@
+       INCLUDES = -I. -I$(TOP) -I$(TOP)/X11
+#if BigEndianArchitecture == YES
+        DEFINES = -DLIBDIR=\"$(LIBDIR)\" -DBIGENDIAN
+#else
+        DEFINES = -DLIBDIR=\"$(LIBDIR)\"
+#endif
+   INSTALLFLAGS = -m 0644
+
+#
+# Only the new toolkit header files get installed in /usr/include
+# HEADERS =  Atoms.h Intrinsic.h Xtlib.h ButtonBox.h Boolean.h Command.h \
+#	Dialog.h Form.h Label.h Menu.h Scroll.h Text.h TextDisp.h VPane.h \
+#	Clock.h Load.h
+
+SRCS = Actions.c Alloc.c ArgList.c AsciiSink.c Boolean.c ButtonBox.c \
+	Command.c Cursors.c Clock.c Debug.c Dialog.c DiskSrc.c \
+	Error.c Event.c Form.c GCManager.c Geometry.c Init.c \
+	Label.c Load.c Menu.c Message.c NextEvent.c Resources.c \
+	Scroll.c ScrollMgr.c ScrollWin.c StringSrc.c Text.c TextActs.c \
+	TextKinds.c Util.c VPane.c
+
+OBJS = Actions.o Alloc.o ArgList.o AsciiSink.o Boolean.o ButtonBox.o \
+	Command.o Cursors.o Clock.o Debug.o Dialog.o DiskSrc.o \
+	Error.o Event.o Form.o GCManager.o Geometry.o Init.o \
+	Label.o Load.o Menu.o Message.o NextEvent.o Resources.o \
+	Scroll.o ScrollMgr.o ScrollWin.o StringSrc.o Text.o TextActs.o \
+	TextKinds.o Util.o VPane.o
+
+#if DebugOldLibXtk && ProfileOldLibXtk
+DebuggedAndProfiledLibraryObjectRule()
+#else
+# if DebugOldLibXtk
+DebuggedLibraryObjectRule()
+# else
+#  if ProfileOldLibXtk
+ProfiledLibraryObjectRule()
+#  else
+NormalLibraryObjectRule()
+#  endif
+# endif
+#endif
+
+NormalLibraryTarget(oldXtk,$(OBJS))
+AliasedLibraryTarget(oldXtk,oldXtk11)
+LintLibraryTarget(oldXtk,$(SRCS))
+InstallLibrary(oldXtk,$(USRLIBDIR))
+InstallLibraryAlias(oldXtk,oldXtk11,$(USRLIBDIR))
+InstallLintLibrary(oldXtk,$(USRLIBDIR))
+/* InstallMultiple($(HEADERS),$(INCDIR)) */
+
+#if ProfileOldLibXtk
+ProfiledLibraryTarget(oldXtk,$(OBJS))
+AliasedLibraryTarget(oldXtk_p,oldXtk11_p)
+InstallLibrary(oldXtk_p,$(USRLIBDIR))
+InstallLibraryAlias(oldXtk_p,oldXtk11_p,$(USRLIBDIR))
+#endif
+
+#if DebugOldLibXtk
+DebuggedLibraryTarget(oldXtk,$(OBJS))
+AliasedLibraryTarget(oldXtk_d,oldXtk11_d)
+#endif
+
+DependTarget()
+
+lint:
+	$(LINT) -buz ${INCLUDES} \
+		-DLIBDIR=\"${LIBDIR}\" \
+		${SRCS} \
+		$(XLIBSRC)/llib-lX.ln

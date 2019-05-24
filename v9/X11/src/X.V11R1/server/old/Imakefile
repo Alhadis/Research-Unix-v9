@@ -1,0 +1,173 @@
+#define PassCDebugFlags 'CDEBUGFLAGS=$(CDEBUGFLAGS)' 'CC=$(CC)'
+
+        SUBDIRS = dix $(ALLDDXDIRS) $(ALLOSDIRS)
+    CDEBUGFLAGS = ServerCDebugFlags
+     EXTENSIONS = $(EXTENSIONSRC)/server/libext.a
+         EXTDIR = $(EXTENSIONSRC)/server
+     ALLDDXDIRS = ddx/mi ddx/sun ddx/cfb ddx/apollo ddx/mfb ddx/lk201 \
+                    ddx/qvss ddx/qdss ddx/ibm/apa16 ddx/ibm/rt ddx/ibm/aed
+      ALLOSDIRS = os/sysV os/4.2bsd
+        SUBDIRS = dix $(ALLDDXDIRS) $(ALLOSDIRS)
+           UNIX = os/4.2bsd/libos.a
+           SYSV = os/sysV/libos.a
+            MFB = ddx/mfb/libmfb.a
+            CFB = ddx/cfb/libcfb.a
+             MI = ddx/mi/libmi.a
+            DIX = dix/libdix.a
+            SUN = ddx/sun/libsun.a
+        SYSLIBS = -lm -ldbm
+    ALLPOSSIBLE = Xqvss Xqdss Xsun Xapa16 Xapollo
+
+#ifndef	XqvssServer
+#define	XqvssServer /* as nothing */
+#endif
+
+#ifndef	XqdssServer
+#define	XqdssServer /* as nothing */
+#endif
+
+#ifndef	XsunServer
+#define	XsunServer /* as nothing */
+#endif
+
+#ifndef	XapolloServer
+#define	XapolloServer /* as nothing */
+#endif
+
+#ifndef	Xapa16Server
+#define	Xapa16Server /* as nothing */
+#endif
+
+#ifndef	XaedServer
+#define	XaedServer /* as nothing */
+#endif
+
+ALL = XqvssServer XqdssServer XsunServer XapolloServer Xapa16Server XaedServer
+
+#
+# This turns off the default rule for compiling .c files because
+# this makefile does not really know how to build it.  This is really
+# just a hack because of sun's version of make and nfs.
+#
+.c.o:
+
+all: $(ALL)
+
+#
+# qvss server
+#
+QVSSDIRS = dix ddx/mi ddx/mfb ddx/lk201 ddx/qvss os/4.2bsd
+QVSSOBJS = ddx/qvss/init.o ddx/qvss/qvss_io.o ddx/lk201/lk201.o
+QVSSLIBS = $(DIX) $(UNIX) $(MFB) $(MI) $(EXTENSIONS)
+XqvssDIRS = $(QVSSDIRS)
+
+ServerTarget(Xqvss,$(EXTDIR) $(QVSSDIRS),$(QVSSOBJS),$(QVSSLIBS),$(SYSLIBS))
+
+#
+# qdss server
+#
+QDSSDIRS = dix ddx/mi ddx/mfb ddx/lk201 ddx/qdss os/4.2bsd
+QDSSOBJS = ddx/qdss/init.o ddx/qdss/qdss_io.o ddx/lk201/lk201.o
+QDSSLIBS = ddx/qdss/libqdss.a.save ddx/qdss/libtl.a.save \
+		ddx/qdss/libqdss.a.save \
+               $(DIX) $(UNIX) $(MFB) $(MI) $(EXTENSIONS)
+XqdssDIRS = $(QDSSDIRS)
+
+ServerTarget(Xqdss,$(EXTDIR) $(QDSSDIRS),$(QDSSOBJS),$(QDSSLIBS),$(SYSLIBS))
+
+
+#
+# sun server
+#
+#ifdef UseSunWindowsInServer
+SUNWINDOWSLIBS = -lsunwindow -lpixrect
+#endif
+SUNDIRS = dix ddx/mi ddx/mfb ddx/cfb ddx/sun os/4.2bsd
+SUNOBJS = ddx/sun/sunInit.o
+SUNLIBS = $(SUN) $(CFB) $(DIX) $(UNIX) $(MFB) $(MI) $(EXTENSIONS)
+SUNSYSLIBS = $(SYSLIBS) $(SUNWINDOWSLIBS)
+XsunDIRS = $(SUNDIRS)
+
+ServerTarget(Xsun,$(EXTDIR) $(SUNDIRS),$(SUNOBJS),$(SUNLIBS),$(SUNSYSLIBS))
+
+
+#
+# apa16 server
+#
+APA16DIRS = dix ddx/mi ddx/mfb ddx/ibm/apa16 ddx/ibm/rt os/4.2bsd
+APA16OBJS = ddx/ibm/rt/rtinit.o ddx/ibm/rt/rtio.o
+APA16LIBS = ddx/ibm/apa16/libapa16.a ddx/ibm/rt/librt.a \
+		$(DIX) $(UNIX) $(MFB) $(MI) $(EXTENSIONS)
+Xapa16DIRS = $(APA16DIRS)
+
+ServerTarget(Xapa16,$(EXTDIR) $(APA16DIRS),$(APA16OBJS),$(APA16LIBS),$(SYSLIBS))
+
+#
+# aed server
+#
+AEDDIRS = dix ddx/mi ddx/mfb ddx/ibm/aed ddx/ibm/rt os/4.2bsd
+AEDOBJS = ddx/ibm/rt/rtinit.o ddx/ibm/rt/rtio.o
+AEDLIBS = ddx/ibm/aed/libaed.a ddx/ibm/rt/librt.a \
+		$(DIX) $(UNIX) $(MFB) $(MI) $(EXTENSIONS)
+XaedDIRS = $(AEDDIRS)
+
+ServerTarget(Xaed,$(EXTDIR) $(AEDDIRS),$(AEDOBJS),$(AEDLIBS),$(SYSLIBS))
+
+
+#
+# apollo server
+#
+APOLLODIRS = dix ddx/mi ddx/mfb ddx/apollo os/4.2bsd
+APOLLOOBJS = ddx/apollo/init.o ddx/apollo/apollo_io.o \
+
+		/sys/traits/io_traits
+APOLLOLIBS = $(DIX) $(UNIX) $(MFB) $(MI) $(EXTENSIONS)
+XapolloDIRS = $(APOLLODIRS)
+
+ServerTarget(Xapollo,$(EXTDIR) $(APOLLODIRS),$(APOLLOOBJS),$(APOLLOLIBS),$(SYSLIBS))
+
+#
+# other, necessary targets
+#
+CleanSubdirs($(SUBDIRS))
+TagSubdirs($(SUBDIRS))
+MakefileSubdirs($(SUBDIRS))
+InstallMultiple($(ALL),$(BINDIR))
+
+#
+# Gad, but I wish this wasn't so complicated.  All this because
+# If we are making two servers, then there may be two lists of
+# directories to depend or whatever, most of which are duplicates
+#
+#define DoServerSubdirList(target)					@@\
+target::								@@\
+	@for i in $(ALL); do \						@@\
+		dirs="$$dirs \$$($${i}DIRS)"; \				@@\
+	done; \								@@\
+	$(MAKE) $(MFLAGS) Real/**/target \				@@\
+		"SERVERSUBDIRS=$$dirs" \				@@\
+		LINT=$(LINT) DESTDIR=$(DESTDIR)				@@\
+									@@\
+Real/**/target:								@@\
+	@subdirs=`ls -d $(SERVERSUBDIRS) | sort -u`; \			@@\
+	for i in $$subdirs; do \					@@\
+		echo "target/**/ing $$i"; \				@@\
+		(cd $$i ; $(MAKE) $(MFLAGS) target \			@@\
+			LINT=$(LINT) DESTDIR=$(DESTDIR) ); \		@@\
+	done
+
+DoServerSubdirList(depend)
+DoServerSubdirList(install)
+DoServerSubdirList(lintlib)
+
+$(EXTDIR) $(SUBDIRS): FRC
+	@cd $@ ; echo "making $@"; \
+	$(MAKE) $(MFLAGS) PassCDebugFlags all
+
+lint:
+	lint dix/?*.ln os/4.2bsd/?*.ln ddx/mi/?*.ln ddx/mfb/?*.ln > lint.out
+
+clean::
+	rm -f $(ALLPOSSIBLE)
+
+FRC:

@@ -1,0 +1,14 @@
+*		32768/tcp
+cs		1/tcp
+ftp		21/tcp
+telnet		23/tcp
+smtp		25/tcp
+date		37/udp
+uucp		64/tcp
+exec		512/tcp
+rogin		513/tcp
+login		513/tcp
+shell		514/tcp
+route		520/udp
+face		666/udp
+berbell		556/tcp

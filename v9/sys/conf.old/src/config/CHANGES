@@ -1,0 +1,4 @@
+Changes necessary for SUNs
+
+mkconf.c: line 402 - added test for rp->rt_type != NULL as strcmp doesn't
+	like to get NULL arguments on SUNs.

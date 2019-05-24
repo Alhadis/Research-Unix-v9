@@ -1,0 +1,26 @@
+.\" $Header: Xaed.man,v 1.2 87/09/14 17:38:22 rws Exp $
+.TH XAED 8 "10 September 1987" "X Version 11"
+.SH NAME
+Xaed - X window system IBM aed display
+.SH DESCRIPTION
+.PP
+This server supports the AED monitor
+on the IBM PC/RT.
+.PP
+-pckeys can be used to swap Ctrl and Caps Lock for touch typists.
+.SH "BUGS"
+This is only known to work on 4.3 systems.
+It has not been thoroughly tested.
+.SH "SEE ALSO"
+.PP
+.IR X (8)
+.IR X (1)
+.IR `Xlib - C Language X Interface'
+.IR `ddX - Device Dependent X Interface'
+.SH AUTHORS
+.PP
+Erik Fortune
+.br
+Copyright (c) 1984, 1985, 1986 by Massachusetts Institute of Technology.
+.br
+See X(1) for a complete Copyright notice.

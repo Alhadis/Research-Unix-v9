@@ -1,0 +1,5 @@
+LOCAL_LIBRARIES = $(XLIB)
+        DEFINES = -DNOINLINE
+
+SimpleProgramTarget(xpr)
+InstallScript(xdpr,$(BINDIR))

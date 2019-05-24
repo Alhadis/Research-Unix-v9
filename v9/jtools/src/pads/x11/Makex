@@ -1,0 +1,14 @@
+JDIR	= ../../sunlib
+LIBS	= $(JDIR)/libj.a -lX11
+CFLAGS = -g -I.. -I$(JDIR) -DBSD -DX11
+OFILES= paint.o buttons.o lib.o pad.o lineops.o cursor.o\
+	master.o host.o protocol.o cache.o scripthit.o
+
+pads:$(OFILES)
+	$(CC) $(CFLAGS) -o pads $(OFILES) $(LIBS)
+
+%.o:	%.c univ.h ../pads.pri
+	$(CC) $(CFLAGS) -c $*.c
+
+clean:
+	rm -f *junk* core jim.recover

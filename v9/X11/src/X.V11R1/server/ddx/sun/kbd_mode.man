@@ -1,0 +1,11 @@
+.\" $Header: kbd_mode.man,v 1.1 87/09/14 12:24:01 rws Exp $
+.TH KBD_MODE "13 June 1987" "X Version 11"
+.UC 4
+.SH NAME
+kbd_mode \- recover the Sun console keyboard
+.SH SYNOPSIS
+.B kbd_mode
+[ -a -e -u ]
+.SH DESCRIPTION
+.I Kbd_mode
+resets the Sun console keyboard to a rational state.

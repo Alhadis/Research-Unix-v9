@@ -1,0 +1,106 @@
+machine/locore.s	standard
+machine/addupc.s	standard
+machine/map.s		standard
+machine/movc.s		standard
+machine/setjmp.s	standard
+machine/scb.s		standard
+machine/vax.s		standard
+machine/autoconf.c	standard
+machine/kern_softint.c	standard
+machine/machdep.c	standard
+machine/mem.c		standard
+machine/probe.c		standard
+machine/rtclock.c	standard
+machine/trap.c		standard
+machine/vm_machdep.c	standard
+machine/dummy1.c	standard
+sys/acct.c		standard
+sys/alloc.c		standard
+sys/clock.c		standard
+sys/errfs.c		standard
+sys/fio.c		standard
+sys/fs.c		standard
+sys/iget.c		standard
+sys/ioctl.c		standard
+sys/limits.c		standard
+sys/main.c		standard
+sys/mman.c		standard
+sys/ms.c		standard
+sys/mount.c		standard
+sys/nami.c		standard
+sys/netb.c		optional netb pseudo-device
+sys/partab.c		standard
+sys/pipe.c		standard
+sys/prf.c		standard
+sys/proca.c		standard
+sys/rdwri.c		standard
+sys/rmap.c		standard
+sys/share.c		standard
+sys/sig.c		standard
+sys/slp.c		standard
+sys/streamio.c		standard
+sys/subr.c		standard
+sys/sys1.c		standard
+sys/sys2.c		standard
+sys/sys3.c		standard
+sys/sys4.c		standard
+sys/sysent.c		standard
+sys/text.c		standard
+sys/vmdrum.c		standard
+sys/vmmem.c		standard
+sys/vmmon.c		standard
+sys/vmpage.c		standard
+sys/vmproc.c		standard
+sys/vmpt.c		standard
+sys/vmsched.c		standard
+sys/vmsubr.c		standard
+sys/vmswap.c		standard
+sys/vmsys.c		standard
+dev/bio.c		standard
+dev/connld.c		optional connld pseudo-device
+dev/cons.c		standard
+dev/dsort.c		standard
+dev/mesg.c		optional mesg pseudo-device
+dev/nttyld.c		optional ntty pseudo-device
+dev/spipe.c		optional sp pseudo-device
+dev/stream.c		standard
+dev/sw.c		standard
+dev/ttyld.c		optional tty pseudo-device
+sundev/bwtwo.c		optional bwtwo device-driver
+sundev/ie.c		optional ie device-driver
+sundev/fbutil.c		standard
+sundev/kbdld.c		optional kbd pseudo-device
+sundev/keytables.c	optional kbd pseudo-device
+sundev/le.c		optional le device-driver
+sundev/mb.c		standard device-driver
+sundev/sc.c		optional sc device-driver
+sundev/sc_conf.c	standard device-driver
+sundev/sd.c		optional sd device-driver
+sundev/sf.c		optional sf device-driver
+sundev/si.c		optional si device-driver
+sundev/st.c		optional st device-driver
+sundev/zs.c		optional zs device-driver
+sundev/zs_asm.s		optional zs device-driver
+sundev/zs_common.c	optional zs device-driver
+sundev/zs_proto.c	optional zs device-driver
+net/arpld.c		optional arp pseudo-device
+net/order.c		optional arp pseudo-device
+net/netutil.c		optional arp pseudo-device
+inet/ip_arp.c		optional uarp pseudo-device
+inet/ip_device.c	optional inet pseudo-device
+inet/ip_input.c		optional inet pseudo-device
+inet/ip_ld.c		optional inet pseudo-device
+inet/ip_output.c	optional inet pseudo-device
+inet/ip_subr.c		optional inet pseudo-device
+inet/vecadd.c		optional inet pseudo-device
+inet/socket.c		optional tcp pseudo-device
+inet/tcp_device.c	optional tcp pseudo-device
+inet/tcp_input.c	optional tcp pseudo-device
+inet/tcp_ld.c		optional tcp pseudo-device
+inet/tcp_output.c	optional tcp pseudo-device
+inet/tcp_subr.c		optional tcp pseudo-device
+inet/tcp_timer.c	optional tcp pseudo-device
+inet/udp_device.c	optional udp pseudo-device
+inet/udp_input.c	optional udp pseudo-device
+inet/udp_ld.c		optional udp pseudo-device
+inet/udp_output.c	optional udp pseudo-device

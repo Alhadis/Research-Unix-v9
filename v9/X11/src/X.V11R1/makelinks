@@ -1,0 +1,72 @@
+rm X11
+rm include/XMenu.h
+rm include/X10.h
+rm include/Xresource.h
+rm include/Xlib.h
+rm include/Xutil.h
+rm include/cursorfont.h
+rm include/Atoms.h
+rm include/ButtonBox.h
+rm include/Clock.h
+rm include/Command.h
+rm include/Intrinsic.h
+rm include/Knob.h
+rm include/Label.h
+rm include/Load.h
+rm include/Misc.h
+rm include/Quarks.h
+rm include/TM.h
+rm include/Scroll.h
+rm include/Text.h
+rm include/VPane.h
+rm include/TopLevel.h
+rm include/extensions/zoid.h
+rm include/extensions/bezier.h
+rm doc/Toolkit/Atoms.h
+rm doc/Toolkit/Intrinsic.h
+rm fonts/bdf/vtsingle.bdf
+rm fonts/bdf/vtbold.bdf
+rm fonts/bdf/6x13.bdf
+rm lib/oldXtk/X11
+rm lib/Xrm/X11
+rm lib/oldXrm/X11
+rm X
+rm clients/uwm/athena.uwmrc
+rm clients/uwm/default.uwmrc
+rm clients/xmodmap/xprkbd.man
+ln -s include X11
+ln -s ./../lib/oldXMenu/XMenu.h include/XMenu.h
+ln -s ./../lib/oldX/X10.h include/X10.h
+ln -s ./../lib/Xrm/Xresource.h include/Xresource.h
+ln -s ./../lib/X/Xlib.h include/Xlib.h
+ln -s ./../lib/X/Xutil.h include/Xutil.h
+ln -s ./../fonts/cursorfont.h include/cursorfont.h
+ln -s ./../lib/Xtk/Atoms.h include/Atoms.h
+ln -s ./../lib/Xtk/ButtonBox.h include/ButtonBox.h
+ln -s ./../lib/Xtk/Clock.h include/Clock.h
+ln -s ./../lib/Xtk/Command.h include/Command.h
+ln -s ./../lib/Xtk/Intrinsic.h include/Intrinsic.h
+ln -s ./../lib/Xtk/Knob.h include/Knob.h
+ln -s ./../lib/Xtk/Label.h include/Label.h
+ln -s ./../lib/Xtk/Load.h include/Load.h
+ln -s ./../lib/Xtk/Misc.h include/Misc.h
+ln -s ./../lib/Xtk/Quarks.h include/Quarks.h
+ln -s ./../lib/Xtk/TM.h include/TM.h
+ln -s ./../lib/Xtk/Scroll.h include/Scroll.h
+ln -s ./../lib/Xtk/Text.h include/Text.h
+ln -s ./../lib/Xtk/VPane.h include/VPane.h
+ln -s ./../lib/Xtk/TopLevel.h include/TopLevel.h
+ln -s .././../extensions/include/zoid.h include/extensions/zoid.h
+ln -s .././../extensions/include/bezier.h include/extensions/bezier.h
+ln -s ../../lib/Xtk/Atoms.h doc/Toolkit/Atoms.h
+ln -s ../../lib/Xtk/Intrinsic.h doc/Toolkit/Intrinsic.h
+ln -s 8x13.bdf fonts/bdf/vtsingle.bdf
+ln -s 8x13bold.bdf fonts/bdf/vtbold.bdf
+ln -s fixed.bdf fonts/bdf/6x13.bdf
+ln -s ./../oldXtk lib/oldXtk/X11
+ln -s ../Xtk lib/Xrm/X11
+ln -s ../oldXrm lib/oldXrm/X11
+ln -s include X
+ln -s xwm.uwmrc clients/uwm/athena.uwmrc
+ln -s xwm.uwmrc clients/uwm/default.uwmrc
+ln -s xmodmap.man clients/xmodmap/xprkbd.man

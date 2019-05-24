@@ -1,0 +1,137 @@
+.TH XWININFO 1 "1 July 1987" "X Version 11"
+.SH NAME
+xwininfo - X Window System window information summarizer.
+.SH SYNOPSIS
+.B "xwininfo"
+[ -help ] [ -id \fIid\fP ] [ -root ] [ -name \fIname\fP ] [ -int ]
+[ -tree ] [ -stats ]
+[ -bits ] [ -events ] [ -size ] [ -wm  ] [ \fIhost\fP:\fIdisplay\fP ]
+.SH DESCRIPTION
+.PP
+.I Xwininfo
+is  a  utility  for  displaying  X  window information summaries.
+Depending on what options are choosen, various information is displayed.
+Refer to the various options for what information is available.
+If no options are choosen, -stats is assumed.
+.PP
+The  user has the option of selecting the target window with
+the mouse (by clicking any mouse button in the desired window)  or  by
+specifying its window id on the command line with the \fB-id\fP argument.
+In addition, if it is easier, instead of specifying
+the window by its id number, the \fB-name\fP argument may be used to specify
+which window is desired by name.
+There is also a special \fB-root\fP argument to quickly obtain information
+on X's root window.
+.PP
+  The following is a sample summary taken with
+no arguments specified:
+
+xwininfo ==> Please select the window you wish
+         ==> information on by clicking the
+         ==> mouse in that window.
+
+xwininfo ==> Window id: 0x8006b (fred)
+
+         ==> Upper left X: 0
+         ==> Upper left Y: 0
+         ==> Width: 1024
+         ==> Height: 864
+         ==> Depth: 1
+         ==> Border width: 0
+         ==> Window class: InputOutput
+         ==> Window Map State: IsUnviewable
+
+.SH ARGUMENT SUMMARY
+.PP
+.TP 8
+.B "-help"
+Print out the 'Usage:' command syntax summary.
+.PP
+.TP 8
+.B "-id \fIid\fP"
+This argument allows the user to specify a target  window  \fIid\fP  on  the
+command  line rather than using the mouse to select the target window.
+This is very useful in  debugging  X  applications  where  the  target
+window is not mapped to the screen or where the use of the mouse might
+be impossible or interfere with the application.
+.PP
+.TP 8
+.B "-name \fIname\fP"
+This argument allows the user to specify that the window named \fIname\fP
+is the target window on the command line rather than using the mouse to
+select the target window.
+.PP
+.TP 8
+.B "-root"
+This  argument  specifies  that  X's root window is the target window.
+This is useful in situations  where  the  root  window  is  completely
+obscured.
+.PP
+.TP 8
+.B "-int"
+This argument specifies that all X window ids should be  displayed  as
+integer values.  The default is to display them as hexadecimal values.
+.PP
+.TP 8
+.B -tree
+This argument causes the root, parent, and children windows id's and name's of
+the selected window to be displayed.
+.PP
+.TP 8
+.B -stats
+This argument causes various attributes of the selected window having
+to do with its location and appearence to be displayed.
+Information displayed includes the location of the window,
+its width and height, its depth, border width, class, and map state.
+.PP
+.TP 8
+.B -bits
+This argument causes various attributes of the selected window having
+to do with its raw bits and how it is to be stored to be displayed.
+Information displayed includes the window's window and bit gravities,
+the window's backing store hint and backing_planes value, its backing pixel,
+and whether or not the window has save-under set.
+.PP
+.TP 8
+.B -events
+This argument causes the selected window's event masks to be displayed.
+Both the event mask of events wanted by some client and the event mask of
+events not to prograte are displayed.
+.PP
+.TP 8
+.B -size
+This argument causes the selected window's sizing hints to be displayed.
+Information displayed includes for both the normal size hints and the
+zoom size hints the user supplied location if any, the program supplied
+location if any, the user supplied size if any, the program supplied size if
+any, the minimum size if any, the maximum size if any, the resize increments
+if any, and the minimum and maximum aspect ratios if any.
+.PP
+.TP 8
+.B -wm
+This argument causes the selected window's window manager hints to be
+displayed.  Information displayed may include whether or not the application
+accepts input, what the window's icon window # and name is, where the window's
+icon should go, and what the window's initial state should be.
+.PP
+.TP 8
+.B "\fIhost\fP:\fIdisplay\fP"
+This  argument  allow  you  to  specify the host and display number on
+which to find the target window.  For example `xwininfo orpheus:1'
+would specify that the target window is on display `1' on the machine
+`orpheus'.  By default,
+.I xwininfo
+uses  the  host  and display number stored in the environment variable
+DISPLAY, and therefore this argument is not normally specified.
+.SH ENVIRONMENT
+.PP
+.TP 8
+.B DISPLAY
+To get default host and display number.
+.SH SEE ALSO
+X(1)
+.SH AUTHOR
+Mark Lillibridge, MIT Project Athena
+.br
+Copyright 1987, Massachusetts Institute of Technology.
+

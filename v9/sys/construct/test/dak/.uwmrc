@@ -1,0 +1,36 @@
+resetbindings;resetvariables;resetmenus
+autoselect
+delta=25
+freeze
+nogrid
+hiconpad=5
+hmenupad=6
+iconfont=fixed
+menufont=fixed
+resizefont=fixed
+viconpad=5
+vmenupad=3
+volume=7
+
+#
+# Mouse button/key maps
+#
+# FUNCTION	KEYS	CONTEXT		BUTTON		MENU(if any)
+# ========      ====    =======         ====== 		============
+f.menu =	m	:i|r|w	:	right down	:"WINDOW OPS"
+
+
+#
+# Menu specifications
+#
+
+menu = "WINDOW OPS" {
+New:		!"sux &"
+Reshape:	f.resize
+Move:		f.move
+Top:		f.raise
+Bottom:		f.lower
+Current:	f.focus
+Icon:		f.iconify
+Refresh:	f.refresh
+}

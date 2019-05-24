@@ -1,0 +1,21 @@
+#
+# Make file for the BDF to SNF font compiler
+#
+      EXECS = fc showsnf
+      FCSRC = fc.c
+      FCOBJ = fc.o
+      SHSRC = showsnf.c
+      SHOBJ = showsnf.o
+  COMMONSRC = fontutil.c
+  COMMONOBJ = fontutil.o
+       SRCS = $(COMMONSRC) $(FCSRC) $(SHSRC)
+     OFILES = $(COMMONOBJ) $(FCOBJ) $(SHOBJ)
+   INCLUDES = -I. -I../../include -I$(SERVERSRC)/include
+CDEBUGFLAGS = -g
+
+all: $(EXECS)
+
+SingleProgramTarget(fc, $(COMMONOBJ) $(FCOBJ),,)
+SingleProgramTarget(showsnf, $(COMMONOBJ) $(SHOBJ),,)
+
+DependTarget()

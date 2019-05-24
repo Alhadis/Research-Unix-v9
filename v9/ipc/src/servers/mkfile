@@ -1,0 +1,21 @@
+BIN=telnetd ftpd
+CFLAGS=-g -I../etc
+
+all	:	$BIN
+
+telnetd	:	telnetd.o telnetaux.o
+		cc $CFLAGS -o telnetd telnetd.o telnetaux.o
+
+ftpd	:	ftpd.o ftpcmd.o ftpaux.o
+		cc -g -o ftpd ftpd.o ftpcmd.o ftpaux.o -lin
+
+ftpcmd.o:	ftpcmd.y
+		yacc ftpcmd.y
+		cc -c $CFLAGS y.tab.c
+		mv y.tab.o ftpcmd.o
+
+install	:	$BIN
+		cp $BIN /usr/ipc/servers
+
+clean:
+	rm -f *.[oO] y.tab.c telnetd ftpd

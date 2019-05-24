@@ -1,0 +1,7 @@
+LOCAL_LIBRARIES = $(OLDXTOOLLIB) $(OLDXRMLIB) $(XLIB)
+# Note that on many systems, /dev/kmem is not readable except by a special
+# group.  kmem is the name of this group on 4.3.
+   INSTALLFLAGS = -m 2755 -g kmem
+       INCLUDES = -I$(OLDXRMSRC) -I$(OLDTOOLKITSRC) -I$(TOP)
+
+SimpleProgramTarget(xload)

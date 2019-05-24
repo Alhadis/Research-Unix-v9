@@ -1,0 +1,50 @@
+.TH XRDB 1 "29 August 1987" "X Version 11"
+.SH NAME
+xrdb - Server Resource Database Utility.
+.SH SYNOPSIS
+.B xrdb
+[ -q ] [ \fIhost\fP:\fInumber\fP ] [ filename ] 
+.SH DESCRIPTION
+.I Xrdb
+is used to set or dump the contents of the RESOURCE_MANAGER property
+on the root window of screen 0.
+You would normally run this program from your .login script.
+This root property normally contains the contents of
+your .Xdefaults file.
+.LP
+The X library XGetDefault routine, and toolkit resource managers
+use this property to get user preferences about color, fonts, and so
+on for your applications.
+This solves the problem present in V10 which required you to
+maitain up to date default files on all of the machines you
+used in your network.
+Any local .Xdefaults file will be merged into this property from the server,
+so customization can be performed on a per machine basis.
+.TP
+.B \-q
+This option allows you to query the current contents of the
+property, and prints the contents on the standard output.
+.SH "OPTIONS"
+.PP
+.TP 8
+.B \fIhost\fP:\fIdisplay\fP
+Normally,
+.I xfd
+gets the host and display number to use from the environment
+variable ``DISPLAY''.  One can, however specify them explicitly.
+The
+.I host
+specifies which machine to manipulate the resource data base, and
+the
+.I number
+argument specifies the display number.
+.SH FILES
+~/.Xdefaults
+.SH "SEE ALSO"
+XGetDefault(3X)
+.SH ENVIRONMENT
+DISPLAY	-	To find out which display you are using.
+.SH AUTHOR
+Jim Gettys
+.br
+Copyright (c) 1987 by Digital Equipment Corporation

@@ -1,0 +1,71 @@
+
+TITLE = libj makefile
+PRODUCTS = libj.a
+
+
+MAKEARG= -$(MAKEFLAGS) 
+
+MLORDER=m32lorder
+LCLCFLAGS=-J -g -O
+CLEAN= $(OBJ) libj.a
+
+
+CC_CMD =	$(MCC) $(MCFLAGS) $(LCLCFLAGS) -c
+
+OBJ=atan2.o cosdeg.o sqrt.o exit.o fgets.o getfont.o \
+	font.o fopen.o gcalloc.o introutine.o jarc.o arc.o jcircle.o \
+	circle.o jdisc.o disc.o discture.o jelarc.o elarc.o jeldisc.o \
+	eldisc.o jellipse.o ellipse.o jpoint.o jstring.o menu.o \
+	balloc.o min.o norm.o point.o popen.o printf.o \
+	ptinrect.o rdwr.o get.o put.o alloc.o comm.o \
+	data.o rectXrect.o rectf.o jtexture.o Jrect.o rectclip.o \
+	rol.o screenswap.o string.o bitblt.o strwidth.o defont.o \
+	texture.o wait.o jlineto.o addr.o masks.o line.o \
+	arith.o clip.o  display.o rect.o texture16.o
+CFILES= alloc.c arc.c atan2.c balloc.c\
+	bitblt.s circle.c clip.c comm.c cosdeg.c data.c\
+	disc.c discture.c display.c ellipse.c exit.c fgets.c fopen.c gcalloc.c get.c introutine.c\
+	jarc.c jcircle.c jdisc.c jellipse.c jlineto.c jpoint.c\
+	Jrect.c jstring.c jtexture.c line.c masks.c menu.c min.c\
+	point.c popen.c printf.c ptinrect.c put.c\
+	rdwr.c rectXrect.c rectclip.c rectf.c screenswap.c sqrt.c string.c\
+	getfont.c font.c defont.c eldisc.c jeldisc.c\
+	strwidth.c texture.c width.c rect.s texture16.c
+
+.C.o:
+	echo ".C files no longer built"
+
+.c.o:
+	$(MCC) $(MCFLAGS) $(LCLCFLAGS) -c $<
+
+.s.o:
+	$(MCC) -c $<
+
+libj.a: $(OBJ)
+	$(MAR) cr libj.a `$(MLORDER) $(OBJ) | tsort`
+	$(MAR) ma clip.o libj.a line.o
+
+texture.o:	texture.s
+	$(MCC) $(MCFLAGS) -g -c texture.s
+
+bitblt.o:	bitblt.c
+	$(MCC) $(MCFLAGS) -J -g -c bitblt.c
+
+min.o: 	min.s
+	$(MCC) -c min.s
+
+arith.o: arith.s
+	$(MCC) -c arith.s
+
+rect.o: rect.s
+	$(MCC) -c rect.s
+
+addr.o: addr.s
+	$(MCC) -c addr.s
+
+save:
+	-cp $(DMDLIB)/libj.a olibj.a
+
+install:libj.a
+	cp libj.a $(DMDLIB)/libj.a
+

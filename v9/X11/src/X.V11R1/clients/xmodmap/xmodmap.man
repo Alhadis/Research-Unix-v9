@@ -1,0 +1,88 @@
+.TH XMODMAP 1 "6 July 1987" "X Version 11"
+.SH NAME
+xmodmap, xprkbd - X Window System keyboard modifier utilities
+.SH SYNOPSIS
+.B "xmodmap"
+[ -S ] [ -s ]
+[ -L ] [ -l ]
+[ -C ] [ -c ]
+[ -1 ]
+[ -2 ]
+[ -3 ]
+[ -4 ]
+[ -5 ]
+[ +S \fIn\fP ] [ +s \fIn\fP ]
+[ +L \fIn\fP ] [ +l \fIn\fP ]
+[ +C \fIn\fP ] [ +c \fIn\fP ]
+[ +1 \fIn\fP ]
+[ +2 \fIn\fP ]
+[ +3 \fIn\fP ]
+[ +4 \fIn\fP ]
+[ +5 \fIn\fP ]
+[ \fIhost\fP:\fIdisplay\fP ]
+.sp
+.B "xprkbd"
+.SH DESCRIPTION
+.PP
+.I Xmodmap
+is a utility for displaying and altering the X keyboard modifier map on the
+specified display and host.
+If no display is specified,  the value of the
+.B DISPLAY
+environment variable is used.
+.PP
+With no arguments,
+.I xmodmap
+displays the current map.
+.PP
+.I Xprkbd
+prints on the standard output a table of the keycodes,  the keysym code,
+and the keynames for the keyboard on the appropriate X server.
+.SH OPTIONS
+.TP 8
+.B "-S -s"
+Disable all current keys for the Shift modifier set.
+.TP 8
+.B "+S +s"
+Add the keyname
+.I n
+to the Shift modifier set.
+.TP 8
+.B "-L -l"
+Disable all current keys for the Lock modifier set.
+.TP 8
+.B "+L +l"
+Add the keyname
+.I n
+to the Lock modifier set.
+.TP 8
+.B "-C"
+Disable all current keys for the Control modifier set.
+.TP 8
+.B "-<digit>"
+Disable all current keys for the Mod<digit> modifier set.
+.TP 8
+.B "+<digit>"
+Add the keyname
+.I n
+to the Mod<digit> modifier set.
+.SH EXAMPLES
+.PP
+To add keyname Shift_L to the Shift set:  \fIxmodmap\fP +s Shift_L
+.PP
+To replace the Control set by keynames F1 & F3: \fIxmodmap\fP -C +c F1 -c F3
+.SH ENVIRONMENT
+.PP
+.TP 8
+.B DISPLAY
+To get default host and display number.
+.SH SEE ALSO
+X(1)
+.SH
+BUGS
+.LP
+Will not allow you to increase the maximum number of keys per modifier.
+.SH AUTHOR
+David Rosenthal,  Sun Microsystems
+.sp
+Copyright \(co 1987 Sun Microsystems,  Inc.

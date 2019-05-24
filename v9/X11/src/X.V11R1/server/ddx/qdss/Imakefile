@@ -1,0 +1,7 @@
+all: qdss_io.o init.o
+
+qdss_io.o init.o: libqdss.a.save
+	rm -f $@
+	ar xv libqdss.a.save $@
+
+depend:

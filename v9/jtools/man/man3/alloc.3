@@ -1,0 +1,77 @@
+.TH ALLOC 3
+.CT 2 mem_man
+.SH NAME
+alloc, balloc, bfree, gcalloc, gcfree \- allocate memory
+.SH SYNOPSIS
+.B #include <jerq.h>
+.PP
+.B char *alloc(nbytes)
+.B unsigned nbytes;
+.PP
+.B Bitmap *balloc(r)
+.B Rectangle r;
+.PP
+.B void bfree(b)
+.B Bitmap *b;
+.PP
+.B char *gcalloc(nbytes, where)
+.B unsigned long nbytes;
+.B char **where;
+.PP
+.B void gcfree(s)
+.B char *s;
+.SH DESCRIPTION
+.I Alloc
+is equivalent to the standard C function
+.IR calloc ;
+see
+.IR malloc (3).
+It returns a pointer to a block of
+.I nbytes
+contiguous bytes of storage, or 0
+if unavailable.
+The storage is aligned on 4-byte boundaries
+and is cleared to zeros.
+.PP
+.I Balloc
+returns a pointer to a Bitmap
+large enough to contain
+the Rectangle
+.IR r ,
+or 0
+for failure.
+The coordinate system inside the Bitmap is set by
+.IR r :
+the
+.B origin
+and
+.B corner
+of the Bitmap are those of
+.IR r .
+.I Bfree
+frees the storage associated with a Bitmap allocated by
+.IR balloc .
+.PP
+.I Gcalloc
+is also equivalent to the standard C function
+.IR calloc.
+It returns a pointer to a block of
+.I nbytes
+contiguous bytes of storage, or
+0
+if unavailable.
+The storage is initialized to zeros.
+.I Where
+is a pointer to the user's data where the location of the
+block is to be saved.
+The return value of
+.I gcalloc
+is stored in
+.IR *where .
+.I Gcfree
+is equivalent to
+.IR free .
+.IR p .
+.SH SEE ALSO
+.IR types (5),
+.IR malloc (3)

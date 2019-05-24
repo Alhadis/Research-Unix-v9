@@ -1,0 +1,18 @@
+CFLAGS=	-I../sunlib -DX11 -DBSD -g 
+LIBS=	../sunlib/libj.a -lX11 -lm
+NPROC=	2
+PROGS=	life sysmon icon
+
+all: ${PROGS}
+
+icon: icon.o
+	cc -o icon icon.o ${LIBS}
+
+life: life.o
+	cc -o life life.o ${LIBS}
+
+sysmon: sysmon.o
+	cc -o sysmon sysmon.o ${LIBS}
+
+clean:
+	rm -f ${PROGS} *.o

@@ -1,0 +1,1041 @@
+1                    SEGMENT LOADER          VERSION 2.1                                        12/14/86  02:24:05    PAGE 2       
+ 
+ PROGRAM STATISTICS      
+ NON-SEGMENTED OBJECT MODULE WRITTEN TO- sh
+ PROGRAM ORIGIN-        0
+ PROGRAM LENGTH-    42016
+ TRANSFER IS TO ENTRY POINT- main     AT ADDRESS-     4045a
+1                    SEGMENT LOADER          VERSION 2.1                                        12/14/86  02:24:05    PAGE 3       
+ 
+ BLOCK MAP
+ 
+ 
+ SORTED BY ASCENDING BLOCK ORIGIN ADDRESS
+ 
+  MODULE    BLOCK    ADDRESS   LENGTH  SOURCE        DATE        OS REV       PROCESSOR      COMMENT
+ 
+ $TASKCOM                  0        1  *SYSTEM* 12/14/86 02:24   UNICOS    SEGLDR  2.1       task common prototype table      
+ $START                    1      213  /lib/libc.o 10/21/86 00:21  1.01.8de  CAL      2.00       
+ shsetbrk  x$cl          214        2  shsetbrk.o 12/11/86 15:24  2.0/9     CAL      2.00       
+           x$prog        216       25  shsetbrk.o 12/11/86 15:24  2.0/9     CAL      2.00       
+ blok$c    x$cl          243       22  blok.o 12/11/86 15:25  2.0/9     CAL      2.00       
+           x$data        265        5  blok.o 12/11/86 15:25  2.0/9     CAL      2.00       
+           x$prog        272      333  blok.o 12/11/86 15:25  2.0/9     CAL      2.00       
+           x$strn        625        2  blok.o 12/11/86 15:25  2.0/9     CAL      2.00       
+ stak$c    x$cl          627       24  stak.o 12/11/86 15:25  2.0/9     CAL      2.00       
+           x$prog        653      344  stak.o 12/11/86 15:25  2.0/9     CAL      2.00       
+ cmd$c     x$cl         1217      176  cmd.o 12/11/86 15:25  2.0/9     CAL      2.00       
+           x$prog       1415     1553  cmd.o 12/11/86 15:25  2.0/9     CAL      2.00       
+           x$strn       3170        2  cmd.o 12/11/86 15:25  2.0/9     CAL      2.00       
+ fault$c   x$cl         3172       31  fault.o 12/14/86 02:23  2.0/9     CAL      2.00       
+           x$data       3223      122  fault.o 12/14/86 02:23  2.0/9     CAL      2.00       
+           x$prog       3345      350  fault.o 12/14/86 02:23  2.0/9     CAL      2.00       
+ main$c    x$cl         3715       67  main.o 12/11/86 15:25  2.0/9     CAL      2.00       
+           x$data       4004       40  main.o 12/11/86 15:25  2.0/9     CAL      2.00       
+           x$prog       4044      575  main.o 12/11/86 15:25  2.0/9     CAL      2.00       
+ word$c    x$cl         4641       62  word.o 12/11/86 15:25  2.0/9     CAL      2.00       
+           x$data       4723       42  word.o 12/11/86 15:25  2.0/9     CAL      2.00       
+           x$prog       4765     1103  word.o 12/11/86 15:25  2.0/9     CAL      2.00       
+ string$c  x$cl         6070        5  string.o 12/11/86 15:25  2.0/9     CAL      2.00       
+           x$prog       6075      260  string.o 12/11/86 15:25  2.0/9     CAL      2.00       
+ name$c    x$cl         6355      203  name.o 12/11/86 15:26  2.0/9     CAL      2.00       
+           x$data       6560      114  name.o 12/11/86 15:26  2.0/9     CAL      2.00       
+           x$prog       6674     2371  name.o 12/11/86 15:26  2.0/9     CAL      2.00       
+           x$strn      11265        1  name.o 12/11/86 15:26  2.0/9     CAL      2.00       
+ args$c    x$cl        11266       43  args.o 12/11/86 15:26  2.0/9     CAL      2.00       
+           x$data      11331       25  args.o 12/11/86 15:26  2.0/9     CAL      2.00       
+           x$prog      11356     1025  args.o 12/11/86 15:26  2.0/9     CAL      2.00       
+           x$strn      12403        3  args.o 12/11/86 15:26  2.0/9     CAL      2.00       
+ xec$c     s$witch     12406      336  xec.o 12/11/86 15:26  2.0/9     CAL      2.00       
+           x$cl        12744      263  xec.o 12/11/86 15:26  2.0/9     CAL      2.00       
+           x$data      13227        1  xec.o 12/11/86 15:26  2.0/9     CAL      2.00       
+           x$prog      13230     2267  xec.o 12/11/86 15:26  2.0/9     CAL      2.00       
+           x$strn      15517        6  xec.o 12/11/86 15:26  2.0/9     CAL      2.00       
+ service$  x$cl        15525      131  service.o 12/11/86 15:26  2.0/9     CAL      2.00       
+           x$data      15656       30  service.o 12/11/86 15:26  2.0/9     CAL      2.00       
+           x$prog      15706     1560  service.o 12/11/86 15:26  2.0/9     CAL      2.00       
+           x$strn      17466        2  service.o 12/11/86 15:26  2.0/9     CAL      2.00       
+ error$c   x$cl        17470       33  error.o 12/11/86 15:26  2.0/9     CAL      2.00       
+           x$prog      17523      255  error.o 12/11/86 15:26  2.0/9     CAL      2.00       
+ io$c      x$cl        20000       72  io.o 12/11/86 15:27  2.0/9     CAL      2.00       
+           x$data      20072        2  io.o 12/11/86 15:27  2.0/9     CAL      2.00       
+           x$prog      20074     1144  io.o 12/11/86 15:27  2.0/9     CAL      2.00       
+ print$c   x$cl        21240       66  print.o 12/11/86 15:27  2.0/9     CAL      2.00       
+           x$data      21326       43  print.o 12/11/86 15:27  2.0/9     CAL      2.00       
+1                    SEGMENT LOADER          VERSION 2.1                                        12/14/86  02:24:05    PAGE 4       
+ 
+ BLOCK MAP
+           x$prog      21371     1156  print.o 12/11/86 15:27  2.0/9     CAL      2.00       
+           x$strn      22547        3  print.o 12/11/86 15:27  2.0/9     CAL      2.00       
+ macro$c   x$cl        22552      122  macro.o 12/11/86 15:27  2.0/9     CAL      2.00       
+           x$data      22674        2  macro.o 12/11/86 15:27  2.0/9     CAL      2.00       
+           x$prog      22676     1257  macro.o 12/11/86 15:27  2.0/9     CAL      2.00       
+ expand$c  x$cl        24155       40  expand.o 12/11/86 15:27  2.0/9     CAL      2.00       
+           x$data      24215        2  expand.o 12/11/86 15:27  2.0/9     CAL      2.00       
+           x$prog      24217     1073  expand.o 12/11/86 15:27  2.0/9     CAL      2.00       
+           x$strn      25312        2  expand.o 12/11/86 15:27  2.0/9     CAL      2.00       
+ sctype$c  x$data      25314       40  sctype.o 12/11/86 15:27  2.0/9     CAL      2.00       
+ msg$c     x$data      25354      373  msg.o 12/11/86 15:27  2.0/9     CAL      2.00       
+           x$strn      25747      237  msg.o 12/11/86 15:27  2.0/9     CAL      2.00       
+ defs$c    x$data      26206      647  defs.o 12/11/86 15:28  2.0/9     CAL      2.00       
+ pathserv  x$cl        27055       31  pathserv.o 12/11/86 15:28  2.0/9     CAL      2.00       
+           x$prog      27106      270  pathserv.o 12/11/86 15:28  2.0/9     CAL      2.00       
+           x$strn      27376        2  pathserv.o 12/11/86 15:28  2.0/9     CAL      2.00       
+ func$c    s$witch     27400      602  func.o 12/11/86 15:28  2.0/9     CAL      2.00       
+           x$cl        30202      175  func.o 12/11/86 15:28  2.0/9     CAL      2.00       
+           x$prog      30377     1352  func.o 12/11/86 15:28  2.0/9     CAL      2.00       
+           x$strn      31751       37  func.o 12/11/86 15:28  2.0/9     CAL      2.00       
+ spname$c  x$cl        32010       16  spname.o 12/11/86 15:28  2.0/9     CAL      2.00       
+           x$data      32026       24  spname.o 12/11/86 15:28  2.0/9     CAL      2.00       
+           x$prog      32052      473  spname.o 12/11/86 15:28  2.0/9     CAL      2.00       
+           x$strn      32545        3  spname.o 12/11/86 15:28  2.0/9     CAL      2.00       
+ readdir$  x$cl        32550        4  readdir.o 12/11/86 15:28  2.0/9     CAL      2.00       
+           x$data      32554       47  readdir.o 12/11/86 15:28  2.0/9     CAL      2.00       
+           x$prog      32623      103  readdir.o 12/11/86 15:28  2.0/9     CAL      2.00       
+ abort$c   x$cl        32726        3  /lib/libc.o 10/21/86 00:10  1.01.8de  CAL      2.00       
+           x$prog      32731       23  /lib/libc.o 10/21/86 00:10  1.01.8de  CAL      2.00       
+ exit$c    x$cl        32754        3  /lib/libc.o 10/21/86 00:12  1.01.8de  CAL      2.00       
+           x$prog      32757       24  /lib/libc.o 10/21/86 00:12  1.01.8de  CAL      2.00       
+ isatty$c  x$cl        33003        2  /lib/libc.o 10/21/86 00:15  1.01.8de  CAL      2.00       
+           x$prog      33005       27  /lib/libc.o 10/21/86 00:15  1.01.8de  CAL      2.00       
+ $LDIVSS               33040       43  /lib/libc.o 10/21/86 00:19  1.01.8de  CAL      2.00       
+ malloc$c  x$cl        33103        7  /lib/libc.o 10/21/86 00:15  1.01.8de  CAL      2.00       
+           x$data      33112        6  /lib/libc.o 10/21/86 00:15  1.01.8de  CAL      2.00       
+           x$prog      33120      253  /lib/libc.o 10/21/86 00:15  1.01.8de  CAL      2.00       
+ $MEMSET               33373       40  /lib/libc.o 10/21/86 00:20  1.01.8de  CAL      2.00       
+ $MODSS                33433        2  /lib/libc.o 10/21/86 00:20  1.01.8de  CAL      2.00       
+ sbrk$c    x$cl        33435        4  /lib/libc.o 10/21/86 00:17  1.01.8de  CAL      2.00       
+           x$prog      33441      101  /lib/libc.o 10/21/86 00:17  1.01.8de  CAL      2.00       
+ $STACKAL              33542     1133  /lib/libc.o 10/21/86 00:20  1.01.8de  CAL      2.00       
+           *Literal    34675        7  /lib/libc.o 10/21/86 00:20  1.01.8de  CAL      2.00       
+           CALLIST     34704        2  /lib/libc.o 10/21/86 00:20  1.01.8de  CAL      2.00       
+ $STACKDE              34706      115  /lib/libc.o 10/21/86 00:21  1.01.8de  CAL      2.00       
+           CALLIST     35023        2  /lib/libc.o 10/21/86 00:21  1.01.8de  CAL      2.00       
+ $STRCPY               35025      271  /lib/libc.o 10/21/86 00:20  1.01.8de  CAL      2.00       
+ $STRLEN               35316       23  /lib/libc.o 10/21/86 00:20  1.01.8de  CAL      2.00       
+ $UDSS                 35360       54  /lib/libc.o 10/21/86 00:21  1.01.8de  CAL      2.00       
+           *Literal    35434        1  /lib/libc.o 10/21/86 00:21  1.01.8de  CAL      2.00       
+ $UMODSS               35440       53  /lib/libc.o 10/21/86 00:21  1.01.8de  CAL      2.00       
+           CALLIST     35513        1  /lib/libc.o 10/21/86 00:21  1.01.8de  CAL      2.00       
+ xmisc$c   x$data      35514       10  /lib/libc.o 10/21/86 00:19  1.01.8de  CAL      2.00       
+ data$c    x$data      35524     2177  /lib/libc.o 10/21/86 00:26  1.01.8de  CAL      2.00       
+1                    SEGMENT LOADER          VERSION 2.1                                        12/14/86  02:24:05    PAGE 5       
+ 
+ BLOCK MAP
+ flsbuf$c  x$cl        37723       30  /lib/libc.o 10/21/86 00:27  1.01.8de  CAL      2.00       
+           x$prog      37753     1114  /lib/libc.o 10/21/86 00:27  1.01.8de  CAL      2.00       
+ $ACCESS               41067       13  /lib/libc.o 10/21/86 00:30  1.01.8de  CAL      2.00       
+           CALLIST     41102        1  /lib/libc.o 10/21/86 00:30  1.01.8de  CAL      2.00       
+ $ALARM                41103       12  /lib/libc.o 10/21/86 00:31  1.01.8de  CAL      2.00       
+           CALLIST     41115        1  /lib/libc.o 10/21/86 00:31  1.01.8de  CAL      2.00       
+ $CHDIR                41116       13  /lib/libc.o 10/21/86 00:31  1.01.8de  CAL      2.00       
+           CALLIST     41131        1  /lib/libc.o 10/21/86 00:31  1.01.8de  CAL      2.00       
+ $CLOSE                41132       13  /lib/libc.o 10/21/86 00:31  1.01.8de  CAL      2.00       
+           CALLIST     41145        1  /lib/libc.o 10/21/86 00:31  1.01.8de  CAL      2.00       
+ $CREAT                41146       13  /lib/libc.o 10/21/86 00:31  1.01.8de  CAL      2.00       
+           CALLIST     41161        1  /lib/libc.o 10/21/86 00:31  1.01.8de  CAL      2.00       
+ $DUP                  41162       13  /lib/libc.o 10/21/86 00:32  1.01.8de  CAL      2.00       
+           CALLIST     41175        1  /lib/libc.o 10/21/86 00:32  1.01.8de  CAL      2.00       
+ $EXECVE               41176       13  /lib/libc.o 10/21/86 00:32  1.01.8de  CAL      2.00       
+           CALLIST     41211        1  /lib/libc.o 10/21/86 00:32  1.01.8de  CAL      2.00       
+ $EXIT                 41212       11  /lib/libc.o 10/21/86 00:32  1.01.8de  CAL      2.00       
+           CALLIST     41223        1  /lib/libc.o 10/21/86 00:32  1.01.8de  CAL      2.00       
+ $FCNTL                41224       13  /lib/libc.o 10/21/86 00:32  1.01.8de  CAL      2.00       
+           CALLIST     41237        1  /lib/libc.o 10/21/86 00:32  1.01.8de  CAL      2.00       
+ $FORK                 41240       15  /lib/libc.o 10/21/86 00:32  1.01.8de  CAL      2.00       
+           CALLIST     41255        1  /lib/libc.o 10/21/86 00:32  1.01.8de  CAL      2.00       
+ $FSTAT                41256       13  /lib/libc.o 10/21/86 00:33  1.01.8de  CAL      2.00       
+           CALLIST     41271        1  /lib/libc.o 10/21/86 00:33  1.01.8de  CAL      2.00       
+ $GETEUID              41272       14  /lib/libc.o 10/21/86 00:33  1.01.8de  CAL      2.00       
+           CALLIST     41306        1  /lib/libc.o 10/21/86 00:33  1.01.8de  CAL      2.00       
+ $GETPID               41307       13  /lib/libc.o 10/21/86 00:33  1.01.8de  CAL      2.00       
+           CALLIST     41322        1  /lib/libc.o 10/21/86 00:33  1.01.8de  CAL      2.00       
+ $IOCTL                41323       13  /lib/libc.o 10/21/86 00:34  1.01.8de  CAL      2.00       
+           CALLIST     41336        1  /lib/libc.o 10/21/86 00:34  1.01.8de  CAL      2.00       
+ $KILL                 41337       13  /lib/libc.o 10/21/86 00:34  1.01.8de  CAL      2.00       
+           CALLIST     41352        1  /lib/libc.o 10/21/86 00:34  1.01.8de  CAL      2.00       
+ $LINK                 41353       13  /lib/libc.o 10/21/86 00:34  1.01.8de  CAL      2.00       
+           CALLIST     41366        1  /lib/libc.o 10/21/86 00:34  1.01.8de  CAL      2.00       
+ longjmp$  x$cl        41367        4  /lib/libc.o 10/21/86 22:27  1.01.8de  CAL      2.00       
+           x$prog      41373       32  /lib/libc.o 10/21/86 22:27  1.01.8de  CAL      2.00       
+ $LSEEK                41425       13  /lib/libc.o 10/21/86 00:34  1.01.8de  CAL      2.00       
+           CALLIST     41440        1  /lib/libc.o 10/21/86 00:34  1.01.8de  CAL      2.00       
+ $OPEN                 41441       13  /lib/libc.o 10/21/86 00:35  1.01.8de  CAL      2.00       
+           CALLIST     41454        1  /lib/libc.o 10/21/86 00:35  1.01.8de  CAL      2.00       
+ $PAUSE                41455       13  /lib/libc.o 10/21/86 00:35  1.01.8de  CAL      2.00       
+           CALLIST     41470        1  /lib/libc.o 10/21/86 00:35  1.01.8de  CAL      2.00       
+ $PIPE                 41471       16  /lib/libc.o 10/21/86 00:35  1.01.8de  CAL      2.00       
+           CALLIST     41507        1  /lib/libc.o 10/21/86 00:35  1.01.8de  CAL      2.00       
+ $READ                 41510       13  /lib/libc.o 10/21/86 00:35  1.01.8de  CAL      2.00       
+           CALLIST     41523        1  /lib/libc.o 10/21/86 00:35  1.01.8de  CAL      2.00       
+ $SBREAK               41524       13  /lib/libc.o 10/21/86 00:36  1.01.8de  CAL      2.00       
+           CALLIST     41537        1  /lib/libc.o 10/21/86 00:36  1.01.8de  CAL      2.00       
+ $SETJMP               41540        7  /lib/libc.o 10/21/86 00:36  1.01.8de  CAL      2.00       
+ $SIGNAL               41547      116  /lib/libc.o 10/21/86 00:36  1.01.8de  CAL      2.00       
+           CALLIST     41665        3  /lib/libc.o 10/21/86 00:36  1.01.8de  CAL      2.00       
+ $STAT                 41670       13  /lib/libc.o 10/21/86 00:37  1.01.8de  CAL      2.00       
+           CALLIST     41703        1  /lib/libc.o 10/21/86 00:37  1.01.8de  CAL      2.00       
+ $TIME                 41704       14  /lib/libc.o 10/21/86 00:37  1.01.8de  CAL      2.00       
+1                    SEGMENT LOADER          VERSION 2.1                                        12/14/86  02:24:05    PAGE 6       
+ 
+ BLOCK MAP
+ $TIMES                41720       13  /lib/libc.o 10/21/86 00:37  1.01.8de  CAL      2.00       
+           CALLIST     41733        1  /lib/libc.o 10/21/86 00:37  1.01.8de  CAL      2.00       
+ $UMASK                41734       13  /lib/libc.o 10/21/86 00:38  1.01.8de  CAL      2.00       
+           CALLIST     41747        1  /lib/libc.o 10/21/86 00:38  1.01.8de  CAL      2.00       
+ $UNLINK               41750       13  /lib/libc.o 10/21/86 00:38  1.01.8de  CAL      2.00       
+           CALLIST     41763        1  /lib/libc.o 10/21/86 00:38  1.01.8de  CAL      2.00       
+ $WAIT                 41764       15  /lib/libc.o 10/21/86 00:38  1.01.8de  CAL      2.00       
+           CALLIST     42001        1  /lib/libc.o 10/21/86 00:38  1.01.8de  CAL      2.00       
+ $WRITE                42002       13  /lib/libc.o 10/21/86 00:38  1.01.8de  CAL      2.00       
+           CALLIST     42015        1  /lib/libc.o 10/21/86 00:38  1.01.8de  CAL      2.00       
+ 
+ 
+ SORTED BY BLOCK NAME
+ 
+  MODULE    BLOCK    ADDRESS   LENGTH  SOURCE        DATE        OS REV       PROCESSOR      COMMENT
+ 
+ $ACCESS               41067       13  /lib/libc.o 10/21/86 00:30  1.01.8de  CAL      2.00       
+           CALLIST     41102        1  /lib/libc.o 10/21/86 00:30  1.01.8de  CAL      2.00       
+ $ALARM                41103       12  /lib/libc.o 10/21/86 00:31  1.01.8de  CAL      2.00       
+           CALLIST     41115        1  /lib/libc.o 10/21/86 00:31  1.01.8de  CAL      2.00       
+ $CHDIR                41116       13  /lib/libc.o 10/21/86 00:31  1.01.8de  CAL      2.00       
+           CALLIST     41131        1  /lib/libc.o 10/21/86 00:31  1.01.8de  CAL      2.00       
+ $CLOSE    CALLIST     41145        1  /lib/libc.o 10/21/86 00:31  1.01.8de  CAL      2.00       
+                       41132       13  /lib/libc.o 10/21/86 00:31  1.01.8de  CAL      2.00       
+ $CREAT    CALLIST     41161        1  /lib/libc.o 10/21/86 00:31  1.01.8de  CAL      2.00       
+                       41146       13  /lib/libc.o 10/21/86 00:31  1.01.8de  CAL      2.00       
+ $DUP                  41162       13  /lib/libc.o 10/21/86 00:32  1.01.8de  CAL      2.00       
+           CALLIST     41175        1  /lib/libc.o 10/21/86 00:32  1.01.8de  CAL      2.00       
+ $EXECVE   CALLIST     41211        1  /lib/libc.o 10/21/86 00:32  1.01.8de  CAL      2.00       
+                       41176       13  /lib/libc.o 10/21/86 00:32  1.01.8de  CAL      2.00       
+ $EXIT                 41212       11  /lib/libc.o 10/21/86 00:32  1.01.8de  CAL      2.00       
+           CALLIST     41223        1  /lib/libc.o 10/21/86 00:32  1.01.8de  CAL      2.00       
+ $FCNTL                41224       13  /lib/libc.o 10/21/86 00:32  1.01.8de  CAL      2.00       
+           CALLIST     41237        1  /lib/libc.o 10/21/86 00:32  1.01.8de  CAL      2.00       
+ $FORK     CALLIST     41255        1  /lib/libc.o 10/21/86 00:32  1.01.8de  CAL      2.00       
+                       41240       15  /lib/libc.o 10/21/86 00:32  1.01.8de  CAL      2.00       
+ $FSTAT    CALLIST     41271        1  /lib/libc.o 10/21/86 00:33  1.01.8de  CAL      2.00       
+                       41256       13  /lib/libc.o 10/21/86 00:33  1.01.8de  CAL      2.00       
+ $GETEUID  CALLIST     41306        1  /lib/libc.o 10/21/86 00:33  1.01.8de  CAL      2.00       
+                       41272       14  /lib/libc.o 10/21/86 00:33  1.01.8de  CAL      2.00       
+ $GETPID   CALLIST     41322        1  /lib/libc.o 10/21/86 00:33  1.01.8de  CAL      2.00       
+                       41307       13  /lib/libc.o 10/21/86 00:33  1.01.8de  CAL      2.00       
+ $IOCTL    CALLIST     41336        1  /lib/libc.o 10/21/86 00:34  1.01.8de  CAL      2.00       
+                       41323       13  /lib/libc.o 10/21/86 00:34  1.01.8de  CAL      2.00       
+ $KILL                 41337       13  /lib/libc.o 10/21/86 00:34  1.01.8de  CAL      2.00       
+           CALLIST     41352        1  /lib/libc.o 10/21/86 00:34  1.01.8de  CAL      2.00       
+ $LDIVSS               33040       43  /lib/libc.o 10/21/86 00:19  1.01.8de  CAL      2.00       
+ $LINK                 41353       13  /lib/libc.o 10/21/86 00:34  1.01.8de  CAL      2.00       
+           CALLIST     41366        1  /lib/libc.o 10/21/86 00:34  1.01.8de  CAL      2.00       
+ $LSEEK    CALLIST     41440        1  /lib/libc.o 10/21/86 00:34  1.01.8de  CAL      2.00       
+                       41425       13  /lib/libc.o 10/21/86 00:34  1.01.8de  CAL      2.00       
+ $MEMSET               33373       40  /lib/libc.o 10/21/86 00:20  1.01.8de  CAL      2.00       
+ $MODSS                33433        2  /lib/libc.o 10/21/86 00:20  1.01.8de  CAL      2.00       
+ $OPEN     CALLIST     41454        1  /lib/libc.o 10/21/86 00:35  1.01.8de  CAL      2.00       
+1                    SEGMENT LOADER          VERSION 2.1                                        12/14/86  02:24:05    PAGE 7       
+ 
+ BLOCK MAP
+                       41441       13  /lib/libc.o 10/21/86 00:35  1.01.8de  CAL      2.00       
+ $PAUSE    CALLIST     41470        1  /lib/libc.o 10/21/86 00:35  1.01.8de  CAL      2.00       
+                       41455       13  /lib/libc.o 10/21/86 00:35  1.01.8de  CAL      2.00       
+ $PIPE                 41471       16  /lib/libc.o 10/21/86 00:35  1.01.8de  CAL      2.00       
+           CALLIST     41507        1  /lib/libc.o 10/21/86 00:35  1.01.8de  CAL      2.00       
+ $READ                 41510       13  /lib/libc.o 10/21/86 00:35  1.01.8de  CAL      2.00       
+           CALLIST     41523        1  /lib/libc.o 10/21/86 00:35  1.01.8de  CAL      2.00       
+ $SBREAK   CALLIST     41537        1  /lib/libc.o 10/21/86 00:36  1.01.8de  CAL      2.00       
+                       41524       13  /lib/libc.o 10/21/86 00:36  1.01.8de  CAL      2.00       
+ $SETJMP               41540        7  /lib/libc.o 10/21/86 00:36  1.01.8de  CAL      2.00       
+ $SIGNAL   CALLIST     41665        3  /lib/libc.o 10/21/86 00:36  1.01.8de  CAL      2.00       
+                       41547      116  /lib/libc.o 10/21/86 00:36  1.01.8de  CAL      2.00       
+ $STACKAL  *Literal    34675        7  /lib/libc.o 10/21/86 00:20  1.01.8de  CAL      2.00       
+           CALLIST     34704        2  /lib/libc.o 10/21/86 00:20  1.01.8de  CAL      2.00       
+                       33542     1133  /lib/libc.o 10/21/86 00:20  1.01.8de  CAL      2.00       
+ $STACKDE  CALLIST     35023        2  /lib/libc.o 10/21/86 00:21  1.01.8de  CAL      2.00       
+                       34706      115  /lib/libc.o 10/21/86 00:21  1.01.8de  CAL      2.00       
+ $START                    1      213  /lib/libc.o 10/21/86 00:21  1.01.8de  CAL      2.00       
+ $STAT     CALLIST     41703        1  /lib/libc.o 10/21/86 00:37  1.01.8de  CAL      2.00       
+                       41670       13  /lib/libc.o 10/21/86 00:37  1.01.8de  CAL      2.00       
+ $STRCPY               35025      271  /lib/libc.o 10/21/86 00:20  1.01.8de  CAL      2.00       
+ $STRLEN               35316       23  /lib/libc.o 10/21/86 00:20  1.01.8de  CAL      2.00       
+ $TASKCOM                  0        1  *SYSTEM* 12/14/86 02:24   UNICOS    SEGLDR  2.1       task common prototype table      
+ $TIME                 41704       14  /lib/libc.o 10/21/86 00:37  1.01.8de  CAL      2.00       
+ $TIMES                41720       13  /lib/libc.o 10/21/86 00:37  1.01.8de  CAL      2.00       
+           CALLIST     41733        1  /lib/libc.o 10/21/86 00:37  1.01.8de  CAL      2.00       
+ $UDSS     *Literal    35434        1  /lib/libc.o 10/21/86 00:21  1.01.8de  CAL      2.00       
+                       35360       54  /lib/libc.o 10/21/86 00:21  1.01.8de  CAL      2.00       
+ $UMASK    CALLIST     41747        1  /lib/libc.o 10/21/86 00:38  1.01.8de  CAL      2.00       
+                       41734       13  /lib/libc.o 10/21/86 00:38  1.01.8de  CAL      2.00       
+ $UMODSS   CALLIST     35513        1  /lib/libc.o 10/21/86 00:21  1.01.8de  CAL      2.00       
+                       35440       53  /lib/libc.o 10/21/86 00:21  1.01.8de  CAL      2.00       
+ $UNLINK   CALLIST     41763        1  /lib/libc.o 10/21/86 00:38  1.01.8de  CAL      2.00       
+                       41750       13  /lib/libc.o 10/21/86 00:38  1.01.8de  CAL      2.00       
+ $WAIT     CALLIST     42001        1  /lib/libc.o 10/21/86 00:38  1.01.8de  CAL      2.00       
+                       41764       15  /lib/libc.o 10/21/86 00:38  1.01.8de  CAL      2.00       
+ $WRITE                42002       13  /lib/libc.o 10/21/86 00:38  1.01.8de  CAL      2.00       
+           CALLIST     42015        1  /lib/libc.o 10/21/86 00:38  1.01.8de  CAL      2.00       
+ abort$c   x$prog      32731       23  /lib/libc.o 10/21/86 00:10  1.01.8de  CAL      2.00       
+           x$cl        32726        3  /lib/libc.o 10/21/86 00:10  1.01.8de  CAL      2.00       
+ args$c    x$prog      11356     1025  args.o 12/11/86 15:26  2.0/9     CAL      2.00       
+           x$data      11331       25  args.o 12/11/86 15:26  2.0/9     CAL      2.00       
+           x$cl        11266       43  args.o 12/11/86 15:26  2.0/9     CAL      2.00       
+           x$strn      12403        3  args.o 12/11/86 15:26  2.0/9     CAL      2.00       
+ blok$c    x$prog        272      333  blok.o 12/11/86 15:25  2.0/9     CAL      2.00       
+           x$data        265        5  blok.o 12/11/86 15:25  2.0/9     CAL      2.00       
+           x$cl          243       22  blok.o 12/11/86 15:25  2.0/9     CAL      2.00       
+           x$strn        625        2  blok.o 12/11/86 15:25  2.0/9     CAL      2.00       
+ cmd$c     x$prog       1415     1553  cmd.o 12/11/86 15:25  2.0/9     CAL      2.00       
+           x$strn       3170        2  cmd.o 12/11/86 15:25  2.0/9     CAL      2.00       
+           x$cl         1217      176  cmd.o 12/11/86 15:25  2.0/9     CAL      2.00       
+ data$c    x$data      35524     2177  /lib/libc.o 10/21/86 00:26  1.01.8de  CAL      2.00       
+ defs$c    x$data      26206      647  defs.o 12/11/86 15:28  2.0/9     CAL      2.00       
+ error$c   x$prog      17523      255  error.o 12/11/86 15:26  2.0/9     CAL      2.00       
+1                    SEGMENT LOADER          VERSION 2.1                                        12/14/86  02:24:05    PAGE 8       
+ 
+ BLOCK MAP
+           x$cl        17470       33  error.o 12/11/86 15:26  2.0/9     CAL      2.00       
+ exit$c    x$prog      32757       24  /lib/libc.o 10/21/86 00:12  1.01.8de  CAL      2.00       
+           x$cl        32754        3  /lib/libc.o 10/21/86 00:12  1.01.8de  CAL      2.00       
+ expand$c  x$strn      25312        2  expand.o 12/11/86 15:27  2.0/9     CAL      2.00       
+           x$prog      24217     1073  expand.o 12/11/86 15:27  2.0/9     CAL      2.00       
+           x$data      24215        2  expand.o 12/11/86 15:27  2.0/9     CAL      2.00       
+           x$cl        24155       40  expand.o 12/11/86 15:27  2.0/9     CAL      2.00       
+ fault$c   x$data       3223      122  fault.o 12/14/86 02:23  2.0/9     CAL      2.00       
+           x$cl         3172       31  fault.o 12/14/86 02:23  2.0/9     CAL      2.00       
+           x$prog       3345      350  fault.o 12/14/86 02:23  2.0/9     CAL      2.00       
+ flsbuf$c  x$prog      37753     1114  /lib/libc.o 10/21/86 00:27  1.01.8de  CAL      2.00       
+           x$cl        37723       30  /lib/libc.o 10/21/86 00:27  1.01.8de  CAL      2.00       
+ func$c    x$strn      31751       37  func.o 12/11/86 15:28  2.0/9     CAL      2.00       
+           x$prog      30377     1352  func.o 12/11/86 15:28  2.0/9     CAL      2.00       
+           x$cl        30202      175  func.o 12/11/86 15:28  2.0/9     CAL      2.00       
+           s$witch     27400      602  func.o 12/11/86 15:28  2.0/9     CAL      2.00       
+ io$c      x$prog      20074     1144  io.o 12/11/86 15:27  2.0/9     CAL      2.00       
+           x$data      20072        2  io.o 12/11/86 15:27  2.0/9     CAL      2.00       
+           x$cl        20000       72  io.o 12/11/86 15:27  2.0/9     CAL      2.00       
+ isatty$c  x$prog      33005       27  /lib/libc.o 10/21/86 00:15  1.01.8de  CAL      2.00       
+           x$cl        33003        2  /lib/libc.o 10/21/86 00:15  1.01.8de  CAL      2.00       
+ longjmp$  x$prog      41373       32  /lib/libc.o 10/21/86 22:27  1.01.8de  CAL      2.00       
+           x$cl        41367        4  /lib/libc.o 10/21/86 22:27  1.01.8de  CAL      2.00       
+ macro$c   x$prog      22676     1257  macro.o 12/11/86 15:27  2.0/9     CAL      2.00       
+           x$data      22674        2  macro.o 12/11/86 15:27  2.0/9     CAL      2.00       
+           x$cl        22552      122  macro.o 12/11/86 15:27  2.0/9     CAL      2.00       
+ main$c    x$prog       4044      575  main.o 12/11/86 15:25  2.0/9     CAL      2.00       
+           x$data       4004       40  main.o 12/11/86 15:25  2.0/9     CAL      2.00       
+           x$cl         3715       67  main.o 12/11/86 15:25  2.0/9     CAL      2.00       
+ malloc$c  x$prog      33120      253  /lib/libc.o 10/21/86 00:15  1.01.8de  CAL      2.00       
+           x$data      33112        6  /lib/libc.o 10/21/86 00:15  1.01.8de  CAL      2.00       
+           x$cl        33103        7  /lib/libc.o 10/21/86 00:15  1.01.8de  CAL      2.00       
+ msg$c     x$strn      25747      237  msg.o 12/11/86 15:27  2.0/9     CAL      2.00       
+           x$data      25354      373  msg.o 12/11/86 15:27  2.0/9     CAL      2.00       
+ name$c    x$strn      11265        1  name.o 12/11/86 15:26  2.0/9     CAL      2.00       
+           x$prog       6674     2371  name.o 12/11/86 15:26  2.0/9     CAL      2.00       
+           x$data       6560      114  name.o 12/11/86 15:26  2.0/9     CAL      2.00       
+           x$cl         6355      203  name.o 12/11/86 15:26  2.0/9     CAL      2.00       
+ pathserv  x$prog      27106      270  pathserv.o 12/11/86 15:28  2.0/9     CAL      2.00       
+           x$cl        27055       31  pathserv.o 12/11/86 15:28  2.0/9     CAL      2.00       
+           x$strn      27376        2  pathserv.o 12/11/86 15:28  2.0/9     CAL      2.00       
+ print$c   x$strn      22547        3  print.o 12/11/86 15:27  2.0/9     CAL      2.00       
+           x$prog      21371     1156  print.o 12/11/86 15:27  2.0/9     CAL      2.00       
+           x$data      21326       43  print.o 12/11/86 15:27  2.0/9     CAL      2.00       
+           x$cl        21240       66  print.o 12/11/86 15:27  2.0/9     CAL      2.00       
+ readdir$  x$prog      32623      103  readdir.o 12/11/86 15:28  2.0/9     CAL      2.00       
+           x$data      32554       47  readdir.o 12/11/86 15:28  2.0/9     CAL      2.00       
+           x$cl        32550        4  readdir.o 12/11/86 15:28  2.0/9     CAL      2.00       
+ sbrk$c    x$prog      33441      101  /lib/libc.o 10/21/86 00:17  1.01.8de  CAL      2.00       
+           x$cl        33435        4  /lib/libc.o 10/21/86 00:17  1.01.8de  CAL      2.00       
+ sctype$c  x$data      25314       40  sctype.o 12/11/86 15:27  2.0/9     CAL      2.00       
+ service$  x$strn      17466        2  service.o 12/11/86 15:26  2.0/9     CAL      2.00       
+           x$prog      15706     1560  service.o 12/11/86 15:26  2.0/9     CAL      2.00       
+           x$data      15656       30  service.o 12/11/86 15:26  2.0/9     CAL      2.00       
+1                    SEGMENT LOADER          VERSION 2.1                                        12/14/86  02:24:05    PAGE 9       
+ 
+ BLOCK MAP
+           x$cl        15525      131  service.o 12/11/86 15:26  2.0/9     CAL      2.00       
+ shsetbrk  x$cl          214        2  shsetbrk.o 12/11/86 15:24  2.0/9     CAL      2.00       
+           x$prog        216       25  shsetbrk.o 12/11/86 15:24  2.0/9     CAL      2.00       
+ spname$c  x$strn      32545        3  spname.o 12/11/86 15:28  2.0/9     CAL      2.00       
+           x$prog      32052      473  spname.o 12/11/86 15:28  2.0/9     CAL      2.00       
+           x$data      32026       24  spname.o 12/11/86 15:28  2.0/9     CAL      2.00       
+           x$cl        32010       16  spname.o 12/11/86 15:28  2.0/9     CAL      2.00       
+ stak$c    x$cl          627       24  stak.o 12/11/86 15:25  2.0/9     CAL      2.00       
+           x$prog        653      344  stak.o 12/11/86 15:25  2.0/9     CAL      2.00       
+ string$c  x$prog       6075      260  string.o 12/11/86 15:25  2.0/9     CAL      2.00       
+           x$cl         6070        5  string.o 12/11/86 15:25  2.0/9     CAL      2.00       
+ word$c    x$prog       4765     1103  word.o 12/11/86 15:25  2.0/9     CAL      2.00       
+           x$data       4723       42  word.o 12/11/86 15:25  2.0/9     CAL      2.00       
+           x$cl         4641       62  word.o 12/11/86 15:25  2.0/9     CAL      2.00       
+ xec$c     s$witch     12406      336  xec.o 12/11/86 15:26  2.0/9     CAL      2.00       
+           x$strn      15517        6  xec.o 12/11/86 15:26  2.0/9     CAL      2.00       
+           x$prog      13230     2267  xec.o 12/11/86 15:26  2.0/9     CAL      2.00       
+           x$data      13227        1  xec.o 12/11/86 15:26  2.0/9     CAL      2.00       
+           x$cl        12744      263  xec.o 12/11/86 15:26  2.0/9     CAL      2.00       
+ xmisc$c   x$data      35514       10  /lib/libc.o 10/21/86 00:19  1.01.8de  CAL      2.00       
+1                    SEGMENT LOADER          VERSION 2.1                                        12/14/86  02:24:05    PAGE 10      
+ 
+ ENTRY POINT CROSS-REFERENCE     
+ MODULE   ENTRY        VALUE 
+  
+ $ACCESS                                    CALLS...     errno     $STKOFEN   
+          access       41070a               CALLED BY... xec$c     pathserv   
+  
+ $ALARM                                     CALLS...     errno     $STKOFEN   
+          alarm        41104a               CALLED BY... xec$c      
+  
+ $CHDIR                                     CALLS...     errno     $STKOFEN   
+          chdir        41117a               CALLED BY... xec$c      
+  
+ $CLOSE                                     CALLS...     errno     $STKOFEN   
+          close        41133a               CALLED BY... main$c    word$c    xec$c     service$  io$c      macro$c   expand$c   
+                                                         flsbuf$c   
+  
+ $CREAT                                     CALLS...     errno     $STKOFEN   
+          creat        41147a               CALLED BY... word$c    io$c       
+  
+ $DUP                                       CALLS...     errno     $STKOFEN   
+          dup          41163a               CALLED BY... name$c    service$   
+  
+ $EXECVE                                    CALLS...     errno     $STKOFEN   
+          execve       41177a               CALLED BY... service$   
+  
+ $EXIT                                      CALLS...     $STKOFEN   
+          $exit        41213a               CALLED BY... exit$c     
+  
+ $FCNTL                                     CALLS...     errno     $STKOFEN   
+          fcntl        41225a               CALLED BY... main$c    io$c       
+  
+ $FORK                                      CALLS...     errno     $STKOFEN   
+          fork         41241a               CALLED BY... xec$c      
+  
+ $FSTAT                                     CALLS...     errno     $STKOFEN   
+          fstat        41257a               CALLED BY... expand$c   
+  
+ $GETEUID                                   CALLS...     errno     $STKOFEN   
+          geteuid      41273a               CALLED BY... main$c     
+  
+ $GETPID                                    CALLS...     errno     $STKOFEN   
+          getpid       41310a               CALLED BY... main$c    abort$c    
+  
+ $IOCTL                                     CALLS...     errno     $STKOFEN   
+          ioctl        41324a               CALLED BY... isatty$c   
+  
+ $KILL                                      CALLS...     errno     $STKOFEN   
+          kill         41340a               CALLED BY... abort$c    
+  
+ $LDIVSS                                 
+          LDSS%        33040a               CALLED BY... print$c   $MODSS     
+  
+ $LINK                                      CALLS...     errno     $STKOFEN   
+          link         41354a               CALLED BY... io$c       
+  
+1                    SEGMENT LOADER          VERSION 2.1                                        12/14/86  02:24:05    PAGE 11      
+ 
+ ENTRY POINT CROSS-REFERENCE     
+ $LSEEK                                     CALLS...     errno     $STKOFEN   
+          lseek        41426a               CALLED BY... word$c    name$c    service$   
+  
+ $MEMSET                                 
+          X$MSET       33373a               CALLED BY... $STRCPY    
+          memset       33374a               CALLED BY...  
+  
+ $MODSS                                     CALLS...     LDSS%      
+          MOD%         33433a               CALLED BY... print$c    
+  
+ $OPEN                                      CALLS...     errno     $STKOFEN   
+          open         41442a               CALLED BY... word$c    service$  io$c      expand$c   
+  
+ $PAUSE                                     CALLS...     errno     $STKOFEN   
+          pause        41456a               CALLED BY... xec$c      
+  
+ $PIPE                                      CALLS...     errno     $STKOFEN   
+          pipe         41472a               CALLED BY... io$c       
+  
+ $READ                                      CALLS...     errno     $STKOFEN   
+          read         41511a               CALLED BY... word$c    readdir$   
+  
+ $SBREAK                                    CALLS...     errno     $STKOFEN   
+          sbreak       41525a               CALLED BY... sbrk$c     
+  
+ $SETJMP                                 
+          $longjmp     41542d               CALLED BY... longjmp$   
+          setjmp       41540a               CALLED BY... main$c     
+  
+ $SIGNAL                                    CALLS...     errno     $STKOFEN   
+          signal       41550a               CALLED BY... fault$c   xec$c     longjmp$   
+          sigoff       41575a                
+          sigon        41606a               CALLED BY... longjmp$   
+          sigsta       41660                 
+  
+ $STACKAL                                   CALLS...     $STKUFEX  $STKUFTR  $TASKCOM  malloc     
+          $STKCR%      34576a               CALLED BY...  
+          $STKOFEN     34430a               CALLED BY... shsetbrk  blok$c    stak$c    cmd$c     fault$c   main$c    word$c     
+                                                         string$c  name$c    args$c    xec$c     service$  error$c   io$c       
+                                                         print$c   macro$c   expand$c  sctype$c  msg$c     defs$c    pathserv   
+                                                         func$c    spname$c  readdir$  abort$c   exit$c    isatty$c  malloc$c   
+                                                         sbrk$c    xmisc$c   bufctl$c  data$c    flsbuf$c  $ACCESS   $ALARM     
+                                                         $CHDIR    $CLOSE    $CREAT    $DUP      $EXECVE   $EXIT     $FCNTL     
+                                                         $FORK     $FSTAT    $GETEUID  $GETPID   $IOCTL    $KILL     $LINK      
+                                                         longjmp$  $LSEEK    $OPEN     $PAUSE    $PIPE     $READ     $SBREAK    
+                                                         $SIGNAL   $STAT     $TIMES    $UMASK    $UNLINK   $WAIT     $WRITE     
+          STKIN        34407                CALLED BY...  
+          STKIS        34406                CALLED BY...  
+          STKRT        34405                 
+  
+ $STACKDE                                   CALLS...     free       
+          $STKDE%      35001a               CALLED BY...  
+          $STKUFCK     34732a                
+          $STKUFEX     34743d               CALLED BY... $STACKAL   
+1                    SEGMENT LOADER          VERSION 2.1                                        12/14/86  02:24:05    PAGE 12      
+ 
+ ENTRY POINT CROSS-REFERENCE     
+          $STKUFTR     34732a               CALLED BY... $STACKAL   
+  
+ $START                                     CALLS...     M$A$I$N    
+          $START           1a                
+          $argc           11                CALLED BY...  
+          $argv           12                CALLED BY...  
+          endcp            7                CALLED BY... shsetbrk  sbrk$c     
+          environ         13                CALLED BY... main$c    name$c     
+          errno           10                CALLED BY... word$c    xec$c     service$  pathserv  flsbuf$c  $ACCESS   $ALARM     
+                                                         $CHDIR    $CLOSE    $CREAT    $DUP      $EXECVE   $FCNTL    $FORK      
+                                                         $FSTAT    $GETEUID  $GETPID   $IOCTL    $KILL     $LINK     $LSEEK     
+                                                         $OPEN     $PAUSE    $PIPE     $READ     $SBREAK   $SIGNAL   $STAT      
+                                                         $TIME     $TIMES    $UMASK    $UNLINK   $WAIT     $WRITE     
+  
+ $STAT                                      CALLS...     errno     $STKOFEN   
+          stat         41671a               CALLED BY... main$c    xec$c     pathserv   
+  
+ $STRCPY                                    CALLS...     x$bmask   X$MSET     
+          memcpy       35041a               CALLED BY...  
+          strcpy       35050a               CALLED BY...  
+          strncpy      35032a               CALLED BY... readdir$   
+  
+ $STRLEN                                    CALLS...     x$bmask    
+          strlen       35323a               CALLED BY... readdir$   
+  
+ $TASKCOM                                
+          $TASKCOM         0                CALLED BY... $STACKAL   
+  
+ $TIME                                      CALLS...     errno      
+          time         41705a               CALLED BY... main$c     
+  
+ $TIMES                                     CALLS...     errno     $STKOFEN   
+          times        41721a               CALLED BY... xec$c      
+  
+ $UDSS                                   
+          UDSS%        35420a               CALLED BY... print$c   $UMODSS    
+  
+ $UMASK                                     CALLS...     errno     $STKOFEN   
+          umask        41735a               CALLED BY... xec$c      
+  
+ $UMODSS                                    CALLS...     UDSS%      
+          UMOD         35500a                
+          UMOD%        35505a               CALLED BY... print$c    
+          UMODSS%      35505a                
+  
+ $UNLINK                                    CALLS...     errno     $STKOFEN   
+          unlink       41751a               CALLED BY... service$  error$c   func$c     
+  
+ $WAIT                                      CALLS...     errno     $STKOFEN   
+          wait         41765a               CALLED BY... service$   
+  
+ $WRITE                                     CALLS...     errno     $STKOFEN   
+          write        42003a               CALLED BY... word$c    io$c      print$c   macro$c   flsbuf$c   
+  
+1                    SEGMENT LOADER          VERSION 2.1                                        12/14/86  02:24:05    PAGE 13      
+ 
+ ENTRY POINT CROSS-REFERENCE     
+ abort$c                                    CALLS...     $STKOFEN  kill      getpid     
+          abort        32732a               CALLED BY... blok$c     
+  
+ args$c                                     CALLS...     $STKOFEN  cf        any       pop       make      dolc      dolv       
+                                                         eflag     flags     failed    argfor    comdiv    badopt    shfree     
+                                                         shalloc   poptemp   prot$env   
+          clean$ar     12245a                
+          clearup      12305a               CALLED BY... word$c    service$  error$c    
+          flagadr      11337                CALLED BY... main$c    service$  macro$c    
+          flagchar     11335                 
+          flagval      11341                 
+          freeargs     12127a               CALLED BY... xec$c      
+          options      11357a               CALLED BY... main$c    xec$c      
+          popargs      12030a               CALLED BY... xec$c      
+          pushargs     11765a               CALLED BY... xec$c      
+          setargs      11724a               CALLED BY... xec$c     service$   
+          useargs      12360a               CALLED BY... xec$c      
+  
+ blok$c                                     CALLS...     $STKOFEN  prc       prn       prs       abort     brkend    movstr     
+                                                         setbrk    stakbas   stakbot   stakbsy   staktop   pushstak   
+          addblok        357a               CALLED BY... main$c     
+          blokbot        270                 
+          blokp          266                 
+          bloktop        267                 
+          brkbegin       271                 
+          brkincr        265                CALLED BY... stak$c     
+          chkmem         524a               CALLED BY... xec$c      
+          shalloc        273a               CALLED BY... cmd$c     name$c    args$c    expand$c   
+          shfree         470a               CALLED BY... stak$c    fault$c   name$c    args$c    error$c   io$c      expand$c   
+                                                         func$c     
+  
+ bufctl$c                                   CALLS...     $STKOFEN   
+  
+ cmd$c                                      CALLS...     $STKOFEN  prc       prn       prp       prs       make      word       
+                                                         fndef     peekc     flags     peekn     wdarg     colon     wdval      
+                                                         wdset     wdnum     chkpr     skipc     nextc     movstr    iotemp     
+                                                         iopend    atline    synmsg    reserv    length    exitsh    shalloc    
+                                                         fiotemp   getstak   standin   endoffil  reserved  prs$cntl  unexpect   
+          cmd           1532a               CALLED BY... main$c    xec$c     macro$c    
+          getstor       1416a                
+          makefork      1446a               CALLED BY... macro$c    
+  
+ data$c                                     CALLS...     $STKOFEN   
+          $bufendt     37676                CALLED BY... flsbuf$c   
+          $iob         37555                CALLED BY... flsbuf$c   
+          $lastbuf     37675                CALLED BY... flsbuf$c   
+          $sibuf       35524                 
+          $smbuf       37530                CALLED BY... flsbuf$c   
+          $sobuf       36525                 
+          $stdbuf      37526                CALLED BY... flsbuf$c   
+  
+ defs$c                                     CALLS...     $STKOFEN   
+          argfor       26415                CALLED BY... args$c    xec$c      
+          breakcnt     27044                CALLED BY... xec$c     error$c    
+1                    SEGMENT LOADER          VERSION 2.1                                        12/14/86  02:24:05    PAGE 14      
+ 
+ ENTRY POINT CROSS-REFERENCE     
+          brkend       27054                CALLED BY... shsetbrk  blok$c    stak$c     
+          cmdadr       26427                CALLED BY... main$c    print$c   macro$c    
+          comdiv       26434                CALLED BY... main$c    args$c    service$   
+          dolc         26413                CALLED BY... main$c    args$c    xec$c     macro$c    
+          dolv         26414                CALLED BY... main$c    args$c    xec$c     macro$c    
+          eflag        27047                CALLED BY... main$c    args$c    xec$c     service$  error$c    
+          errshell     26637                CALLED BY... main$c    error$c    
+          execbrk      27042                CALLED BY... xec$c     error$c    
+          exitval      27040                CALLED BY... fault$c   main$c    word$c    name$c    xec$c     service$  error$c    
+                                                         func$c     
+          fdmap        26213                CALLED BY... service$  io$c       
+          fiotemp      26211                CALLED BY... cmd$c     xec$c     error$c   func$c     
+          flags        26435                CALLED BY... cmd$c     fault$c   main$c    word$c    name$c    args$c    xec$c      
+                                                         service$  error$c   io$c      print$c   macro$c    
+          fndef        26421                CALLED BY... cmd$c     main$c    io$c       
+          funcnt       27045                CALLED BY... xec$c     service$  error$c    
+          gchain       26416                CALLED BY... xec$c     service$  expand$c   
+          iopend       26212                CALLED BY... cmd$c     main$c    word$c    macro$c    
+          ioset        26207                CALLED BY... xec$c     service$  io$c       
+          iotemp       26210                CALLED BY... cmd$c     xec$c     error$c   io$c       
+          loopcnt      27043                CALLED BY... main$c    xec$c      
+          output       26206                CALLED BY... main$c    print$c   macro$c    
+          pcsadr       26425                CALLED BY... xec$c     macro$c    
+          peekc        26432                CALLED BY... cmd$c     main$c    word$c    macro$c    
+          peekn        26433                CALLED BY... cmd$c     main$c    word$c     
+          pidadr       26426                CALLED BY... main$c    macro$c    
+          reserv       26424                CALLED BY... cmd$c     word$c     
+          retval       27041                CALLED BY... fault$c   main$c    xec$c     service$  macro$c    
+          rwait        26436                CALLED BY... word$c    xec$c      
+          serial       26431                CALLED BY... main$c    io$c       
+          stakbas      27050                CALLED BY... blok$c    stak$c     
+          stakbot      27052                CALLED BY... blok$c    stak$c    main$c    name$c    service$  print$c   macro$c    
+          stakbsy      27053                CALLED BY... blok$c    stak$c     
+          staktop      27051                CALLED BY... blok$c    stak$c    word$c    name$c    xec$c     service$  print$c    
+                                                         macro$c   expand$c  pathserv  func$c     
+          subshell     26437                CALLED BY... main$c    service$   
+          tmpnam       26430                CALLED BY... main$c    io$c       
+          trapnote     27037                CALLED BY... fault$c   main$c    word$c    name$c    xec$c     service$  expand$c   
+                                                         func$c     
+          wasintr      27046                CALLED BY... fault$c   service$   
+          wdarg        26422                CALLED BY... cmd$c     word$c     
+          wdnum        26420                CALLED BY... cmd$c     word$c     
+          wdset        26423                CALLED BY... cmd$c     word$c     
+          wdval        26417                CALLED BY... cmd$c     word$c     
+  
+ error$c                                    CALLS...     $STKOFEN  prc       prp       prs       exit      eflag     flags      
+                                                         colon     iotemp    funcnt    shfree    unlink    fiotemp   trapcom    
+                                                         exitval   execbrk   clearup   restore   longjmp   execexp   chktrap    
+                                                         clear$bu  breakcnt  errshell  prs$cntl   
+          done         17657a               CALLED BY... fault$c   main$c    xec$c      
+          error        17570a               CALLED BY... stak$c    xec$c     io$c      macro$c    
+          exitsh       17612a               CALLED BY... cmd$c     word$c    name$c    xec$c     service$  func$c     
+          failed       17524a               CALLED BY... name$c    args$c    xec$c     service$  io$c      print$c   macro$c    
+                                                         pathserv   
+1                    SEGMENT LOADER          VERSION 2.1                                        12/14/86  02:24:05    PAGE 15      
+ 
+ ENTRY POINT CROSS-REFERENCE     
+          rmfunctm     17755a                
+          rmtemp       17722a               CALLED BY... stak$c    xec$c      
+  
+ exit$c                                     CALLS...     $STKOFEN  $exit     $cleanup   
+          exit         32760a               CALLED BY... main$c    error$c    
+  
+ expand$c                                   CALLS...     $STKOFEN  open      fstat     close     gchain    shalloc   endstak    
+                                                         locstak   staktop   nullstr   movstrn   readdir   shfree    trapnote   
+                                                         pushstak   
+          closedir     25265a               CALLED BY... spname$c   
+          expand       24220a               CALLED BY... service$   
+          gmatch       24527a               CALLED BY... xec$c      
+          makearg      25133a               CALLED BY... service$   
+          opendir      25152a               CALLED BY... spname$c   
+  
+ fault$c                                    CALLS...     $STKOFEN  done      flags     signal    retval    shfree    exitval    
+                                                         wasintr   execexp   trapnote   
+          chktrap       3656a               CALLED BY... word$c    xec$c     error$c    
+          clrsig        3621a               CALLED BY... xec$c      
+          fault         3346a                
+          getsig        3501a               CALLED BY... xec$c      
+          ignsig        3451a               CALLED BY... main$c    xec$c      
+          oldsigs       3563a               CALLED BY... xec$c      
+          setsig        3533a                
+          sigval        3323                 
+          stdsigs       3410a               CALLED BY... main$c     
+          trapcom       3223                CALLED BY... xec$c     error$c    
+          trapflg       3263                 
+  
+ flsbuf$c                                   CALLS...     $STKOFEN  $iob      free      close     errno     write     malloc     
+                                                         $smbuf    isatty    $stdbuf   $bufendt  $lastbuf   
+          $bufsync     41031a               CALLED BY...  
+          $cleanup     37754a               CALLED BY... exit$c     
+          $findbuf     40710a               CALLED BY...  
+          $flsbuf      40205a               CALLED BY...  
+          $wrtchk      40574a               CALLED BY...  
+          $xflsbuf     40467a               CALLED BY...  
+          fclose       40001a               CALLED BY...  
+          fflush       40100a               CALLED BY...  
+  
+ func$c                                     CALLS...     $STKOFEN  itos      numbuf    shfree    unlink    exitsh    fiotemp    
+                                                         locstak   staktop   exitval   trapnote  pushstak   
+          free$arg     30621a                
+          freefunc     30400a               CALLED BY... name$c     
+          freeio       30645a                
+          freereg      30722a                
+          freetree     30422a                
+          prarg        31475a                
+          prf          31054a                
+          prfqstr      31631a                
+          prfstr       31017a                
+          prio         31525a                
+          strf         30755a               CALLED BY... name$c    pathserv   
+  
+1                    SEGMENT LOADER          VERSION 2.1                                        12/14/86  02:24:05    PAGE 16      
+ 
+ ENTRY POINT CROSS-REFERENCE     
+ io$c                                       CALLS...     $STKOFEN  cf        make      pipe      link      open      itos       
+                                                         readc     fndef     fdmap     flags     creat     close     ioset      
+                                                         error     fcntl     chkpr     nextc     write     failed    movstr     
+                                                         iotemp    tmpout    tmpnam    serial    numbuf    piperr    $ctype1    
+                                                         length    badopen   shfree    mactrim   locstak   cpystak   standin    
+                                                         nosubst   badcreat   
+          chkopen      20343a               CALLED BY... main$c    xec$c     service$   
+          chkpipe      20313a               CALLED BY... xec$c     macro$c    
+          copy         20541a               CALLED BY... word$c     
+          create       20446a               CALLED BY... service$   
+          estabf       20135a               CALLED BY... main$c    word$c    xec$c     macro$c    
+          initf        20075a               CALLED BY... main$c    name$c    xec$c     macro$c    
+          link$iod     21060a               CALLED BY... xec$c      
+          pop          20212a               CALLED BY... name$c    args$c    xec$c     macro$c    
+          poptemp      20265a               CALLED BY... args$c    service$   
+          push         20167a               CALLED BY... name$c    xec$c     macro$c    
+          pushtemp     20242a                
+          rename       20376a               CALLED BY... xec$c     service$   
+          restore      21202a               CALLED BY... xec$c     error$c    
+          savefd       21156a               CALLED BY... service$   
+          swap$iod     21127a               CALLED BY... xec$c      
+          tmpfil       20501a               CALLED BY... service$   
+          tmpfptr      20073                 
+          topfd        20072                CALLED BY... service$   
+  
+ isatty$c                                   CALLS...     $STKOFEN  ioctl      
+          isatty       33006a               CALLED BY... main$c    flsbuf$c   
+  
+ longjmp$                                   CALLS...     $STKOFEN  sigon     signal    $longjmp   
+          longjmp      41374a               CALLED BY... service$  error$c    
+  
+ macro$c                                    CALLS...     $STKOFEN  cmd       pop       dolc      dolv      trim      itos       
+                                                         push      readc     peekc     flags     close     unset     error      
+                                                         initf     await     write     failed    cmdadr    badsub    pidadr     
+                                                         lookup    movstr    iopend    output    pcsadr    numbuf    retval     
+                                                         $ctype1   flagadr   $ctype2   assign    estabf    endstak   locstak    
+                                                         stakbot   staktop   setstak   chkpipe   execute   tdystak   badparam   
+                                                         makefork  pushstak   
+          macro        23562a               CALLED BY... xec$c     service$   
+          subst        24035a               CALLED BY... service$   
+  
+ main$c                                     CALLS...     $STKOFEN  environ   exit      cmd       prs       dolc      done       
+                                                         time      dolv      itos      stat      eflag     readc     fndef      
+                                                         peekc     flags     peekn     close     initf     fcntl     ps1nod     
+                                                         ps2nod    cmdadr    pidadr    movstr    iopend    output    sptbnl     
+                                                         ifsnod    tmpnam    serial    comdiv    numbuf    retval    flagadr    
+                                                         readmsg   mailnod   stakbot   profile   exitval   loopcnt   mailmsg    
+                                                         nullstr   simple    stdsigs   addblok   options   setjmp    replace    
+                                                         assnum    getpid    dfault    estabf    chkopen   geteuid   isatty     
+                                                         ignsig    tdystak   stakchk   execute   errshell  subshell  setup$en   
+                                                         pathopen  trapnote  stdpromp  suppromp   
+          Ldup          4526a                
+          chkmail       4564a                
+          chkpr         4450a               CALLED BY... cmd$c     word$c    io$c       
+1                    SEGMENT LOADER          VERSION 2.1                                        12/14/86  02:24:05    PAGE 17      
+ 
+ ENTRY POINT CROSS-REFERENCE     
+          main          4045a                
+          M$A$I$N       4045a               CALLED BY... $START     
+          setmail       4621a               CALLED BY... name$c     
+          settmp        4475a               CALLED BY... xec$c      
+          standin       4040                CALLED BY... cmd$c     word$c    name$c    service$  io$c       
+          stdfile       4010                 
+          tmpout        4005                CALLED BY... service$  io$c       
+  
+ malloc$c                                   CALLS...     $STKOFEN  sbrk       
+          free         33264a               CALLED BY... $STACKDE  flsbuf$c   
+          malloc       33121a               CALLED BY... $STACKAL  flsbuf$c   
+          realloc      33310a               CALLED BY...  
+  
+ msg$c                                      CALLS...     $STKOFEN   
+          acctname     25506                CALLED BY... name$c     
+          arglist      25424                CALLED BY... service$   
+          atline       25522                CALLED BY... cmd$c      
+          badcreat     25402                CALLED BY... io$c       
+          baddir       25444                CALLED BY... xec$c      
+          badexec      25432                CALLED BY... service$   
+          badexpor     25460                 
+          badfile      25440                CALLED BY... service$   
+          badfname     25474                CALLED BY... xec$c      
+          badnum       25366                CALLED BY... print$c    
+          badopen      25420                CALLED BY... io$c       
+          badopt       25354                CALLED BY... args$c     
+          badparam     25370                CALLED BY... macro$c    
+          badperm      25470                 
+          badretur     25453                CALLED BY... xec$c      
+          badshift     25442                CALLED BY... xec$c      
+          badsub       25377                CALLED BY... macro$c    
+          badtrap      25446                CALLED BY... xec$c      
+          badunset     25463                CALLED BY... name$c     
+          cdpname      25500                CALLED BY... name$c     
+          colon        25514                CALLED BY... cmd$c     error$c   print$c    
+          commands     25672                CALLED BY... xec$c     pathserv   
+          coredump     25422                CALLED BY... service$   
+          defpath      25512                CALLED BY... service$   
+          devnull      25524                CALLED BY... xec$c      
+          duperr       25670                 
+          endoffil     25516                CALLED BY... cmd$c      
+          execpmsg     25526                CALLED BY... xec$c      
+          export       25667                CALLED BY... name$c     
+          histname     25507                CALLED BY... name$c     
+          homename     25501                CALLED BY... name$c     
+          ifsname      25503                CALLED BY... name$c     
+          mailmsg      25356                CALLED BY... main$c     
+          mailname     25502                CALLED BY... name$c     
+          minus        25515                CALLED BY... service$   
+          no$comma     25746                CALLED BY... xec$c     pathserv   
+          no$reser     25566                CALLED BY... word$c     
+          nofork       25404                CALLED BY... xec$c      
+          nohome       25465                CALLED BY... xec$c      
+          nospace      25360                 
+1                    SEGMENT LOADER          VERSION 2.1                                        12/14/86  02:24:05    PAGE 18      
+ 
+ ENTRY POINT CROSS-REFERENCE     
+          nostack      25362                CALLED BY... stak$c     
+          noswap       25411                CALLED BY... xec$c      
+          notbltin     25436                CALLED BY... xec$c      
+          notfound     25434                CALLED BY... xec$c     service$  pathserv   
+          notid        25450                CALLED BY... name$c     
+          nullstr      25510                CALLED BY... main$c    name$c    xec$c     service$  expand$c   
+          pathname     25477                CALLED BY... name$c     
+          piperr       25415                CALLED BY... io$c       
+          profile      25532                CALLED BY... main$c     
+          ps1name      25504                CALLED BY... name$c     
+          ps2name      25505                CALLED BY... name$c     
+          readmsg      25527                CALLED BY... main$c     
+          reserved     25534                CALLED BY... cmd$c     word$c     
+          sptbnl       25511                CALLED BY... main$c    name$c     
+          stdpromp     25530                CALLED BY... main$c     
+          suppromp     25531                CALLED BY... main$c     
+          synmsg       25364                CALLED BY... cmd$c      
+          sysmsg       25567                CALLED BY... service$   
+          toobig       25431                CALLED BY... service$   
+          txtbsy       25427                CALLED BY... service$   
+          unexpect     25520                CALLED BY... cmd$c      
+          unset        25374                CALLED BY... macro$c    
+  
+ name$c                                     CALLS...     $STKOFEN  cf        prc       any       dup       pop       prs        
+                                                         strf      push      itos      flags     lseek     notid     initf      
+                                                         nextc     failed    movstr    sptbnl    ps1name   ps2name   numbuf     
+                                                         export    $ctype1   shfree    cdpname   length    shalloc   ifsname    
+                                                         mactrim   getstak   stakbot   standin   staktop   environ   exitval    
+                                                         nullstr   execexp   setmail   setstak   exitsh    acctname  mailname   
+                                                         prc$buff  homename  pathname  freefunc  badunset  prs$buff  histname   
+                                                         trapnote  pushstak  quotedst   
+          acctnod       6660                 
+          assign        7255a               CALLED BY... xec$c     macro$c    
+          assnum        7704a               CALLED BY... main$c    xec$c      
+          cdpnod        6570                CALLED BY... xec$c      
+          chkid        10066a                
+          dfault        7227a               CALLED BY... main$c     
+          exname       10442a                
+          findnam      11002a               CALLED BY... xec$c     pathserv   
+          free$val     11233a               CALLED BY... xec$c      
+          histnod       6620                CALLED BY... word$c     
+          homenod       6630                CALLED BY... xec$c      
+          ifsnod        6600                CALLED BY... main$c    service$   
+          killenvf     10620a                
+          lookup        7767a               CALLED BY... xec$c     macro$c    
+          mailnod       6650                CALLED BY... main$c     
+          make          7733a               CALLED BY... cmd$c     args$c    io$c       
+          namep         6670                 
+          namscan      10170a               CALLED BY... xec$c      
+          pathnod       6640                CALLED BY... service$   
+          printexp     10531a               CALLED BY... xec$c      
+          printnam     10245a               CALLED BY... xec$c     pathserv   
+          prot$env     10662a               CALLED BY... args$c     
+          ps1nod        6610                CALLED BY... main$c     
+1                    SEGMENT LOADER          VERSION 2.1                                        12/14/86  02:24:05    PAGE 19      
+ 
+ ENTRY POINT CROSS-REFERENCE     
+          ps2nod        6560                CALLED BY... main$c     
+          pushnam      10715a                
+          pushstr      10335a                
+          readvar       7337a               CALLED BY... xec$c      
+          replace       7200a               CALLED BY... main$c    xec$c      
+          setenv       10746a               CALLED BY... service$   
+          setlist       6754a               CALLED BY... xec$c      
+          setname       7030a                
+          setup$en     10573a               CALLED BY... main$c     
+          special      11045a               CALLED BY... xec$c      
+          staknam      10370a                
+          syslook       6675a               CALLED BY... word$c    xec$c     pathserv   
+          unset$na     11115a               CALLED BY... xec$c      
+  
+ pathserv                                   CALLS...     $STKOFEN  strf      stat      errno     failed    findnam   catpath    
+                                                         getpath   staktop   access    syslook   prs$2buf  prc$buff  no$comma   
+                                                         commands  prs$buff  printnam  nextpath  notfound   
+          chk$acce     27152a                
+          findpath     27107a                
+          pr$path      27212a                
+          what$is      27255a               CALLED BY... xec$c      
+  
+ print$c                                    CALLS...     LDSS%     MOD%      UDSS%     UMOD%     $STKOFEN  any       flags      
+                                                         colon     write     failed    cmdadr    movstr    output    badnum     
+                                                         $ctype2   length    locstak   stakbot   staktop   pushstak   
+          clear$bu     22252a               CALLED BY... error$c    
+          flushb       22046a               CALLED BY... xec$c      
+          itos         21624a               CALLED BY... main$c    name$c    io$c      macro$c   func$c     
+          numbuf       21367                CALLED BY... main$c    name$c    io$c      macro$c   func$c     
+          prc          21455a               CALLED BY... blok$c    cmd$c     word$c    name$c    xec$c     service$  error$c    
+          prc$buff     22103a               CALLED BY... name$c    xec$c     pathserv   
+          prl          21776a                
+          prn          21577a               CALLED BY... blok$c    cmd$c     xec$c     service$   
+          prn$buff     22373a               CALLED BY... xec$c      
+          prp          21372a               CALLED BY... cmd$c     service$  error$c    
+          prs          21421a               CALLED BY... blok$c    cmd$c     main$c    name$c    xec$c     service$  error$c    
+          prs$2buf     22157a               CALLED BY... pathserv   
+          prs$buff     22205a               CALLED BY... name$c    xec$c     pathserv   
+          prs$cntl     22267a               CALLED BY... cmd$c     error$c    
+          prt          21510a               CALLED BY... xec$c      
+          quotedst     22420a               CALLED BY... name$c    xec$c      
+          stoi         21702a               CALLED BY... xec$c     service$   
+  
+ readdir$                                   CALLS...     $STKOFEN  read      strlen    strncpy    
+          readdir      32624a               CALLED BY... expand$c  spname$c   
+  
+ sbrk$c                                     CALLS...     $STKOFEN  endcp     sbreak     
+          brk          33442a                
+          sbrk         33500a               CALLED BY... shsetbrk  malloc$c   
+  
+ sctype$c                                   CALLS...     $STKOFEN   
+          $ctype1      25314                CALLED BY... word$c    name$c    io$c      macro$c    
+          $ctype2      25334                CALLED BY... word$c    xec$c     print$c   macro$c    
+  
+1                    SEGMENT LOADER          VERSION 2.1                                        12/14/86  02:24:05    PAGE 20      
+ 
+ ENTRY POINT CROSS-REFERENCE     
+ service$                                   CALLS...     $STKOFEN  cf        prc       any       dup       prn       prp        
+                                                         prs       open      wait      stoi      eflag     fdmap     flags      
+                                                         macro     lseek     close     ioset     errno     minus     topfd      
+                                                         subst     failed    gchain    setenv    ifsnod    tmpout    histfd     
+                                                         comdiv    retval    funcnt    txtbsy    toobig    badexec   badfile    
+                                                         flagadr   sysmsg    savefd    tmpfil    unlink    defpath   create     
+                                                         rename    endstak   locstak   getstak   stakbot   cpystak   pathnod    
+                                                         standin   staktop   exitval   nullstr   arglist   wasintr   chkopen    
+                                                         poptemp   exitsh    execve    clearup   setargs   longjmp   expand     
+                                                         makearg   coredump  subshell  trapnote  notfound  pushstak   
+          await        16665a               CALLED BY... xec$c     macro$c    
+          catpath      16234a               CALLED BY... xec$c     pathserv   
+          execa        16415a               CALLED BY... xec$c      
+          execs        16465a                
+          getarg       17313a               CALLED BY... xec$c      
+          getpath      16137a               CALLED BY... xec$c     pathserv   
+          initio       15707a               CALLED BY... xec$c      
+          mactrim      17120a               CALLED BY... name$c    xec$c     io$c       
+          nextpath     16343a               CALLED BY... pathserv   
+          nosubst      15705                CALLED BY... io$c       
+          pathopen     16204a               CALLED BY... main$c    xec$c      
+          post         16634a               CALLED BY... xec$c      
+          postclr      16610a               CALLED BY... xec$c      
+          scan         17145a               CALLED BY... xec$c      
+          simple       16077a               CALLED BY... main$c     
+          trim         17045a               CALLED BY... xec$c     macro$c    
+  
+ shsetbrk                                   CALLS...     $STKOFEN  sbrk      endcp     brkend     
+          setbrk         217a               CALLED BY... blok$c    stak$c     
+  
+ spname$c                                   CALLS...     $STKOFEN  readdir   opendir   closedir   
+          SPdist       32314a                
+          SPeq         32500a                
+          spname       32053a               CALLED BY... xec$c      
+  
+ stak$c                                     CALLS...     $STKOFEN  error     brkend    movstr    setbrk    shfree    rmtemp     
+                                                         stakbas   stakbot   stakbsy   staktop   brkincr   nostack    
+          cpystak       1100a               CALLED BY... service$  io$c       
+          endstak        766a               CALLED BY... word$c    service$  macro$c   expand$c   
+          getstak        654a               CALLED BY... cmd$c     name$c    service$   
+          locstak        713a               CALLED BY... word$c    service$  io$c      print$c   macro$c   expand$c  func$c     
+          pushstak      1160a               CALLED BY... blok$c    word$c    name$c    service$  print$c   macro$c   expand$c   
+                                                         func$c     
+          savstak        751a               CALLED BY... xec$c      
+          setstak       1127a               CALLED BY... name$c    macro$c    
+          stakchk       1055a               CALLED BY... main$c     
+          tdystak       1016a               CALLED BY... main$c    xec$c     macro$c    
+  
+ string$c                                   CALLS...     $STKOFEN   
+          any           6142a               CALLED BY... name$c    args$c    xec$c     service$  print$c    
+          cf            6202a               CALLED BY... name$c    args$c    xec$c     service$  io$c       
+          length        6257a               CALLED BY... cmd$c     name$c    io$c      print$c    
+          movstr        6076a               CALLED BY... blok$c    stak$c    cmd$c     main$c    name$c    xec$c     io$c       
+                                                         print$c   macro$c    
+1                    SEGMENT LOADER          VERSION 2.1                                        12/14/86  02:24:05    PAGE 21      
+ 
+ ENTRY POINT CROSS-REFERENCE     
+          movstrn       6313a               CALLED BY... expand$c   
+  
+ word$c                                     CALLS...     $STKOFEN  prc       read      open      copy      peekc     flags      
+                                                         creat     peekn     lseek     wdarg     close     wdval     errno      
+                                                         wdset     rwait     wdnum     chkpr     write     iopend    reserv     
+                                                         $ctype1   $ctype2   estabf    exitsh    endstak   locstak   histnod    
+                                                         standin   staktop   exitval   syslook   chktrap   clearup   no$reser   
+                                                         reserved  trapnote  pushstak   
+          histfd        4723                CALLED BY... service$   
+          nextc         5503a               CALLED BY... cmd$c     name$c    io$c       
+          readc         5566a               CALLED BY... main$c    io$c      macro$c    
+          skipc         5435a               CALLED BY... cmd$c      
+          word          4766a               CALLED BY... cmd$c      
+  
+ xec$c                                      CALLS...     $STKOFEN  cf        cmd       prc       any       pop       prn        
+                                                         prs       prt       dolc      scan      done      fork      dolv       
+                                                         stoi      trim      post      stat      push      eflag     execa      
+                                                         chdir     flags     alarm     macro     ioset     errno     rwait      
+                                                         times     error     await     umask     pause     close     initf      
+                                                         failed    baddir    gchain    signal    lookup    movstr    iotemp     
+                                                         argfor    cdpnod    pcsadr    retval    funcnt    nofork    noswap     
+                                                         nohome    $ctype2   findnam   badtrap   catpath   homenod   getpath    
+                                                         mactrim   fiotemp   useargs   savstak   staktop   devnull   trapcom    
+                                                         exitval   execbrk   loopcnt   nullstr   exitsh    special   getarg     
+                                                         syslook   setlist   initio    restore   popargs   badfname  clrsig     
+                                                         replace   getsig    ignsig    oldsigs   readvar   options   setargs    
+                                                         namscan   what$is   chkmem    flushb    chktrap   assnum    postclr    
+                                                         settmp    rename    badshift  free$val  prc$buff  no$comma  breakcnt   
+                                                         link$iod  chkopen   rmtemp    commands  prn$buff  chkpipe   badretur   
+                                                         prs$buff  execpmsg  pathopen  unset$na  swap$iod  printnam  notbltin   
+                                                         assign    trapnote  notfound  pushargs  freeargs  gmatch    tdystak    
+                                                         spname    access    estabf    quotedst  printexp   
+          dochdir      15213a                
+          execexp      15375a               CALLED BY... fault$c   name$c    error$c    
+          execprin     15447a                
+          execute      13231a               CALLED BY... main$c    macro$c    
+  
+ xmisc$c                                    CALLS...     $STKOFEN   
+          x$bmask      35514                CALLED BY... $STRCPY   $STRLEN    

@@ -1,0 +1,3 @@
+LOCAL_LIBRARIES = $(XLIB)
+
+SimpleProgramTarget(muncher)
